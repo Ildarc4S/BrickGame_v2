@@ -48,8 +48,10 @@ class Snake {
   Direction getDirection();
   const std::vector<Point>& getBody() const;
 
-  void move();
+  void move(bool apple_eat = false);
 };
+
+
 
 class SnakeGame {
  private:
@@ -68,10 +70,15 @@ class SnakeGame {
   void spawn();
   void pause();
   void exit();
+  void eat();
 
   void moveHandle(Direction direction, bool hold);
-  bool isCollide();
 
+  bool isCollide();
+  bool isAppleCollide();
+
+  int** fillField(int width, int height);
+  void clearField(int width, int height); 
  public:
   SnakeGame()
     : state_(State::START),
@@ -80,10 +87,12 @@ class SnakeGame {
       score_(0),
       db_("./brick_game/snake/db/score.txt"),
       pause_(false){
+      game_info_.field = fillField(FIELD_WIDTH, FIELD_HEIGHT);
     apple_.genRandPosition(snake_.getBody());
   }
   
   void userInput(UserAction_t action, bool hold);
+  GameInfo_t getGameInfo();
 
   void update(Direction direction) {
       snake_.setDirection(direction);
@@ -96,6 +105,20 @@ class SnakeGame {
 
   const Apple& getApple() {
     return apple_;
+  }
+};
+
+class SnakeGameSingleton {
+ private:
+   SnakeGameSingleton() = default;
+   ~SnakeGameSingleton() = default;
+
+   SnakeGameSingleton(const SnakeGameSingleton&) = delete;
+   SnakeGameSingleton& operator=(const SnakeGameSingleton&) = delete;
+ public:
+  static SnakeGame& getSnakeGame() {
+    static SnakeGame snake_game;
+    return snake_game;
   }
 };
 

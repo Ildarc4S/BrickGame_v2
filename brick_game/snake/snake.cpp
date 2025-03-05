@@ -19,7 +19,15 @@ const std::vector<Point>& Snake::getBody() const {
     return body_;
 }
 
-void Snake::move() {
+int** SnakeGame::fillField(int width, int height) {
+  int** ptr = new int*[height];
+  for (int i = 0; i < height; i++) {
+    ptr[i] = new int[width];
+  }
+  return ptr;
+}
+
+void Snake::move(bool apple_eat) {
   Point temp = body_.back();
 
   switch (direction_) {
@@ -32,7 +40,10 @@ void Snake::move() {
   }
 
   body_.push_back(temp);
-  body_.erase(body_.begin());
+
+  if (!apple_eat) {
+    body_.erase(body_.begin());
+  }
 }
 
 void SnakeGame::userInput(UserAction_t action, bool hold) {
@@ -49,6 +60,9 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         default:
           break;
       }
+      break;
+    case State::EAT:
+      eat();
       break;
     case State::MOVE:
       switch (action) {
@@ -70,7 +84,6 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         case Down:
           moveHandle(Direction::DOWN, hold);
           break;
-
         default:
           break;
       }
@@ -109,6 +122,7 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
     default:
       break;
   }
+  std::cout << (int)state_ << std::endl;
 }
 
 void SnakeGame::start() {
@@ -133,6 +147,8 @@ void SnakeGame::spawn() {
     apple_.genRandPosition(snake_.getBody());
   } else if (state_ == State::START) {
     snake_ = Snake();
+    std::cout << "Spawn";
+    state_ = State::MOVE;
   }
 }
 
@@ -144,6 +160,12 @@ void SnakeGame::pause() {
 void SnakeGame::exit() {
   db_.write(game_info_.high_score);
   state_ = State::EXIT;
+}
+
+void SnakeGame::eat() {
+  game_info_.score += 10;
+  apple_.genRandPosition(snake_.getBody());
+  state_ = State::MOVE;
 }
 
 bool SnakeGame::isCollide() {
@@ -163,14 +185,50 @@ bool SnakeGame::isCollide() {
   return result;
 }
 
+bool SnakeGame::isAppleCollide() {
+  return snake_.getBody().back() == apple_.getPosition();
+}
+
 void SnakeGame::moveHandle(Direction direction, bool hold) {
+  std::cout << "Move\n" << snake_.getBody().back().getX() << "\n";
   snake_.setDirection(direction);
   snake_.move();
+
+  if (isAppleCollide()) {
+    state_ = State::EAT;
+  }
 
   if (isCollide()) {
     state_ = State::GAME_OVER;
   }
 }
 
+void SnakeGame::clearField(int width, int height) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      game_info_.field[i][j] = 0; 
+    }
+  }
+}  
+
+GameInfo_t SnakeGame::getGameInfo() {
+  if (game_info_.field != nullptr) {
+    clearField(FIELD_WIDTH, FIELD_HEIGHT);
+    for (const auto& elm : snake_.getBody()) {
+      game_info_.field[elm.getY()][elm.getX()] = 2;
+    }
+  }
+
+  return game_info_;
+}
+
 }  // namespace s21
+
+void userInput(UserAction_t action, bool hold) {
+  s21::SnakeGameSingleton::getSnakeGame().userInput(action, hold);
+}
+
+GameInfo_t updateCurrentState() {
+  return s21::SnakeGameSingleton::getSnakeGame().getGameInfo();
+}
 

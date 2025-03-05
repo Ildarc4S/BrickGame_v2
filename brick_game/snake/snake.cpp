@@ -18,6 +18,16 @@ Direction Snake::getDirection() {
 const std::vector<Point>& Snake::getBody() const {
     return body_;
 }
+SnakeGame::SnakeGame()
+  : state_(State::START),
+    action_(UserAction_t::Start),
+    snake_(),
+    score_(0),
+    db_("./brick_game/snake/db/score.txt"),
+    pause_(false){
+    game_info_.field = fillField(FIELD_WIDTH, FIELD_HEIGHT);
+  apple_.genRandPosition(snake_.getBody());
+}
 
 int** SnakeGame::fillField(int width, int height) {
   int** ptr = new int*[height];

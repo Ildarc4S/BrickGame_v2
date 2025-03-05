@@ -80,17 +80,7 @@ class SnakeGame {
   int** fillField(int width, int height);
   void clearField(int width, int height); 
  public:
-  SnakeGame()
-    : state_(State::START),
-      action_(UserAction_t::Start),
-      snake_(),
-      score_(0),
-      db_("./brick_game/snake/db/score.txt"),
-      pause_(false){
-      game_info_.field = fillField(FIELD_WIDTH, FIELD_HEIGHT);
-    apple_.genRandPosition(snake_.getBody());
-  }
-  
+  SnakeGame(); 
   void userInput(UserAction_t action, bool hold);
   GameInfo_t getGameInfo();
 

@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <ctime>
 #include <algorithm>
 #include <vector>
 
@@ -14,6 +15,7 @@ Apple::Apple(const std::vector<Point>& snake_body) : position_() {
 
 void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   Point temp;
+  srand(time(NULL));
   do {
     temp = Point(rand() % 10, rand() % 20);
   } while(std::find(snake_body.begin(), snake_body.end(), temp) != snake_body.end());

@@ -5,6 +5,9 @@
 extern "C" {
 #endif
 
+#define FIELD_WIDTH 10
+#define FIELD_HEIGHT 20
+
 typedef enum {
     Start,
     Pause,

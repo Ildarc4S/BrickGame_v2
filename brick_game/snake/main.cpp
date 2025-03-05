@@ -7,8 +7,8 @@
 #include "./include/point.h"
 
 void printField(const std::vector<s21::Point>& vec, const s21::Apple& apple) {
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 20; j++) {
+  for (int i = 0; i < 20; i++) {
+    for (int j = 0; j < 10; j++) {
       if (std::find(vec.begin(), vec.end(), s21::Point(j, i)) != vec.end()) {
         std::cout << "[]";
       } else {
@@ -18,7 +18,6 @@ void printField(const std::vector<s21::Point>& vec, const s21::Apple& apple) {
       if (i == apple.getPosition().setY() && j == apple.getPosition().setX()) {
         std::cout << "()";
       }
-
     }
     std::cout << std::endl;
   }

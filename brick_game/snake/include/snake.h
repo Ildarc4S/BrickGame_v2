@@ -6,6 +6,7 @@
 #include "./../../spec/game_spec.h"
 #include "./point.h"
 #include "./apple.h"
+#include "./data_base.h"
 
 namespace s21 {
 
@@ -24,6 +25,12 @@ enum class Direction {
   DOWN,
   LEFT,
   RIGHT
+};
+
+enum class PauseState {
+  PAUSE,
+  GAME_OVER,
+  EXIT
 };
 
 class Snake {
@@ -52,9 +59,18 @@ class SnakeGame {
 
   Snake snake_;
   Apple apple_;
+  DataBase db_;
 
   int score_;
   int pause_;
+
+  void start();
+  void spawn();
+  void pause();
+  void exit();
+
+  void moveHandle(Direction direction, bool hold);
+  bool isCollide();
 
  public:
   SnakeGame()
@@ -62,10 +78,12 @@ class SnakeGame {
       action_(UserAction_t::Start),
       snake_(),
       score_(0),
-      pause_(false) {
+      db_("./brick_game/snake/db/score.txt"),
+      pause_(false){
     apple_.genRandPosition(snake_.getBody());
-    std:: cout << "(" << apple_.getPosition().setX() << ", " << apple_.getPosition().setY() << ")\n";
   }
+  
+  void userInput(UserAction_t action, bool hold);
 
   void update(Direction direction) {
       snake_.setDirection(direction);

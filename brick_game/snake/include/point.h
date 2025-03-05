@@ -14,6 +14,14 @@ class Point {
   bool operator==(const Point& other) const;
   bool operator!=(const Point& other) const;
 
+  int getX() const {
+    return x;
+  }
+
+  int getY() const {
+    return y;
+  }
+
   int& setX() {
     return x;
   }

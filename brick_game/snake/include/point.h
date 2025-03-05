@@ -13,6 +13,15 @@ class Point {
 
   bool operator==(const Point& other) const;
   bool operator!=(const Point& other) const;
+
+  int& setX() {
+    return x;
+  }
+
+  int& setY() {
+    return y;
+  }
+
 };
 
 }  // namespace s21

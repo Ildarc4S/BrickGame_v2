@@ -10,9 +10,10 @@ class Apple {
  private:
   Point position_;
  public:
-  Apple(const std::vector<Point>& snake_body); 
+  Apple();
+  Apple(const std::vector<Point>& snake_body);
 
-  Point getPosition();
+  Point getPosition() const;
   void genRandPosition(const std::vector<Point>& snake_body);
 };
 

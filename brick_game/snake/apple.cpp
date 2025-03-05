@@ -6,6 +6,8 @@
 
 namespace s21 {
 
+Apple::Apple() {}
+
 Apple::Apple(const std::vector<Point>& snake_body) : position_() {
   genRandPosition(snake_body);
 }
@@ -15,9 +17,10 @@ void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   do {
     temp = Point(rand() % 10, rand() % 20);
   } while(std::find(snake_body.begin(), snake_body.end(), temp) != snake_body.end());
+  position_ = temp;
 }
 
-Point Apple::getPosition() {
+Point Apple::getPosition() const {
   return position_;
 }
 

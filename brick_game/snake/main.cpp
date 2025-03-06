@@ -34,10 +34,9 @@ int main() {
     int i = 0;
     userInput(UserAction_t::Start, false);
     userInput(UserAction_t::Right, false);
-    userInput(UserAction_t::Down, false);
     while (true) {
       printField(updateCurrentState());
-      userInput(UserAction_t::Right, false);
+      userInput(UserAction_t::Down, false);
       i++;
       napms(500);
     }

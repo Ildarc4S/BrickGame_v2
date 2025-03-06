@@ -209,6 +209,8 @@ bool SnakeGame::isCollide() {
 }
 
 bool SnakeGame::isAppleCollide(const Point& head) {
+  std::cout << "(" << head.getY() << " " << head.getX() << std::endl;
+  std::cout << "(" << apple_.getPosition().getY() << " " << apple_.getPosition().getX() << std::endl;
   return head == apple_.getPosition();
 }
 
@@ -218,13 +220,13 @@ void SnakeGame::moveHandle(Direction direction, bool hold) {
 
   bool is_colide_apple = isAppleCollide(new_head);
   snake_.move(is_colide_apple);
+  std::cout << is_colide_apple;
 
   if (is_colide_apple) {
+    std::cout << "EM";
     state_ = State::EAT;
-  }
-
-  if (isCollide()) {
-    //state_ = State::GAME_OVER;
+  } else if (isCollide()) {
+    state_ = State::GAME_OVER;
   }
 }
 

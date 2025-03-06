@@ -33,6 +33,13 @@ enum class PauseState {
   EXIT
 };
 
+enum class FigureCode {
+  AIR = 0,
+  WALL,
+  SNAKE,
+  APPLE
+};
+
 class Snake {
  private:
   Direction direction_;
@@ -49,6 +56,7 @@ class Snake {
   const std::vector<Point>& getBody() const;
 
   void move(bool apple_eat = false);
+  Point calcAndGetNewHeadPos();
 };
 
 
@@ -75,12 +83,13 @@ class SnakeGame {
   void moveHandle(Direction direction, bool hold);
 
   bool isCollide();
-  bool isAppleCollide();
+  bool isAppleCollide(const Point& head);
 
   int** fillField(int width, int height);
-  void clearField(int width, int height); 
+  void clearField(int width, int height);
+
  public:
-  SnakeGame(); 
+  SnakeGame();
   void userInput(UserAction_t action, bool hold);
   GameInfo_t getGameInfo();
 

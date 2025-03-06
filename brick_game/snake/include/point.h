@@ -29,7 +29,6 @@ class Point {
   int& setY() {
     return y;
   }
-
 };
 
 }  // namespace s21

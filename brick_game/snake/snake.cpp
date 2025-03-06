@@ -3,11 +3,12 @@
 #include <vector>
 
 namespace s21 {
+
 Snake::Snake()
   : direction_(Direction::RIGHT),
   speed_(1) {
-    for (int i = 0; i < 4; ++i) {
-      body_.emplace_back(i, 0);
+    for (int i = 1; i < 5; ++i) {
+      body_.emplace_back(i, 2);
     }
 }
 
@@ -18,6 +19,27 @@ Direction Snake::getDirection() {
 const std::vector<Point>& Snake::getBody() const {
     return body_;
 }
+
+Point Snake::calcAndGetNewHeadPos() {
+  Point new_head = body_.back();
+  switch (direction_) {
+    case Direction::RIGHT:
+      new_head.setX()++;
+      break;
+    case Direction::DOWN:
+      new_head.setY()++;
+      break;
+    case Direction::LEFT:
+      new_head.setX()--;
+      break;
+    case Direction::UP:
+      new_head.setY()--;
+      break;
+  }
+
+  return new_head;
+}
+
 SnakeGame::SnakeGame()
   : state_(State::START),
     action_(UserAction_t::Start),
@@ -38,18 +60,9 @@ int** SnakeGame::fillField(int width, int height) {
 }
 
 void Snake::move(bool apple_eat) {
-  Point temp = body_.back();
+  Point new_head = calcAndGetNewHeadPos();
 
-  switch (direction_) {
-    case Direction::RIGHT:
-      temp.setX()++;
-      break;
-    case Direction::DOWN:
-      temp.setY()++;
-      break;
-  }
-
-  body_.push_back(temp);
+  body_.push_back(new_head);
 
   if (!apple_eat) {
     body_.erase(body_.begin());
@@ -179,53 +192,62 @@ void SnakeGame::eat() {
 }
 
 bool SnakeGame::isCollide() {
-  bool result = true;
+  bool result = false;
   const Point& temp = snake_.getBody().back();
   if (temp.getX() < 0 || temp.getY() < 0 ||
-      temp.getX() >= FIELD_WIDTH || temp.getY() >= FIELD_WIDTH) {
-    result = false;
+      temp.getX() >= FIELD_WIDTH-1 || temp.getY() >= FIELD_WIDTH-1) {
+    result = true;
   }
 
   for (const auto& body_elm : snake_.getBody()) {
-    if (temp == body_elm) {
-      result = false;
+    if (temp == body_elm && temp != snake_.getBody().back()) {
+      result = true;
     }
   }
 
   return result;
 }
 
-bool SnakeGame::isAppleCollide() {
-  return snake_.getBody().back() == apple_.getPosition();
+bool SnakeGame::isAppleCollide(const Point& head) {
+  return head == apple_.getPosition();
 }
 
 void SnakeGame::moveHandle(Direction direction, bool hold) {
-  std::cout << "Move\n" << snake_.getBody().back().getX() << "\n";
   snake_.setDirection(direction);
-  snake_.move();
+  Point new_head = snake_.calcAndGetNewHeadPos();
 
-  if (isAppleCollide()) {
+  bool is_colide_apple = isAppleCollide(new_head);
+  snake_.move(is_colide_apple);
+
+  if (is_colide_apple) {
     state_ = State::EAT;
   }
 
   if (isCollide()) {
-    state_ = State::GAME_OVER;
+    //state_ = State::GAME_OVER;
   }
 }
 
 void SnakeGame::clearField(int width, int height) {
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      game_info_.field[i][j] = 0; 
+      if (i == 0 || j == 0 || i == height-1 || j == width-1) {
+        game_info_.field[i][j] = static_cast<int>(FigureCode::WALL);
+      } else {
+        game_info_.field[i][j] = static_cast<int>(FigureCode::AIR);
+      }
     }
   }
-}  
+}
 
 GameInfo_t SnakeGame::getGameInfo() {
   if (game_info_.field != nullptr) {
     clearField(FIELD_WIDTH, FIELD_HEIGHT);
+    const Point& apple_position = apple_.getPosition();
+    game_info_.field[apple_position.getY()][apple_position.getX()] = static_cast<int>(FigureCode::APPLE);
+
     for (const auto& elm : snake_.getBody()) {
-      game_info_.field[elm.getY()][elm.getX()] = 2;
+      game_info_.field[elm.getY()][elm.getX()] = static_cast<int>(FigureCode::SNAKE);
     }
   }
 

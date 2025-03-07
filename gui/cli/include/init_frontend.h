@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "./color.h"
+#include "./objects.h"
 
 void initColorPairs();
 void initNcurses();

@@ -6,6 +6,7 @@
 
 #include <sys/time.h>
 #include <ncurses.h>
+#include <stdio.h>
 
 #define KEYBOARD_COUNT 8
 
@@ -21,6 +22,6 @@ typedef struct _keyboard {
   void (*listen)(struct _keyboard *);
 } Keyboard_t;
 
-Keyboard_t initKeygoard();
+Keyboard_t initKeyboard();
 
 #endif  // KEY_H

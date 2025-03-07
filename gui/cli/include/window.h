@@ -4,48 +4,48 @@
 #include <string.h>
 
 #include "./objects.h"
-#include "./color.h"
 
 #define TEXT_SIZE 50
 #define TEXT_LINE_COUNT 10
+#define CUR_TEXT_LINEC_COUNT 6
 
 typedef struct _panel {
-  int x; /**< X coordinate of the panel */
-  int y; /**< Y coordinate of the panel */
+  int x;
+  int y;
 
-  char head_text[TEXT_SIZE]; /**< Header text for the panel */
-  char text[TEXT_LINE_COUNT][TEXT_SIZE];  /**< Text content of the panel */
-  int size;           /**< Size of the panel (number of rows) */
-  int value; /**< Value associated with the panel (e.g., score, level) */
-  int mode;  /**< Mode of the panel (e.g., display mode) */
+  char head_text[TEXT_SIZE];
+  char text[TEXT_LINE_COUNT][TEXT_SIZE];
+  int size;
 
-  Color_t color; /**< Color associated with the panel */
+  PanelMode mode;
+  PanelColor_t color;
 
-  void (*draw)(struct _panel *_this);
+  void (*draw)(struct _panel *);
 } Panel_t;
 
 typedef struct _game_field {
-  int x; /**< X coordinate of the game field */
-  int y; /**< Y coordinate of the game field */
+  int x;
+  int y;
 
-  int width;  /**< Width of the game field */
-  int height; /**< Height of the game field */
+  int width;
+  int height;
 
   void (*drawField)(struct _game_field *);
-  void (*drawTetramino)(struct _game_field *);
-  void (*updateTetramino)(struct _game_field *);
 } GameField_t;
 
 typedef struct _window {
-  Panel_t nextFigurePanel;  /**< Panel displaying the next figure */
-  Panel_t scorePanel;       /**< Panel displaying the current score */
-  Panel_t high_score_panel; /**< Panel displaying the high score */
-  Panel_t levelPanel;       /**< Panel displaying the current level */
-  Panel_t helpPanel;        /**< Panel displaying game help information */
-  Panel_t speed_panel;      /**< Panel displaying the speed level */
-  GameField_t game_field;   /**< The main game field */
+  Panel_t next_figure_panel;
+  Panel_t score_panel;
+  Panel_t high_score_panel;
+  Panel_t level_panel;
+  Panel_t help_panel;
+  Panel_t speed_panel;
+  GameField_t game_field;
 
-  void (*draw)(struct _window *); /**< Function to draw the entire window */
+  void (*draw)(struct _window *);
+  bool (*checkGameExit)(void);
 } Window_t;
+
+Window_t initWindow();
 
 #endif  // WINDOW_H

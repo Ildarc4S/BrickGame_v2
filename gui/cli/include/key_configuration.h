@@ -1,8 +1,8 @@
 #ifndef KEY_CONFIG_H
 #define KEY_CONFIG_H
 
-#include "./../../../brick_game/spec/game_spec.h"
 #include "./button.h"
+#include "./objects.h"
 
 void upKeyPressed(Button_t btn);
 void leftKeyPressed(Button_t btn);

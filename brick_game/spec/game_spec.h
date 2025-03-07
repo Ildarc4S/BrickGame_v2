@@ -1,12 +1,10 @@
 #ifndef GAME_SCPEC_H
 #define GAME_SCPEC_H
 
-#ifndef __cplusplus
-extern "C" {
-#endif
-
 #define FIELD_WIDTH 10
 #define FIELD_HEIGHT 20
+
+#include <stdbool.h>
 
 typedef enum {
     Start,
@@ -29,12 +27,16 @@ typedef struct {
     int pause;
 } GameInfo_t;
 
+//#ifndef __cplusplus
+//extern "C" {
+//#endif
+
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 
-#ifndef __cplusplus
-extern }
-#endif
+//#ifndef __cplusplus
+//extern }
+//#endif
 
 #endif  // GAME_SCPEC_H
 

@@ -1,25 +1,51 @@
 #ifndef OBJECTS_CODE_H
 #define OBJECTS_CODE_H
 
+#include "./../../../brick_game/spec/game_spec.h"
+#include <ncurses.h>
+
+#define FIELD_WIDTH 10
+#define FIELD_HEIGHT 20
+
+#define TETRAMINO_WIDTH 4
+#define TETRAMINO_HEIGHT 4
+
 typedef enum {
   OBJECT_CODE_AIR = -2,
   OBJECT_CODE_WALL = -1,
-  OBJECT_CODE_TETRAMINO_I = 0,
-  OBJECT_CODE_TETRAMINO_O,
-  OBJECT_CODE_TETRAMINO_T,
-  OBJECT_CODE_TETRAMINO_S,
-  OBJECT_CODE_TETRAMINO_Z,
-  OBJECT_CODE_TETRAMINO_J,
-  OBJECT_CODE_TETRAMINO_L,
+  OBJECT_CODE_TETRAMINO_I = 1,
+  OBJECT_CODE_TETRAMINO_O = 2,
+  OBJECT_CODE_TETRAMINO_T = 3,
+  OBJECT_CODE_TETRAMINO_S = 4,
+  OBJECT_CODE_TETRAMINO_Z = 5,
+  OBJECT_CODE_TETRAMINO_J = 6,
+  OBJECT_CODE_TETRAMINO_L = 7,
 
   OBJECT_CODE_SNAKE = 10,
-  OBJECT_CODE_APPLE,
+  OBJECT_CODE_APPLE = 11
 } ObjectCode;
 
 typedef enum {
-  PAUSE_MODE_PAUSE = 0,
-  PAUSE_MODE_START,
-  PAUSE_MODE_GAME_OVER
+  PAUSE_MODE_PAUSE = 1,
+  PAUSE_MODE_START = 2,
+  PAUSE_MODE_GAME_OVER = 3,
+  PAUSE_MODE_EXIT = 4
 } PauseMode;
+
+typedef enum {
+  PANEL_COLOR_GREEN = 21, /**< Green color for the panel */
+  PANEL_COLOR_RED = 22,       /**< Red color for the panel */
+  PANEL_COLOR_YELLOW = 23,    /**< Yellow color for the panel */
+  PANEL_COLOR_BLUE = 24,      /**< Blue color for the panel */
+} PanelColor_t;
+
+typedef enum {
+    PANEL_MODE_TEXT = -3,
+    PANEL_MODE_HIGH_SCORE = -4,
+    PANEL_MODE_SPEED      = -5,
+    PANEL_MODE_LEVEL      = -6,
+    PANEL_MODE_CUR_SCORE  = -7,
+    PANEL_MODE_NEXT_FIGURE = -8
+} PanelMode;
 
 #endif  // OBJECTS_CODE_H

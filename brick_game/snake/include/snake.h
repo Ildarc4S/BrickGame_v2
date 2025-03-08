@@ -5,7 +5,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #include "./../../spec/game_spec.h"
 
@@ -16,6 +16,7 @@ extern "C" {
 #include "./point.h"
 #include "./apple.h"
 #include "./data_base.h"
+#include "./timer.h"
 
 namespace s21 {
 
@@ -59,6 +60,10 @@ class Snake {
  public:
   Snake();
   Snake(const Snake& other);
+  Snake(Snake&& other);
+
+  Snake& operator=(const Snake& other);
+  Snake& operator=(Snake&& other);
 
   void setDirection(Direction direction) {
     direction_ = direction;
@@ -78,6 +83,7 @@ class SnakeGame {
   State state_;
   UserAction_t action_;
   GameInfo_t game_info_;
+  Timer timer_;
 
   Snake snake_;
   Apple apple_;

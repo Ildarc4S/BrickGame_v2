@@ -1,6 +1,7 @@
 #include "./include/snake.h"
 #include <iostream>
 #include <vector>
+#include <utility>
 
 namespace s21 {
 
@@ -11,7 +12,7 @@ Snake::Snake()
   int mid_y = FIELD_HEIGHT / 2;
 
   for (int i = 0; i < 4; i++) {
-    body_.emplace_back(mid_x - i, mid_y);
+    body_.emplace_back(mid_x + i, mid_y);
   }
 }
 
@@ -19,6 +20,11 @@ Snake::Snake(const Snake& other)
   : direction_(other.direction_),
     speed_(other.speed_),
     body_(other.body_) {}
+
+Snake::Snake(Snake&& other)
+  : direction_(std::move(other.direction_)),
+    speed_(std::move(other.speed_)),
+    body_(std::move(other.body_)) {}
 
 Snake& Snake::operator=(const Snake& other) {
   if (this != &other) {
@@ -29,12 +35,7 @@ Snake& Snake::operator=(const Snake& other) {
   return *this;
 }
 
-Snake::Snake(Snake&& other) noexcept
-  : direction_(std::move(other.direction_)),
-    speed_(std::move(other.speed_)),
-    body_(std::move(other.body_)) {}
-
-Snake& Snake::operator=(Snake&& other) noexcept {
+Snake& Snake::operator=(Snake&& other) {
   if (this != &other) {
     direction_ = std::move(other.direction_);
     speed_ = std::move(other.speed_);
@@ -76,6 +77,7 @@ SnakeGame::SnakeGame()
     action_(UserAction_t::Start),
     snake_(),
     score_(0),
+    timer_(300),
     db_("./brick_game/snake/db/score.txt"),
     pause_(false){
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
@@ -179,6 +181,8 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
   }
 }
 
+#include <ncurses.h>
+
 void SnakeGame::start() {
   if (state_ == State::START) {
     spawn();
@@ -186,22 +190,25 @@ void SnakeGame::start() {
   } else if (state_ == State::PAUSE) {
     state_ = State::MOVE;
   } else if (state_ == State::GAME_OVER) {
-    // cleanField(game_info_.field);
+    game_info_.high_score = db_.read();
+    if (game_info_.score > game_info_.high_score) {
+      game_info_.high_score = game_info_.score;
+      db_.write(game_info_.high_score);
+    }
     game_info_.level = 1;
     game_info_.score = 0;
-
     game_info_.speed = 10;
     spawn();
   }
   game_info_.pause = static_cast<int>(PauseMode::GAME_CONTINUE);
 }
 
+
 void SnakeGame::spawn() {
   if (state_ == State::EAT) {
     apple_.genRandPosition(snake_.getBody());
-  } else if (state_ == State::START) {
+  } else {
     snake_ = Snake();
-    std::cout << "Spawn";
     state_ = State::MOVE;
   }
 }
@@ -213,6 +220,7 @@ void SnakeGame::pause() {
 
 void SnakeGame::exit() {
   db_.write(game_info_.high_score);
+  game_info_.pause = static_cast<int>(PauseMode::EXIT);
   state_ = State::EXIT;
 }
 
@@ -228,8 +236,8 @@ bool SnakeGame::isAppleCollide(const Point& head) {
 
 bool SnakeGame::isCollision(const Point& new_head) {
   bool result = false;
-  if (new_head.getX() < 0 || new_head.getX() >= FIELD_WIDTH + 1
-      || new_head.getY() < 0 || new_head.getY() >= FIELD_HEIGHT + 1) {
+  if (new_head.getX() <= 0 || new_head.getX() >= FIELD_WIDTH + 1
+      || new_head.getY() <= 0 || new_head.getY() >= FIELD_HEIGHT + 1) {
     result = true;
   }
 
@@ -273,7 +281,8 @@ void SnakeGame::moveHandle(Direction direction, bool hold) {
     snake_.move(is_colide_apple);
 
     if (is_colide_apple) {
-      state_ = State::EAT;
+      eat();
+      // state_ = State::EAT;
     }
   }
 }
@@ -291,6 +300,11 @@ void SnakeGame::clearField(int width, int height) {
 }
 
 GameInfo_t SnakeGame::getGameInfo() {
+  if (state_ == State::MOVE && timer_.isExpired()) {
+    moveHandle(snake_.getDirection(), false);
+    timer_.update();
+  }
+
   if (game_info_.field != nullptr) {
     clearField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     const Point& apple_position = apple_.getPosition();

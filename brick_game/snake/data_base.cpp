@@ -3,7 +3,7 @@
 namespace s21 {
 
 DataBase::DataBase(const std::string& file_name) : file_name_(file_name) {}
-  
+
 int DataBase::read() {
   std::string line;
   std::ifstream file(file_name_);
@@ -15,7 +15,7 @@ int DataBase::read() {
     }
     file.close();
   }
-  
+
   return data;
 }
 

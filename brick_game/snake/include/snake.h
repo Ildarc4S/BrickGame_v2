@@ -3,7 +3,16 @@
 #include <vector>
 #include <iostream>
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #include "./../../spec/game_spec.h"
+
+#ifdef __cplusplus
+}
+#endif
+
 #include "./point.h"
 #include "./apple.h"
 #include "./data_base.h"
@@ -27,10 +36,12 @@ enum class Direction {
   RIGHT
 };
 
-enum class PauseState {
-  PAUSE,
-  GAME_OVER,
-  EXIT
+enum class PauseMode {
+  PAUSE = 1,
+  GAME_CONTINUE = 2,
+  START = 3,
+  GAME_OVER = 4,
+  EXIT = 5
 };
 
 enum class FigureCode {
@@ -47,6 +58,7 @@ class Snake {
   int speed_;
  public:
   Snake();
+  Snake(const Snake& other);
 
   void setDirection(Direction direction) {
     direction_ = direction;
@@ -82,8 +94,9 @@ class SnakeGame {
 
   void moveHandle(Direction direction, bool hold);
 
-  bool isCollide();
+  bool isCollision(const Point& head);
   bool isAppleCollide(const Point& head);
+  bool isOppositeDirection(const Direction& direction);
 
   int** fillField(int width, int height);
   void clearField(int width, int height);

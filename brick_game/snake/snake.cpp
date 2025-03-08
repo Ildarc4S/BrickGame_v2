@@ -6,10 +6,41 @@ namespace s21 {
 
 Snake::Snake()
   : direction_(Direction::RIGHT),
-  speed_(1) {
-    for (int i = 1; i < 5; ++i) {
-      body_.emplace_back(i, 2);
-    }
+    speed_(1) {
+  int mid_x = FIELD_WIDTH / 2;
+  int mid_y = FIELD_HEIGHT / 2;
+
+  for (int i = 0; i < 4; i++) {
+    body_.emplace_back(mid_x - i, mid_y);
+  }
+}
+
+Snake::Snake(const Snake& other)
+  : direction_(other.direction_),
+    speed_(other.speed_),
+    body_(other.body_) {}
+
+Snake& Snake::operator=(const Snake& other) {
+  if (this != &other) {
+    direction_ = other.direction_;
+    speed_ = other.speed_;
+    body_ = other.body_;
+  }
+  return *this;
+}
+
+Snake::Snake(Snake&& other) noexcept
+  : direction_(std::move(other.direction_)),
+    speed_(std::move(other.speed_)),
+    body_(std::move(other.body_)) {}
+
+Snake& Snake::operator=(Snake&& other) noexcept {
+  if (this != &other) {
+    direction_ = std::move(other.direction_);
+    speed_ = std::move(other.speed_);
+    body_ = std::move(other.body_);
+  }
+  return *this;
 }
 
 Direction Snake::getDirection() {
@@ -47,7 +78,8 @@ SnakeGame::SnakeGame()
     score_(0),
     db_("./brick_game/snake/db/score.txt"),
     pause_(false){
-    game_info_.field = fillField(FIELD_WIDTH, FIELD_HEIGHT);
+    game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
+    game_info_.pause = static_cast<int>(PauseMode::START);
   apple_.genRandPosition(snake_.getBody());
 }
 
@@ -145,7 +177,6 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
     default:
       break;
   }
-  std::cout << (int)state_ << std::endl;
 }
 
 void SnakeGame::start() {
@@ -162,7 +193,7 @@ void SnakeGame::start() {
     game_info_.speed = 10;
     spawn();
   }
-  game_info_.pause = 0;
+  game_info_.pause = static_cast<int>(PauseMode::GAME_CONTINUE);
 }
 
 void SnakeGame::spawn() {
@@ -176,7 +207,7 @@ void SnakeGame::spawn() {
 }
 
 void SnakeGame::pause() {
-  game_info_.pause = (int)(PauseState::PAUSE);
+  game_info_.pause = static_cast<int>(PauseMode::PAUSE);
   state_ = State::PAUSE;
 }
 
@@ -191,16 +222,20 @@ void SnakeGame::eat() {
   state_ = State::MOVE;
 }
 
-bool SnakeGame::isCollide() {
+bool SnakeGame::isAppleCollide(const Point& head) {
+  return head == apple_.getPosition();
+}
+
+bool SnakeGame::isCollision(const Point& new_head) {
   bool result = false;
-  const Point& temp = snake_.getBody().back();
-  if (temp.getX() < 0 || temp.getY() < 0 ||
-      temp.getX() >= FIELD_WIDTH-1 || temp.getY() >= FIELD_WIDTH-1) {
+  if (new_head.getX() < 0 || new_head.getX() >= FIELD_WIDTH + 1
+      || new_head.getY() < 0 || new_head.getY() >= FIELD_HEIGHT + 1) {
     result = true;
   }
 
-  for (const auto& body_elm : snake_.getBody()) {
-    if (temp == body_elm && temp != snake_.getBody().back()) {
+  const std::vector<Point>& snake_body = snake_.getBody();
+  for (int i = 0; i < snake_body.size() - 1 && !result; i++) {
+    if (new_head == snake_body[i]) {
       result = true;
     }
   }
@@ -208,25 +243,38 @@ bool SnakeGame::isCollide() {
   return result;
 }
 
-bool SnakeGame::isAppleCollide(const Point& head) {
-  std::cout << "(" << head.getY() << " " << head.getX() << std::endl;
-  std::cout << "(" << apple_.getPosition().getY() << " " << apple_.getPosition().getX() << std::endl;
-  return head == apple_.getPosition();
+bool SnakeGame::isOppositeDirection(const Direction& direction) {
+  bool result = false;
+  Direction currentDirection = snake_.getDirection();
+
+  if ((currentDirection == Direction::RIGHT && direction == Direction::LEFT) ||
+      (currentDirection == Direction::LEFT && direction == Direction::RIGHT) ||
+      (currentDirection == Direction::UP && direction == Direction::DOWN) ||
+      (currentDirection == Direction::DOWN && direction == Direction::UP)) {
+    result = true;
+  }
+
+  return result;
 }
 
 void SnakeGame::moveHandle(Direction direction, bool hold) {
+  if (isOppositeDirection(direction)) {
+    return;
+  }
+
   snake_.setDirection(direction);
   Point new_head = snake_.calcAndGetNewHeadPos();
 
-  bool is_colide_apple = isAppleCollide(new_head);
-  snake_.move(is_colide_apple);
-  std::cout << is_colide_apple;
-
-  if (is_colide_apple) {
-    std::cout << "EM";
-    state_ = State::EAT;
-  } else if (isCollide()) {
+  if (isCollision(new_head)) {
     state_ = State::GAME_OVER;
+    game_info_.pause = static_cast<int>(PauseMode::GAME_OVER);
+  } else {
+    bool is_colide_apple = isAppleCollide(new_head);
+    snake_.move(is_colide_apple);
+
+    if (is_colide_apple) {
+      state_ = State::EAT;
+    }
   }
 }
 
@@ -244,7 +292,7 @@ void SnakeGame::clearField(int width, int height) {
 
 GameInfo_t SnakeGame::getGameInfo() {
   if (game_info_.field != nullptr) {
-    clearField(FIELD_WIDTH, FIELD_HEIGHT);
+    clearField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     const Point& apple_position = apple_.getPosition();
     game_info_.field[apple_position.getY()][apple_position.getX()] = static_cast<int>(FigureCode::APPLE);
 

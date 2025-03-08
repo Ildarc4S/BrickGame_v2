@@ -27,9 +27,10 @@ typedef enum {
 
 typedef enum {
   PAUSE_MODE_PAUSE = 1,
-  PAUSE_MODE_START = 2,
-  PAUSE_MODE_GAME_OVER = 3,
-  PAUSE_MODE_EXIT = 4
+  PAUSE_MODE_GAME_CONTINUE = 2,
+  PAUSE_MODE_START = 3,
+  PAUSE_MODE_GAME_OVER = 4,
+  PAUSE_MODE_EXIT = 5
 } PauseMode;
 
 typedef enum {

@@ -87,19 +87,30 @@ bool _checkGameExit() {
   return game_info.pause == PAUSE_MODE_EXIT;
 }
 
+
 void _drawField(GameField_t *this) {
   GameInfo_t game = updateCurrentState();
-  if (game.pause == 0) {
+
+  for (int i = 0; i < this->height; i++) {
+    for (int j = 0; j < this->width; j++) {
+      mvprintw(this->y + i, (this->x + j) * 2, "  ");
+    }
+  }
+
+  if (game.pause == PAUSE_MODE_GAME_CONTINUE) {
     for (int i = 0; i < this->height; i++) {
       for (int j = 0; j < this->width; j++) {
+        
         if (game.field[i][j] == OBJECT_CODE_WALL) {
           mvprintw(this->y + i, (this->x + j) * 2, "[]");
-        } else if (isTetraminoCode(game.field[i][j])) {
+        } else if (isTetraminoCode(game.field[i][j]) || game.field[i][j] == OBJECT_CODE_SNAKE) {
           attron(COLOR_PAIR(game.field[i][j]));
           mvprintw(this->y + i, (this->x + j) * 2, "[]");
           attroff(COLOR_PAIR(game.field[i][j]));
         } else if (game.field[i][j] == OBJECT_CODE_AIR) {
           mvprintw(this->y + i, (this->x + j) * 2, "  ");
+        } else if (game.field[i][j] == OBJECT_CODE_APPLE) {
+          mvprintw(this->y + i, (this->x + j) * 2, "()");
         }
       }
     }

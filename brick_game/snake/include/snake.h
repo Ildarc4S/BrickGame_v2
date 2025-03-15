@@ -3,15 +3,8 @@
 #include <vector>
 #include <iostream>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "./../../spec/game_spec.h"
 
-#ifdef __cplusplus
-}
-#endif
 
 #include "./point.h"
 #include "./apple.h"
@@ -46,10 +39,10 @@ enum class PauseMode {
 };
 
 enum class FigureCode {
-  AIR = 0,
-  WALL,
-  SNAKE,
-  APPLE
+  AIR = -2,
+  WALL = -1,
+  SNAKE = 10,
+  APPLE = 11
 };
 
 class Snake {

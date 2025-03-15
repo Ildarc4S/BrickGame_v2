@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <QDebug>
 
 namespace s21 {
 
@@ -118,9 +119,6 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
           break;
       }
       break;
-    case State::EAT:
-      eat();
-      break;
     case State::MOVE:
       switch (action) {
         case Terminate:
@@ -153,14 +151,9 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         case Start:
           start();
           break;
-        case Pause:
-          pause();
-          break;
-
         default:
           break;
       }
-
       break;
     case State::GAME_OVER:
       switch (action) {
@@ -180,8 +173,6 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
       break;
   }
 }
-
-#include <ncurses.h>
 
 void SnakeGame::start() {
   if (state_ == State::START) {
@@ -314,7 +305,7 @@ GameInfo_t SnakeGame::getGameInfo() {
       game_info_.field[elm.getY()][elm.getX()] = static_cast<int>(FigureCode::SNAKE);
     }
   }
-
+ 
   return game_info_;
 }
 

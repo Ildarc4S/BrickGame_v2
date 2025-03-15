@@ -1,14 +1,15 @@
 #include <QApplication>
-#include <QPushButton>
+
+#include "./gui/desktop/window.h"
+#include "./common/controller.h"
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
+  QApplication app(argc, argv);
 
-    QPushButton button("Hello Qt!");
-    button.resize(200, 60);
-    button.show();
-    QObject::connect(&button, &QPushButton::clicked,
-        []() { QApplication::quit(); });
+  s21::Window window;
+  s21::Controller controller(&window);
+  window.resize(600, 800);
 
-    return app.exec();
+  window.show();
+  return app.exec();
 }

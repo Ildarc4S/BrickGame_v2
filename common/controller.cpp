@@ -1,6 +1,7 @@
 #include "./controller.h"
 #include <QDebug>
 #include <QTimer>
+#include <QApplication>
 
 namespace s21 {
 
@@ -8,9 +9,9 @@ Controller::Controller(Window* view, QObject* parent)
   : QObject(parent),
     view_(view) {
       connect(view_, &Window::keyPressed, this, &Controller::processUserInput);
-       QTimer *timer = new QTimer(this);
+      QTimer *timer = new QTimer(this);
       connect(timer, &QTimer::timeout, this, &Controller::update_game);
-      timer->start(100);
+      timer->start(10);
 }
 
 UserAction_t Controller::convertKeyToAction(int key) {
@@ -37,7 +38,7 @@ UserAction_t Controller::convertKeyToAction(int key) {
      case Qt::Key_S:
       action = UserAction_t::Start;
       break;
-     case Qt::Key_Escape:
+     case Qt::Key_Q:
       action = UserAction_t::Terminate;
       break;
   }
@@ -48,14 +49,17 @@ UserAction_t Controller::convertKeyToAction(int key) {
 void Controller::processUserInput(int key, bool hold) {
   UserAction_t action = convertKeyToAction(key);
   userInput(action, hold);
-  qDebug() << "Action:" << action;
 }
 
 void Controller::update_game() {
   GameInfo_t game_info = updateCurrentState();
-  qDebug() << "Pause:" << game_info.pause;
-  view_->setGameInfo(game_info);
-  view_->update();
+
+  if (game_info.pause == 5) {
+    QApplication::quit();
+  } else {
+    view_->setGameInfo(game_info);
+    view_->update();
+  }
 }
 
 }  // namespace s21

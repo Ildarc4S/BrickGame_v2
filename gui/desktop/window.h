@@ -20,6 +20,14 @@ enum class ObjectCode {
   OBJECT_CODE_APPLE = 11
 };
 
+enum class PauseMode_t {
+  PAUSE_MODE_PAUSE = 1,
+  PAUSE_MODE_GAME_CONTINUE = 2,
+  PAUSE_MODE_START = 3,
+  PAUSE_MODE_GAME_OVER = 4,
+  PAUSE_MODE_EXIT = 5
+};
+
 class Window : public QMainWindow {
   Q_OBJECT
  public:
@@ -32,9 +40,13 @@ class Window : public QMainWindow {
 
  signals:
   void keyPressed(int key, bool hoold);
+  void continueGame();
+  void restartGame();
+  void exitGame();
 
  private:
   void render(QPainter& painter);
+  void renderField(QPainter& painter);
   QColor convertObbjectCodeToColor(ObjectCode code);
 
  private:

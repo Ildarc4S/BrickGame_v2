@@ -2,29 +2,28 @@
 #include <QKeyEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QVBoxLayout>
 #include <QDebug>
 
 namespace s21 {
-Window::Window(QWidget* parent) : game_info_{0}{ 
-}
 
-void Window::setGameInfo(GameInfo_t& game_info) {
-  game_info_ = game_info;
-}
+GameArea::GameArea(QWidget* parent)
+    : QWidget(parent),
+      game_info_(nullptr) {}
 
-void Window::keyPressEvent(QKeyEvent* event) {
-  emit keyPressed(event->key(), event->isAutoRepeat());
-}
-
-void Window::paintEvent(QPaintEvent* event) {
+void GameArea::paintEvent(QPaintEvent* event) {
   Q_UNUSED(event);
+  if (!game_info_ || !game_info_->field) { 
+    return;
+  }
+
   QPainter painter(this);
 
-  render(painter);
+  drawField(painter);
 }
 
-QColor Window::convertObbjectCodeToColor(ObjectCode code) {
-  QColor color = Qt::blue;
+QColor GameArea::convertObbjectCodeToColor(ObjectCode code) {
+  QColor color = Qt::white;
   switch (code) {
     case ObjectCode::OBJECT_CODE_AIR:
       color = Qt::white;
@@ -39,20 +38,24 @@ QColor Window::convertObbjectCodeToColor(ObjectCode code) {
       color = Qt::red;
       break;
     default:
-      qDebug() << "Unknown ObjectCode:" << static_cast<int>(code);
       break;
   }
   return color;
 }
 
-void Window::renderField(QPainter& painter) {
+void GameArea::drawField(QPainter& painter) {
+  if (!game_info_ || !game_info_->field) {
+  qDebug() << "game_info_ or field is null!";
+  return;
+}
   int field_rows = FIELD_HEIGHT + 2;
   int field_cols = FIELD_WIDTH + 2;
 
   int window_width = width() / 2;
   int window_height = height();
 
-  int cell_size = qMin(window_width / field_cols, window_height / field_rows);
+  int cell_size = qMin(width() / (FIELD_WIDTH + 2), 
+                       height() / (FIELD_HEIGHT + 2));
 
   for (int i = 0; i < field_rows; i++) {
     for (int j = 0; j < field_cols; j++) {
@@ -61,7 +64,7 @@ void Window::renderField(QPainter& painter) {
           i * cell_size,
           cell_size,
           cell_size,
-          convertObbjectCodeToColor(static_cast<ObjectCode>(game_info_.field[i][j])));
+          convertObbjectCodeToColor(static_cast<ObjectCode>(game_info_->field[i][j])));
 
       painter.setPen(Qt::black);
       painter.drawRect(
@@ -73,57 +76,81 @@ void Window::renderField(QPainter& painter) {
   }
 }
 
-void Window::render(QPainter& painter) {
-    if (game_info_.field == nullptr)
-        return;
-
-    if (game_info_.pause == 2) {
-      renderField(painter);
-    }
-  int window_width = width() / 2;
-  int window_height = height();
-
-
-    if (game_info_.pause == 1 || game_info_.pause == 4) {
-        QFont font("Arial", 20, QFont::Bold);
-        painter.setFont(font);
-
-        int button_width = 200;
-        int button_height = 50;
-        int start_x = (window_width - button_width) / 2;
-        int start_y = (window_height - 3 * button_height) / 2;
-
-        if (game_info_.pause == 1) {
-            painter.setBrush(Qt::lightGray);
-            painter.drawRect(start_x, start_y, button_width, button_height);
-            painter.setPen(Qt::black);
-            painter.drawText(start_x, start_y, button_width, button_height, Qt::AlignCenter, "Continue");
-
-            painter.setBrush(Qt::lightGray);
-            painter.drawRect(start_x, start_y + button_height + 10, button_width, button_height);
-            painter.setPen(Qt::black);
-            painter.drawText(start_x, start_y + button_height + 10, button_width, button_height, Qt::AlignCenter, "Restart");
-
-            painter.setBrush(Qt::lightGray);
-            painter.drawRect(start_x, start_y + 2 * (button_height + 10), button_width, button_height);
-            painter.setPen(Qt::black);
-            painter.drawText(start_x, start_y + 2 * (button_height + 10), button_width, button_height, Qt::AlignCenter, "Exit");
-        }
-
-        if (game_info_.pause == 4) {
-            painter.setPen(Qt::red);
-            painter.drawText(start_x, start_y - 50, button_width, button_height, Qt::AlignCenter, "Game Over");
-
-            painter.setBrush(Qt::lightGray);
-            painter.drawRect(start_x, start_y, button_width, button_height);
-            painter.setPen(Qt::black);
-            painter.drawText(start_x, start_y, button_width, button_height, Qt::AlignCenter, "Restart");
-
-            painter.setBrush(Qt::lightGray);
-            painter.drawRect(start_x, start_y + button_height + 10, button_width, button_height);
-            painter.setPen(Qt::black);
-            painter.drawText(start_x, start_y + button_height + 10, button_width, button_height, Qt::AlignCenter, "Exit");
-        }
-    }
+void GameArea::setGameInfo(const GameInfo_t* game_info) {
+  game_info_ = game_info;
 }
+
+MenuWidget::MenuWidget(QWidget* parent)
+  : QWidget(parent) {
+  QVBoxLayout* layout = new QVBoxLayout(this);
+
+  start_continue_btn_ = new QPushButton("Continue");
+  restart_btn_ = new QPushButton("Restart");
+  exit_btn_ = new QPushButton("Exit");
+
+  layout->addStretch();
+  layout->addWidget(start_continue_btn_);
+  layout->addWidget(restart_btn_);
+  layout->addWidget(exit_btn_);
+  layout->addStretch();
+  layout->addSpacing(20);
+
+  connect(start_continue_btn_, &QPushButton::clicked, this, &MenuWidget::pauseClicked);
+  connect(restart_btn_, &QPushButton::clicked, this, &MenuWidget::restartClicked);
+  connect(exit_btn_, &QPushButton::clicked, this, &MenuWidget::exitClicked);
+}
+
+Window::Window(QWidget* parent) : QWidget(parent) {
+  QHBoxLayout* main_layout = new QHBoxLayout(this);
+  main_layout->setContentsMargins(0, 0, 0, 0);
+
+  left_stack_ =  new QStackedWidget;
+  game_area_ = new GameArea;
+  menu_ = new MenuWidget;
+  left_stack_->addWidget(game_area_);
+  left_stack_->addWidget(menu_);
+
+  QWidget* right_panel = new QWidget;
+  QVBoxLayout* right_layout = new QVBoxLayout(right_panel);
+  right_layout->setAlignment(Qt::AlignTop);
+
+  score_label_ = new QLabel("Score: 0");
+  level_label_ = new QLabel("Level: 1");
+  speed_label_ = new QLabel("Speed: 10");
+
+  QFont font("Arial", 18, QFont::Bold);
+  for (auto label : {score_label_, level_label_, speed_label_}) {
+    label->setFont(font);
+    right_layout->addWidget(label);
+  }
+
+  right_layout->addStretch();
+
+  main_layout->addWidget(left_stack_, 2);
+  main_layout->addWidget(right_panel, 1);
+
+  connect(menu_, &MenuWidget::pauseClicked, this, &Window::pauseClicked);
+  connect(menu_, &MenuWidget::restartClicked, this, &Window::restartClicked);
+  connect(menu_, &MenuWidget::exitClicked, this, &Window::exitClicked);
+}
+
+void Window::setGameInfo(const GameInfo_t& game_info) {
+  game_info_ = game_info;
+  game_area_->setGameInfo(&game_info_);
+  left_stack_->setCurrentIndex((game_info.pause == 2) ? 0 : 1);
+
+  updateInfoPanel();
+  update();
+}
+
+void Window::updateInfoPanel() {
+  score_label_->setText(QString("Score: %1").arg(game_info_.score));
+  level_label_->setText(QString("Level: %1").arg(game_info_.level));
+  speed_label_->setText(QString("Speed: %1").arg(game_info_.speed));
+}
+
+void Window::keyPressEvent(QKeyEvent* event) {
+  emit keyPressed(event->key(), event->isAutoRepeat());
+}
+
 }  // namespace s21

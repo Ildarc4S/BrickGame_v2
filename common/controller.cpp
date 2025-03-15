@@ -9,6 +9,10 @@ Controller::Controller(Window* view, QObject* parent)
   : QObject(parent),
     view_(view) {
       connect(view_, &Window::keyPressed, this, &Controller::processUserInput);
+      connect(view_, &Window::pauseClicked, this, &Controller::handleStartContinue);
+      connect(view_, &Window::restartClicked, this, &Controller::handleRestart);
+      connect(view_, &Window::exitClicked, this, &Controller::handleExit);
+
       QTimer *timer = new QTimer(this);
       connect(timer, &QTimer::timeout, this, &Controller::update_game);
       timer->start(10);
@@ -44,6 +48,17 @@ UserAction_t Controller::convertKeyToAction(int key) {
   }
 
   return action;
+}
+
+void Controller::handleExit() {
+  userInput(UserAction_t::Terminate, false);
+}
+
+void Controller::handleStartContinue() {
+  userInput(UserAction_t::Start, false);
+}
+
+void Controller::handleRestart() {
 }
 
 void Controller::processUserInput(int key, bool hold) {

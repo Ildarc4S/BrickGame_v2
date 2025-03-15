@@ -16,6 +16,9 @@ class Controller : public QObject {
 
  private slots:
   void processUserInput(int key, bool hold);
+  void handleRestart();
+  void handleStartContinue();
+  void handleExit();
 
  //private slots:
   //void processUserInput(int key, bool hold);

@@ -1,6 +1,10 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QPushButton>
+#include <QLabel>
+#include <QStackedWidget>
+
 #include "./../../brick_game/spec/game_spec.h"
 
 namespace s21 {
@@ -28,29 +32,69 @@ enum class PauseMode_t {
   PAUSE_MODE_EXIT = 5
 };
 
-class Window : public QMainWindow {
+class GameArea : public QWidget {
+  Q_OBJECT
+
+ public:
+  explicit GameArea(QWidget* parent = nullptr);
+  void setGameInfo(const GameInfo_t* game_info);
+
+ protected:
+  void paintEvent(QPaintEvent* event) override;
+
+ private:
+  QColor convertObbjectCodeToColor(ObjectCode code);
+  void drawField(QPainter& painter);
+
+ private:
+  const GameInfo_t* game_info_ = nullptr;
+};
+
+class MenuWidget: public QWidget {
   Q_OBJECT
  public:
+  explicit MenuWidget(QWidget* parent = nullptr);
+
+ signals:
+  void restartClicked();
+  void pauseClicked();
+  void exitClicked();
+
+ private:
+  QPushButton* start_continue_btn_;
+  QPushButton* restart_btn_;
+  QPushButton* exit_btn_;
+};
+
+class Window : public QWidget {
+  Q_OBJECT
+
+ public:
   explicit Window(QWidget* parent = nullptr);
-  void setGameInfo(GameInfo_t& game_info);
+  void setGameInfo(const GameInfo_t& game_info);
 
  protected:
   void keyPressEvent(QKeyEvent* event) override;
-  void paintEvent(QPaintEvent* event) override;
+  // void resizeEvent(QResizeEvent* event) override;
 
  signals:
   void keyPressed(int key, bool hoold);
-  void continueGame();
-  void restartGame();
-  void exitGame();
+  void pauseClicked();
+  void restartClicked();
+  void exitClicked();
 
  private:
-  void render(QPainter& painter);
-  void renderField(QPainter& painter);
-  QColor convertObbjectCodeToColor(ObjectCode code);
+  void updateInfoPanel();
+  void updateLayout();
 
  private:
-  GameInfo_t game_info_;
+    GameInfo_t game_info_;
+    QStackedWidget* left_stack_;
+    GameArea* game_area_;
+    MenuWidget* menu_;
+    QLabel* score_label_;
+    QLabel* level_label_;
+    QLabel* speed_label_;
 };
 
 }  // namespace s21

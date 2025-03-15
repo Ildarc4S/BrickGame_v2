@@ -5,7 +5,6 @@
 
 #include "./../../spec/game_spec.h"
 
-
 #include "./point.h"
 #include "./apple.h"
 #include "./data_base.h"

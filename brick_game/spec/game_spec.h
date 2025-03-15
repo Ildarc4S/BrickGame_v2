@@ -27,15 +27,15 @@ typedef struct {
     int pause;
 } GameInfo_t;
 
-#ifndef __cplusplus
+#ifdef __cplusplus 
 extern "C" {
 #endif
 
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 
-#ifndef __cplusplus
-extern }
+#ifdef __cplusplus
+}
 #endif
 
 #endif  // GAME_SCPEC_H

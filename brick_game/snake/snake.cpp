@@ -1,8 +1,6 @@
 #include "./include/snake.h"
-#include <iostream>
 #include <vector>
 #include <utility>
-#include <QDebug>
 
 namespace s21 {
 
@@ -105,6 +103,7 @@ void Snake::move(bool apple_eat) {
 }
 
 void SnakeGame::userInput(UserAction_t action, bool hold) {
+  timer_.update();
   switch (state_) {
     case State::START:
       switch (action) {
@@ -305,17 +304,19 @@ GameInfo_t SnakeGame::getGameInfo() {
       game_info_.field[elm.getY()][elm.getX()] = static_cast<int>(FigureCode::SNAKE);
     }
   }
- 
+
   return game_info_;
 }
 
 }  // namespace s21
 
-void userInput(UserAction_t action, bool hold) {
-  s21::SnakeGameSingleton::getSnakeGame().userInput(action, hold);
-}
+extern "C" {
+  void userInput(UserAction_t action, bool hold) {
+    s21::SnakeGameSingleton::getSnakeGame().userInput(action, hold);
+  }
 
-GameInfo_t updateCurrentState() {
-  return s21::SnakeGameSingleton::getSnakeGame().getGameInfo();
+  GameInfo_t updateCurrentState() {
+    return s21::SnakeGameSingleton::getSnakeGame().getGameInfo();
+  }
 }
 

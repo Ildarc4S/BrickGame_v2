@@ -1,6 +1,7 @@
 #include "./include/snake.h"
 #include <vector>
 #include <utility>
+#include <QDebug>
 
 namespace s21 {
 
@@ -75,11 +76,14 @@ SnakeGame::SnakeGame()
   : state_(State::START),
     action_(UserAction_t::Start),
     snake_(),
-    score_(0),
     timer_(300),
-    db_("./brick_game/snake/db/score.txt"),
-    pause_(false){
+    db_("snake_score.txt") {
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
+    game_info_.next = fillField(4, 4);
+    game_info_.score = 0;
+    game_info_.high_score = 0;
+    game_info_.level = 1;
+    game_info_.speed = 10;
     game_info_.pause = static_cast<int>(PauseMode::START);
   apple_.genRandPosition(snake_.getBody());
 }
@@ -103,7 +107,6 @@ void Snake::move(bool apple_eat) {
 }
 
 void SnakeGame::userInput(UserAction_t action, bool hold) {
-  timer_.update();
   switch (state_) {
     case State::START:
       switch (action) {
@@ -177,17 +180,23 @@ void SnakeGame::start() {
   if (state_ == State::START) {
     spawn();
     game_info_.high_score = db_.read();
+    qDebug() << game_info_.high_score;
   } else if (state_ == State::PAUSE) {
     state_ = State::MOVE;
   } else if (state_ == State::GAME_OVER) {
     game_info_.high_score = db_.read();
-    if (game_info_.score > game_info_.high_score) {
+    qDebug() << db_.read();
+    qDebug() << game_info_.score;
+    if (game_info_.score >= game_info_.high_score) {
       game_info_.high_score = game_info_.score;
       db_.write(game_info_.high_score);
+      qDebug() << "Write";
     }
     game_info_.level = 1;
     game_info_.score = 0;
     game_info_.speed = 10;
+
+    qDebug() << game_info_.high_score;
     spawn();
   }
   game_info_.pause = static_cast<int>(PauseMode::GAME_CONTINUE);
@@ -269,10 +278,10 @@ void SnakeGame::moveHandle(Direction direction, bool hold) {
   } else {
     bool is_colide_apple = isAppleCollide(new_head);
     snake_.move(is_colide_apple);
+    timer_.update();
 
     if (is_colide_apple) {
       eat();
-      // state_ = State::EAT;
     }
   }
 }

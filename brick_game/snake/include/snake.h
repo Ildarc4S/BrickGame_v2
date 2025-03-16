@@ -81,9 +81,6 @@ class SnakeGame {
   Apple apple_;
   DataBase db_;
 
-  int score_;
-  int pause_;
-
   void start();
   void spawn();
   void pause();

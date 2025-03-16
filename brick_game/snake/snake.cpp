@@ -79,12 +79,13 @@ SnakeGame::SnakeGame()
     timer_(300),
     db_("snake_score.txt") {
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
-    game_info_.next = fillField(4, 4);
+    game_info_.next = nullptr;
     game_info_.score = 0;
     game_info_.high_score = 0;
     game_info_.level = 1;
     game_info_.speed = 10;
     game_info_.pause = static_cast<int>(PauseMode::START);
+    max_level_score_ = 5;
   apple_.genRandPosition(snake_.getBody());
 }
 
@@ -185,12 +186,9 @@ void SnakeGame::start() {
     state_ = State::MOVE;
   } else if (state_ == State::GAME_OVER) {
     game_info_.high_score = db_.read();
-    qDebug() << db_.read();
-    qDebug() << game_info_.score;
     if (game_info_.score >= game_info_.high_score) {
       game_info_.high_score = game_info_.score;
       db_.write(game_info_.high_score);
-      qDebug() << "Write";
     }
     game_info_.level = 1;
     game_info_.score = 0;
@@ -221,12 +219,33 @@ void SnakeGame::exit() {
   db_.write(game_info_.high_score);
   game_info_.pause = static_cast<int>(PauseMode::EXIT);
   state_ = State::EXIT;
+
+  game_info_.high_score = db_.read();
+  if (game_info_.score >= game_info_.high_score) {
+    game_info_.high_score = game_info_.score;
+    db_.write(game_info_.high_score);
+  }
 }
 
 void SnakeGame::eat() {
-  game_info_.score += 10;
+  game_info_.score += 1;
   apple_.genRandPosition(snake_.getBody());
   state_ = State::MOVE;
+
+  int new_level = game_info_.score / max_level_score_ + 1;
+  if (new_level > game_info_.level) {
+    timer_.setInterval(timer_.getInterval()-50);
+    game_info_.level = new_level;
+  }
+
+  if (game_info_.level > 10) {
+    game_info_.level = 10;
+  }
+
+  if (game_info_.score >= 200) {
+    state_ = State::GAME_OVER;
+    game_info_.pause = static_cast<int>(PauseMode::WIN);
+  }
 }
 
 bool SnakeGame::isAppleCollide(const Point& head) {

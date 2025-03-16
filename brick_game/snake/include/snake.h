@@ -34,7 +34,8 @@ enum class PauseMode {
   GAME_CONTINUE = 2,
   START = 3,
   GAME_OVER = 4,
-  EXIT = 5
+  EXIT = 5,
+  WIN = 6
 };
 
 enum class FigureCode {
@@ -80,6 +81,7 @@ class SnakeGame {
   Snake snake_;
   Apple apple_;
   DataBase db_;
+  int max_level_score_;
 
   void start();
   void spawn();

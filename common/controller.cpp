@@ -52,13 +52,17 @@ UserAction_t Controller::convertKeyToAction(int key) {
 
 void Controller::handleExit() {
   userInput(UserAction_t::Terminate, false);
+  qDebug() << "Exit button clicked!";
 }
 
 void Controller::handleStartContinue() {
   userInput(UserAction_t::Start, false);
+  qDebug() << "Start button clicked!";
 }
 
 void Controller::handleRestart() {
+  qDebug() << "Restart button clicked!";
+  userInput(UserAction_t::Start, false);
 }
 
 void Controller::processUserInput(int key, bool hold) {

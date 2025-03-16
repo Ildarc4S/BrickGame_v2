@@ -107,32 +107,29 @@ MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
 }
 
 void MenuWidget::updateButtons(int pause_mode) {
-  if (pause_mode == 1) {
+  PauseMode named_pause_mode = static_cast<PauseMode>(pause_mode);
+
+  if (named_pause_mode == PauseMode::kPause) {
     start_continue_btn_->setText("Continue");
-    start_continue_btn_->setVisible(true);
-    exit_btn_->setVisible(true);
-  } else if (pause_mode == 3) {
+  } else if (named_pause_mode == PauseMode::kStart ||
+             named_pause_mode == PauseMode::kWin) {
     start_continue_btn_->setText("Start");
-    start_continue_btn_->setVisible(true);
     exit_btn_->setVisible(true);
-  } else if (pause_mode == 4) {
+  } else if (named_pause_mode == PauseMode::kGameOver) {
     start_continue_btn_->setText("Restart");
-    start_continue_btn_->setVisible(true);
-    exit_btn_->setVisible(true);
   }
 
-  if (pause_mode == 1) {
+  if (named_pause_mode == PauseMode::kPause) {
     status_label_->setText("Pause");
-  } else if (pause_mode == 3) {
+  } else if (named_pause_mode == PauseMode::kStart) {
     status_label_->setText("Start");
-  } else if (pause_mode == 4) {
+  } else if (named_pause_mode == PauseMode::kGameOver) {
     status_label_->setText("Game Over");
+  } else if (named_pause_mode == PauseMode::kWin) {
+    status_label_->setText("You win!");
   } else {
     status_label_->clear();
   }
-
-  status_label_->setVisible(pause_mode == 1 || pause_mode == 3 ||
-                            pause_mode == 4);
 }
 
 Window::Window(QWidget *parent) : QWidget(parent) {

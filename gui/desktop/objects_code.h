@@ -22,7 +22,8 @@ enum class PauseMode {
   kGameContinue = 2,
   kStart = 3,
   kGameOver = 4,
-  kExit = 5
+  kExit = 5,
+  kWin = 6
 };
 
 } // namespace s21

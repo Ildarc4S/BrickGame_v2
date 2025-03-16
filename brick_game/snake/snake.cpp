@@ -87,6 +87,8 @@ SnakeGame::SnakeGame()
     game_info_.speed = 10;
     game_info_.pause = static_cast<int>(PauseMode::START);
     max_level_score_ = 5;
+    max_level_ = 10;
+    max_score_ = 200;
   apple_.genRandPosition(snake_.getBody());
 }
 
@@ -200,8 +202,9 @@ void SnakeGame::start() {
     game_info_.level = 1;
     game_info_.score = 0;
     game_info_.speed = 10;
+    timer_.setInterval(300, /*save=*/ false);
+    timer_.updateLastinterval();
 
-    qDebug() << game_info_.high_score;
     spawn();
   }
   game_info_.pause = static_cast<int>(PauseMode::GAME_CONTINUE);
@@ -242,14 +245,15 @@ void SnakeGame::eat() {
   int new_level = game_info_.score / max_level_score_ + 1;
   if (new_level > game_info_.level) {
     timer_.setInterval(timer_.getLastInterval()-50, /*save =*/ true);
+    timer_.updateLastinterval();
     game_info_.level = new_level;
   }
 
-  if (game_info_.level > 10) {
-    game_info_.level = 10;
+  if (game_info_.level > max_level_) {
+    game_info_.level = max_level_;
   }
 
-  if (game_info_.score >= 200) {
+  if (game_info_.score >= max_score_) {
     state_ = State::GAME_OVER;
     game_info_.pause = static_cast<int>(PauseMode::WIN);
   }

@@ -1,17 +1,33 @@
 #include "./include/timer.h"
+#include <QDebug>
 
 namespace s21 {
 
-Timer::Timer(int interval) 
+Timer::Timer(int interval)
   : interval_(interval),
+    last_interval_(interval_),
     last_time_(std::chrono::steady_clock::now()) {}
 
 int Timer::getInterval() {
   return interval_;
 }
 
-void Timer::setInterval(int interval) {
+int Timer::getLastInterval() {
+  return last_interval_;
+}
+
+void Timer::setInterval(int interval, bool save) {
+  if (save) {
+    updateLastinterval();
+  }
   interval_ = interval;
+
+  qDebug() << interval_;
+  qDebug() << last_interval_;
+}
+
+void Timer::updateLastinterval() {
+  last_interval_ = interval_;
 }
 
 bool Timer::isExpired() {

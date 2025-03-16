@@ -82,6 +82,7 @@ class SnakeGame {
   Apple apple_;
   DataBase db_;
   int max_level_score_;
+  bool boost_time_;
 
   void start();
   void spawn();

@@ -77,6 +77,7 @@ SnakeGame::SnakeGame()
     action_(UserAction_t::Start),
     snake_(),
     timer_(300),
+    boost_time_(false),
     db_("snake_score.txt") {
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     game_info_.next = nullptr;
@@ -142,6 +143,13 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         case Down:
           moveHandle(Direction::DOWN, hold);
           break;
+        case Action:
+          boost_time_ = !boost_time_;
+          if (boost_time_) {
+            timer_.setInterval(timer_.getInterval() - 80, /*save =*/ true);
+          } else {
+            timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
+          }
         default:
           break;
       }
@@ -166,7 +174,6 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         case Terminate:
           exit();
           break;
-
         default:
           break;
       }
@@ -234,7 +241,7 @@ void SnakeGame::eat() {
 
   int new_level = game_info_.score / max_level_score_ + 1;
   if (new_level > game_info_.level) {
-    timer_.setInterval(timer_.getInterval()-50);
+    timer_.setInterval(timer_.getLastInterval()-50, /*save =*/ true);
     game_info_.level = new_level;
   }
 

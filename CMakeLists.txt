@@ -7,11 +7,13 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 file(GLOB SNAKE_SOURCES "brick_game/snake/*.cpp")
+file(GLOB GUI_SOURCES "gui/desktop/*.cpp")
+file(GLOB CONTROLLER_SOURCES "common/*.cpp")
 
 add_executable(myapp
     main.cpp
-    common/controller.cpp
-    gui/desktop/window.cpp
+    ${CONTROLLER_SOURCES}
+    ${GUI_SOURCES}
     ${SNAKE_SOURCES}
 )
 

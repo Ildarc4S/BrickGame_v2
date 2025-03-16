@@ -1,21 +1,19 @@
 #include "./window.h"
+#include <QDebug>
 #include <QKeyEvent>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QVBoxLayout>
-#include <QDebug>
 #include <array>
 #include <utility>
 
 namespace s21 {
 
-GameArea::GameArea(QWidget* parent)
-    : QWidget(parent),
-      game_info_(nullptr) {}
+GameArea::GameArea(QWidget *parent) : QWidget(parent), game_info_(nullptr) {}
 
-void GameArea::paintEvent(QPaintEvent* event) {
+void GameArea::paintEvent(QPaintEvent *event) {
   Q_UNUSED(event);
-  if (!game_info_ || !game_info_->field) { 
+  if (!game_info_ || !game_info_->field) {
     return;
   }
 
@@ -26,25 +24,25 @@ void GameArea::paintEvent(QPaintEvent* event) {
 QColor GameArea::convertObjectCodeToColor(ObjectCode code) {
   QColor color = Qt::white;
   switch (code) {
-    case ObjectCode::OBJECT_CODE_AIR:
-      color = QColor(80, 80, 80);
-      break;
-    case ObjectCode::OBJECT_CODE_WALL:
-      color = Qt::black;
-      break;
-    case ObjectCode::OBJECT_CODE_SNAKE:
-      color = Qt::green;
-      break;
-    case ObjectCode::OBJECT_CODE_APPLE:
-      color = Qt::red;
-      break;
-    default:
-      break;
+  case ObjectCode::kAir:
+    color = QColor(80, 80, 80);  // gray
+    break;
+  case ObjectCode::kWall:
+    color = Qt::black;
+    break;
+  case ObjectCode::kSnake:
+    color = Qt::green;
+    break;
+  case ObjectCode::kApple:
+    color = Qt::red;
+    break;
+  default:
+    break;
   }
   return color;
 }
 
-void GameArea::drawField(QPainter& painter) {
+void GameArea::drawField(QPainter &painter) {
   if (!game_info_ || !game_info_->field) {
     return;
   }
@@ -52,7 +50,8 @@ void GameArea::drawField(QPainter& painter) {
   int field_rows = FIELD_HEIGHT + 2;
   int field_cols = FIELD_WIDTH + 2;
 
-  int cell_size = qMin(width() / (FIELD_WIDTH + 2), height() / (FIELD_HEIGHT + 2));
+  int cell_size =
+      qMin(width() / (FIELD_WIDTH + 2), height() / (FIELD_HEIGHT + 2));
 
   QColor wallColor = Qt::white;
 
@@ -64,32 +63,31 @@ void GameArea::drawField(QPainter& painter) {
       painter.setPen(wallColor);
       painter.drawRect(j * cell_size, i * cell_size, cell_size, cell_size);
 
-      if (code != ObjectCode::OBJECT_CODE_WALL) {
-        painter.fillRect(j * cell_size, i * cell_size, cell_size, cell_size, cellColor);
+      if (code != ObjectCode::kWall) {
+        painter.fillRect(j * cell_size, i * cell_size, cell_size, cell_size,
+                         cellColor);
       }
     }
   }
 }
 
-void GameArea::setGameInfo(const GameInfo_t* game_info) {
+void GameArea::setGameInfo(const GameInfo_t *game_info) {
   game_info_ = game_info;
 }
 
-MenuWidget::MenuWidget(QWidget* parent)
-  : QWidget(parent) {
-  QVBoxLayout* layout = new QVBoxLayout(this);
+MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
+  QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QWidget* status_container = new QWidget(this);
-  QVBoxLayout* status_layout = new QVBoxLayout(status_container);
+  QWidget *status_container = new QWidget(this);
+  QVBoxLayout *status_layout = new QVBoxLayout(status_container);
 
   status_label_ = new QLabel(this);
   status_label_->setAlignment(Qt::AlignCenter);
-  status_label_->setStyleSheet(
-      "QLabel {"
-      "   color: #FFFFFF;"
-      "   font: bold 32px;"
-      "   margin-bottom: 30px;"
-      "}");
+  status_label_->setStyleSheet("QLabel {"
+                               "   color: #FFFFFF;"
+                               "   font: bold 32px;"
+                               "   margin-bottom: 30px;"
+                               "}");
   status_layout->addWidget(status_label_);
 
   layout->addWidget(status_container);
@@ -103,7 +101,8 @@ MenuWidget::MenuWidget(QWidget* parent)
   layout->addStretch();
   layout->addSpacing(20);
 
-  connect(start_continue_btn_, &QPushButton::clicked, this, &MenuWidget::pauseClicked);
+  connect(start_continue_btn_, &QPushButton::clicked, this,
+          &MenuWidget::pauseClicked);
   connect(exit_btn_, &QPushButton::clicked, this, &MenuWidget::exitClicked);
 }
 
@@ -132,44 +131,43 @@ void MenuWidget::updateButtons(int pause_mode) {
     status_label_->clear();
   }
 
-   status_label_->setVisible(pause_mode == 1 || pause_mode == 3 || pause_mode == 4);
+  status_label_->setVisible(pause_mode == 1 || pause_mode == 3 ||
+                            pause_mode == 4);
 }
 
+Window::Window(QWidget *parent) : QWidget(parent) {
+  setStyleSheet("QWidget {"
+                "    background-color: #2E2E2E;" // Темный фон для всего окна
+                "    color: white;"              // Белый текст
+                "}"
+                "QPushButton {"
+                "    background-color: #444444;" // Темный фон для кнопок
+                "    border: 1px solid #666666;" // Светлая граница
+                "    color: white;"              // Белый текст на кнопках
+                "    padding: 15px;"             // Увеличиваем высоту кнопок
+                "    border-radius: 5px;"        // Округленные углы
+                "    font-size: 18px;"           // Увеличиваем размер шрифта
+                "}"
+                "QPushButton:hover {"
+                "    background-color: #555555;" // Фон кнопки при наведении
+                "}"
+                "QPushButton:pressed {"
+                "    background-color: #333333;" // Фон кнопки при нажатии
+                "}"
+                "QLabel {"
+                "    color: white;" // Белый текст для меток
+                "}");
 
-Window::Window(QWidget* parent) : QWidget(parent) {
-  setStyleSheet(
-  "QWidget {"
-  "    background-color: #2E2E2E;"   // Темный фон для всего окна
-  "    color: white;"                 // Белый текст
-  "}"
-  "QPushButton {"
-  "    background-color: #444444;"   // Темный фон для кнопок
-  "    border: 1px solid #666666;"    // Светлая граница
-  "    color: white;"                 // Белый текст на кнопках
-  "    padding: 15px;"                // Увеличиваем высоту кнопок
-  "    border-radius: 5px;"           // Округленные углы
-  "    font-size: 18px;"              // Увеличиваем размер шрифта
-  "}"
-  "QPushButton:hover {"
-  "    background-color: #555555;"   // Фон кнопки при наведении
-  "}"
-  "QPushButton:pressed {"
-  "    background-color: #333333;"   // Фон кнопки при нажатии
-  "}"
-  "QLabel {"
-  "    color: white;"                 // Белый текст для меток
-  "}");
-
-  QHBoxLayout* main_layout = new QHBoxLayout(this);
+  QHBoxLayout *main_layout = new QHBoxLayout(this);
   main_layout->setContentsMargins(0, 0, 0, 0);
 
-  left_stack_ =  new QStackedWidget;
+  left_stack_ = new QStackedWidget;
   game_area_ = new GameArea;
   menu_ = new MenuWidget;
   left_stack_->addWidget(game_area_);
   left_stack_->addWidget(menu_);
 
-  QWidget* right_panel = new QWidget;
+  QWidget *right_panel = new QWidget;
   right_layout = new QVBoxLayout(right_panel);
 
   right_layout->setAlignment(Qt::AlignTop);
@@ -180,10 +178,9 @@ Window::Window(QWidget* parent) : QWidget(parent) {
       std::make_pair("Score", QString::number(game_info_.score)),
       std::make_pair("High Score", QString::number(game_info_.score)),
       std::make_pair("Level", QString::number(game_info_.level)),
-      std::make_pair("Speed", QString::number(game_info_.speed))
-  };
+      std::make_pair("Speed", QString::number(game_info_.speed))};
 
-  for (const auto& entry : info_data) {
+  for (const auto &entry : info_data) {
     right_layout->addWidget(createInfoBlock(entry.first, entry.second));
   }
 
@@ -197,94 +194,89 @@ Window::Window(QWidget* parent) : QWidget(parent) {
   connect(menu_, &MenuWidget::exitClicked, this, &Window::exitClicked);
 }
 
-QFrame* Window::createInfoBlock(const QString& title, const QString& value) {
-  QFrame* frame = new QFrame;
-  frame->setStyleSheet(
-      "QFrame {"
-      "   background: #252525;"
-      "   border-radius: 12px;"
-      "   padding: 1px;"
-      "}");
+QFrame *Window::createInfoBlock(const QString &title, const QString &value) {
+  QFrame *frame = new QFrame;
+  frame->setStyleSheet("QFrame {"
+                       "   background: #252525;"
+                       "   border-radius: 12px;"
+                       "   padding: 1px;"
+                       "}");
 
   frame->setObjectName(title);
 
-  QLabel* title_label = new QLabel(title, frame);
+  QLabel *title_label = new QLabel(title, frame);
   title_label->setStyleSheet("color: #888888; font: bold 16px;");
 
-  QLabel* value_label = new QLabel(value, frame);
+  QLabel *value_label = new QLabel(value, frame);
   value_label->setStyleSheet("color: #FFFFFF; font: bold 28px;");
   value_label->setObjectName(title + "Value");
 
-  QVBoxLayout* layout = new QVBoxLayout(frame);
+  QVBoxLayout *layout = new QVBoxLayout(frame);
   layout->addWidget(title_label);
   layout->addWidget(value_label);
 
   return frame;
 }
 
-QFrame* Window::createHelpBlock() {
-  QFrame* frame = new QFrame;
-  frame->setStyleSheet(
-      "QFrame {"
-      "   background: #252525;"
-      "   border-radius: 12px;"
-      "   padding: 2px;"
-      "}");
+QFrame *Window::createHelpBlock() {
+  QFrame *frame = new QFrame;
+  frame->setStyleSheet("QFrame {"
+                       "   background: #252525;"
+                       "   border-radius: 12px;"
+                       "   padding: 2px;"
+                       "}");
 
-  QLabel* help_label = nullptr;
+  QLabel *help_label = nullptr;
 
   if (game_info_.next == nullptr) {
-    help_label = new QLabel(
-          "CONTROLS:\n"
-          "← → - Move left/right\n"
-          "↑ ↓ - Move up/down\n"
-          "S - Start/Continue\n"
-          "P - Pause\n"
-          "Q - Quit");
+    help_label = new QLabel("CONTROLS:\n"
+                            "← → - Move left/right\n"
+                            "↑ ↓ - Move up/down\n"
+                            "S - Start/Continue\n"
+                            "P - Pause\n"
+                            "Q - Quit");
   } else {
-    help_label = new QLabel(
-          "CONTROLS:\n"
-          "← → - Move left/right\n"
-          "↓ - Move down\n"
-          "Double ↓ - Move fast down\n"
-          "S - Start/Continue\n"
-          "P - Pause\n"
-          "Q - Quit");
+    help_label = new QLabel("CONTROLS:\n"
+                            "← → - Move left/right\n"
+                            "↓ - Move down\n"
+                            "Double ↓ - Move fast down\n"
+                            "S - Start/Continue\n"
+                            "P - Pause\n"
+                            "Q - Quit");
   }
 
   help_label->setObjectName("helpFrame");
   help_label->setStyleSheet("color: #CCCCCC; font: 16px; line-height: 1.5;");
-  QVBoxLayout* layout = new QVBoxLayout(frame);
+  QVBoxLayout *layout = new QVBoxLayout(frame);
   layout->addWidget(help_label);
 
   return frame;
 }
 
-QFrame* Window::createNextFigureBlock() {
-    QFrame* frame = new QFrame;
-    frame->setStyleSheet(
-        "QFrame {"
-        "   background: #252525;"
-        "   border-radius: 12px;"
-        "   padding: 5px;"
-        "}");
+QFrame *Window::createNextFigureBlock() {
+  QFrame *frame = new QFrame;
+  frame->setStyleSheet("QFrame {"
+                       "   background: #252525;"
+                       "   border-radius: 12px;"
+                       "   padding: 5px;"
+                       "}");
 
-    QLabel* title_label = new QLabel("Next Figure", frame);
-    title_label->setStyleSheet("color: #888888; font: bold 16px;");
+  QLabel *title_label = new QLabel("Next Figure", frame);
+  title_label->setStyleSheet("color: #888888; font: bold 16px;");
 
-    next_figure_widget_ = new NextFigureWidget(frame);
-    next_figure_widget_->setStyleSheet("background: #222222;");
-    next_figure_widget_->setFixedSize(120, 120);
-    next_figure_widget_->setObjectName("nextFigureWidget");
+  next_figure_widget_ = new NextFigureWidget(frame);
+  next_figure_widget_->setStyleSheet("background: #222222;");
+  next_figure_widget_->setFixedSize(120, 120);
+  next_figure_widget_->setObjectName("nextFigureWidget");
 
-    QVBoxLayout* layout = new QVBoxLayout(frame);
-    layout->addWidget(title_label);
-    layout->addWidget(next_figure_widget_);
+  QVBoxLayout *layout = new QVBoxLayout(frame);
+  layout->addWidget(title_label);
+  layout->addWidget(next_figure_widget_);
 
-    return frame;
+  return frame;
 }
 
-void Window::setGameInfo(const GameInfo_t& game_info) {
+void Window::setGameInfo(const GameInfo_t &game_info) {
   game_info_ = game_info;
   game_area_->setGameInfo(&game_info_);
   left_stack_->setCurrentIndex((game_info.pause == 2) ? 0 : 1);
@@ -292,30 +284,29 @@ void Window::setGameInfo(const GameInfo_t& game_info) {
   menu_->updateButtons(game_info_.pause);
 
   updateInfoPanel();
-  QFrame* help_label = findChild<QFrame*>("helpFrame");
+  QFrame *help_label = findChild<QFrame *>("helpFrame");
   if (!help_label) {
     help_label = createHelpBlock();
     right_layout->addWidget(help_label);
   }
 
-if (game_info_.next != nullptr) {
+  if (game_info_.next != nullptr) {
     if (!next_figure_widget_) {
-      next_figure_widget_ = findChild<NextFigureWidget*>("nextFigureWidget");
+      next_figure_widget_ = findChild<NextFigureWidget *>("nextFigureWidget");
       if (!next_figure_widget_) {
-        QFrame* next_figure_block = createNextFigureBlock();
-        next_figure_widget_ = next_figure_block->findChild<NextFigureWidget*>("nextFigureWidget");
+        QFrame *next_figure_block = createNextFigureBlock();
+        next_figure_widget_ = next_figure_block->findChild<NextFigureWidget *>(
+            "nextFigureWidget");
         if (next_figure_widget_) {
           right_layout->addWidget(next_figure_block);
-        } 
+        }
       }
     }
 
     if (next_figure_widget_) {
       next_figure_widget_->setGameInfo(&game_info_);
     }
-
   }
-
 
   update();
 }
@@ -327,20 +318,20 @@ void Window::updateInfoPanel() {
   updateSingleInfoPanel("Speed", QString::number(game_info_.speed));
 }
 
-void Window::updateSingleInfoPanel(const QString& title, const QString& value) {
+void Window::updateSingleInfoPanel(const QString &title, const QString &value) {
   QString labelName = title + "Value";
 
-  QFrame* frame = findChild<QFrame*>(title);
+  QFrame *frame = findChild<QFrame *>(title);
   if (frame) {
-    QLabel* label = frame->findChild<QLabel*>(labelName);
+    QLabel *label = frame->findChild<QLabel *>(labelName);
     if (label) {
       label->setText(value);
     }
   }
 }
 
-void Window::keyPressEvent(QKeyEvent* event) {
+void Window::keyPressEvent(QKeyEvent *event) {
   emit keyPressed(event->key(), event->isAutoRepeat());
 }
 
-}  // namespace s21
+} // namespace s21

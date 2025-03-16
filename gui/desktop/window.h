@@ -54,6 +54,7 @@ class MenuWidget: public QWidget {
   Q_OBJECT
  public:
   explicit MenuWidget(QWidget* parent = nullptr);
+  void updateButtons(int pause_mode);
 
  signals:
   void restartClicked();
@@ -64,6 +65,7 @@ class MenuWidget: public QWidget {
   QPushButton* start_continue_btn_;
   QPushButton* restart_btn_;
   QPushButton* exit_btn_;
+  QLabel* status_label_;
 };
 
 class Window : public QWidget {

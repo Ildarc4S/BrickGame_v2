@@ -84,9 +84,9 @@ MenuWidget::MenuWidget(QWidget* parent)
   : QWidget(parent) {
   QVBoxLayout* layout = new QVBoxLayout(this);
 
-  start_continue_btn_ = new QPushButton("Continue");
-  restart_btn_ = new QPushButton("Restart");
-  exit_btn_ = new QPushButton("Exit");
+  start_continue_btn_ = new QPushButton("Start", this);
+  restart_btn_ = new QPushButton("Restart", this);
+  exit_btn_ = new QPushButton("Exit", this);
 
   layout->addStretch();
   layout->addWidget(start_continue_btn_);
@@ -98,6 +98,34 @@ MenuWidget::MenuWidget(QWidget* parent)
   connect(start_continue_btn_, &QPushButton::clicked, this, &MenuWidget::pauseClicked);
   connect(restart_btn_, &QPushButton::clicked, this, &MenuWidget::restartClicked);
   connect(exit_btn_, &QPushButton::clicked, this, &MenuWidget::exitClicked);
+
+  // В конструкторе MenuWidget
+status_label_ = new QLabel(this);
+status_label_->setAlignment(Qt::AlignCenter);
+status_label_->setStyleSheet("font: bold 36px; color: blue;");
+layout->addWidget(status_label_);
+
+}
+
+void MenuWidget::updateButtons(int pause_mode) {
+  const bool show_restart = (pause_mode == 1 || pause_mode == 4);
+
+  start_continue_btn_->setText((pause_mode == 4 || pause_mode == 8) ? "Start" : "Continue");
+  start_continue_btn_->setVisible(true);
+  restart_btn_->setVisible(show_restart);
+  exit_btn_->setVisible(true);
+
+  if (pause_mode == 1) {
+    status_label_->setText("Pause");
+  } else if (pause_mode == 3) {
+    status_label_->setText("Start");
+  } else if (pause_mode == 4) {
+    status_label_->setText("Game Over");
+  } else {
+    status_label_->clear();
+  }
+
+  status_label_->setVisible(pause_mode == 1 || pause_mode == 3 || pause_mode == 4);
 }
 
 Window::Window(QWidget* parent) : QWidget(parent) {
@@ -138,6 +166,8 @@ void Window::setGameInfo(const GameInfo_t& game_info) {
   game_info_ = game_info;
   game_area_->setGameInfo(&game_info_);
   left_stack_->setCurrentIndex((game_info.pause == 2) ? 0 : 1);
+
+  menu_->updateButtons(game_info_.pause);
 
   updateInfoPanel();
   update();

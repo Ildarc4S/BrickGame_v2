@@ -92,7 +92,7 @@ class SnakeGame {
   void pause();
   void exit();
   void eat();
-
+  void speedBoost();
   void moveHandle(Direction direction, bool hold);
 
   bool isCollision(const Point& head);
@@ -106,19 +106,6 @@ class SnakeGame {
   SnakeGame();
   void userInput(UserAction_t action, bool hold);
   GameInfo_t getGameInfo();
-
-  void update(Direction direction) {
-      snake_.setDirection(direction);
-      snake_.move();
-  }
-
-  const Snake& getSnake() {
-    return snake_;
-  }
-
-  const Apple& getApple() {
-    return apple_;
-  }
 };
 
 class SnakeGameSingleton {

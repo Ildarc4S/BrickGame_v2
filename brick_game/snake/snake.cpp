@@ -79,6 +79,7 @@ SnakeGame::SnakeGame()
     timer_(300),
     boost_time_(false),
     db_("snake_score.txt") {
+
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     game_info_.next = nullptr;
     game_info_.score = 0;
@@ -86,6 +87,7 @@ SnakeGame::SnakeGame()
     game_info_.level = 1;
     game_info_.speed = 10;
     game_info_.pause = static_cast<int>(PauseMode::START);
+
     max_level_score_ = 5;
     max_level_ = 10;
     max_score_ = 200;
@@ -146,12 +148,7 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
           moveHandle(Direction::DOWN, hold);
           break;
         case Action:
-          boost_time_ = !boost_time_;
-          if (boost_time_) {
-            timer_.setInterval(timer_.getInterval() - 80, /*save =*/ true);
-          } else {
-            timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
-          }
+          
         default:
           break;
       }
@@ -202,8 +199,7 @@ void SnakeGame::start() {
     game_info_.level = 1;
     game_info_.score = 0;
     game_info_.speed = 10;
-    timer_.setInterval(300, /*save=*/ false);
-    timer_.updateLastinterval();
+    timer_.resetInterval();
 
     spawn();
   }
@@ -247,6 +243,7 @@ void SnakeGame::eat() {
     timer_.setInterval(timer_.getLastInterval()-50, /*save =*/ true);
     timer_.updateLastinterval();
     game_info_.level = new_level;
+    game_info_.speed += 10;
   }
 
   if (game_info_.level > max_level_) {
@@ -256,6 +253,15 @@ void SnakeGame::eat() {
   if (game_info_.score >= max_score_) {
     state_ = State::GAME_OVER;
     game_info_.pause = static_cast<int>(PauseMode::WIN);
+  }
+}
+
+void SnakeGame::speedBoost() {
+  boost_time_ = !boost_time_;
+  if (boost_time_) {
+    timer_.setInterval(timer_.getInterval() - 80, /*save =*/ true);
+  } else {
+    timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
   }
 }
 

@@ -6,6 +6,7 @@ namespace s21 {
 Timer::Timer(int interval)
   : interval_(interval),
     last_interval_(interval_),
+    default_interval_(interval_),
     last_time_(std::chrono::steady_clock::now()) {}
 
 int Timer::getInterval() {
@@ -14,6 +15,10 @@ int Timer::getInterval() {
 
 int Timer::getLastInterval() {
   return last_interval_;
+}
+
+int Timer::getDefaultInterval() {
+  return default_interval_;
 }
 
 void Timer::setInterval(int interval, bool save) {
@@ -28,6 +33,11 @@ void Timer::setInterval(int interval, bool save) {
 
 void Timer::updateLastinterval() {
   last_interval_ = interval_;
+}
+
+void Timer::resetInterval() {
+  last_interval_ = default_interval_;
+  interval_ = default_interval_;
 }
 
 bool Timer::isExpired() {

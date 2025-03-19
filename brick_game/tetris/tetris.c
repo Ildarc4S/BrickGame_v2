@@ -49,7 +49,6 @@ void printT(Tetramino_t* t) {
 }
 
 void _spawn(Tetris_t *self) {
-  printf("Spawn");
   if (!self) {
     return;
   }

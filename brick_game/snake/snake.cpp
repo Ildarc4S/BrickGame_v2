@@ -78,7 +78,7 @@ SnakeGame::SnakeGame()
     snake_(),
     timer_(300),
     boost_time_(false),
-    db_("snake_score.txt") {
+    db_("snake_db.txt") {
 
     game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     game_info_.next = nullptr;
@@ -90,7 +90,10 @@ SnakeGame::SnakeGame()
 
     max_level_score_ = 5;
     max_level_ = 10;
+    add_score_ = 1;
     max_score_ = 200;
+    interval_diff_ = 50;
+    interval_boost_diff_ = 80;
   apple_.genRandPosition(snake_.getBody());
 }
 
@@ -148,7 +151,12 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
           moveHandle(Direction::DOWN, hold);
           break;
         case Action:
-          
+          boost_time_ = !boost_time_;
+          if (boost_time_) {
+            timer_.setInterval(timer_.getInterval() - interval_boost_diff_, /*save =*/ true);
+          } else {
+            timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
+          }
         default:
           break;
       }
@@ -234,16 +242,16 @@ void SnakeGame::exit() {
 }
 
 void SnakeGame::eat() {
-  game_info_.score += 1;
+  game_info_.score += add_score_;
   apple_.genRandPosition(snake_.getBody());
   state_ = State::MOVE;
 
   int new_level = game_info_.score / max_level_score_ + 1;
   if (new_level > game_info_.level) {
-    timer_.setInterval(timer_.getLastInterval()-50, /*save =*/ true);
+    timer_.setInterval(timer_.getLastInterval()-interval_diff_, /*save =*/ true);
     timer_.updateLastinterval();
     game_info_.level = new_level;
-    game_info_.speed += 10;
+    game_info_.speed += add_speed_;
   }
 
   if (game_info_.level > max_level_) {

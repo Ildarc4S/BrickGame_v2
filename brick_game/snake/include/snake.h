@@ -41,6 +41,7 @@ enum class PauseMode {
 enum class FigureCode {
   AIR = -2,
   WALL = -1,
+
   SNAKE = 10,
   APPLE = 11
 };
@@ -85,6 +86,10 @@ class SnakeGame {
   int max_level_score_;
   int max_level_;
   int max_score_;
+  int add_score_;
+  int add_speed_;
+  int interval_diff_;
+  int interval_boost_diff_;
   bool boost_time_;
 
   void start();
@@ -101,7 +106,7 @@ class SnakeGame {
 
   int** fillField(int width, int height);
   void clearField(int width, int height);
-
+  void restoreGameInfoDate();
  public:
   SnakeGame();
   void userInput(UserAction_t action, bool hold);

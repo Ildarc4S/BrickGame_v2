@@ -15,7 +15,7 @@ Controller::Controller(Window* view, QObject* parent)
 
       QTimer *timer = new QTimer(this);
       connect(timer, &QTimer::timeout, this, &Controller::update_game);
-      timer->start(10);
+      timer->start(1);
 }
 
 UserAction_t Controller::convertKeyToAction(int key) {
@@ -82,7 +82,7 @@ void Controller::update_game() {
     qDebug() << str;
   }
 */
-  if (game_info.pause == 5) {
+  if (game_info.pause == static_cast<int>(PauseMode::kExit)) {
     QApplication::quit();
   } else {
     view_->setGameInfo(game_info);

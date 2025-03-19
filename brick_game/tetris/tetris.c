@@ -176,8 +176,8 @@ void _updateTetrisScore(Tetris_t *self) {
 void _updateTetrisLevel(Tetris_t *self) {
   long tick = self->timer.tick;
   if (self->level.level > self->game_info.level && tick >= self->timer.default_tick /*80*/) {
-    self->game_info.speed += self->speed_diff; // 10
-    self->timer.tick -= self->tick_diff; // 70
+    self->game_info.speed += self->speed_diff;
+    self->timer.tick -= self->tick_diff;
   }
   self->game_info.level = self->level.level;
 }
@@ -243,7 +243,7 @@ Tetris_t constructorTetris() {
    
     .timer = initTimer(),
     .level = initLevel(),
-    .db = initDataBase("./brick_game/db/tetris_db.txt"),
+    .db = initDataBase("tetris_db.txt"),
     .speed_diff = 10,
     .tick_diff = 70,
 
@@ -260,7 +260,7 @@ Tetris_t constructorTetris() {
     .updateScore = _updateTetrisScore,
     .updateLevel = _updateTetrisLevel,
     .updateTetrisState = _updateTetrisState};
-
+  _restoreInfo(&self);
   clearField(self.game_info.field);
   return self;
 }

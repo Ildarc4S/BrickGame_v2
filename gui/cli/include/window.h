@@ -17,7 +17,7 @@ typedef struct _panel {
   char text[TEXT_LINE_COUNT][TEXT_SIZE];
   int size;
 
-  PanelMode mode;
+  PanelMode_t mode;
   PanelColor_t color;
 
   void (*draw)(struct _panel *);

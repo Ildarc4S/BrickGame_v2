@@ -1,72 +1,82 @@
 #include "./include/window.h"
 
-void drawPanelHead(Panel_t *this_) {
-  attron(COLOR_PAIR(this_->color));
-  mvprintw(this_->y - 1, (this_->x) * 2, "%s", this_->head_text);
-  attroff(COLOR_PAIR(this_->color));
+void drawPanelHead(Panel_t *self) {
+  attron(COLOR_PAIR(self->color));
+  mvprintw(self->y - 1, (self->x) * 2, "%s", self->head_text);
+  attroff(COLOR_PAIR(self->color));
 }
 
-void drawFigure(Panel_t *this, GameInfo_t game_info) {
+void drawFigure(Panel_t *self, GameInfo_t game_info) {
   if (!game_info.next) return;
 
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
-      mvprintw(this->y + i + 1, (this->x + j + 1) * 2, "  ");
+      mvprintw(self->y + i + 1, (self->x + j + 1) * 2, "  ");
       if (game_info.next[i][j]) {
         attron(COLOR_PAIR(game_info.next[i][j]));
-        mvprintw(this->y + i + 1, (this->x + j + 1) * 2, "[]");
+        mvprintw(self->y + i + 1, (self->x + j + 1) * 2, "[]");
         attroff(COLOR_PAIR(game_info.next[i][j]));
       }
     }
   }
 }
 
-void drawText(Panel_t *this) {
-  for (int i = 0; i < this->size; i++) {
-    mvprintw(this->y + i, this->x * 2, "%s", this->text[i]);
-  }
-}
-
-void _drawPanel(Panel_t *this) {
+void drawText(Panel_t *self) {
   GameInfo_t game_info = updateCurrentState();
-  if (!game_info.next) {
-    drawPanelHead(this);
+  
+  int start = 0;
+  int count = 5;
+  
+  if (game_info.next == NULL) {
+    start = 5;
+    count = 5;
   }
 
-  mvprintw(this->y, (this->x) * 2, "       ");  // Clean Field
-  if (this->mode == PANEL_MODE_TEXT) {
-    drawText(this);   
-  } else if (this->mode == PANEL_MODE_HIGH_SCORE) {
-    mvprintw(this->y, this->x * 2, "%d", game_info.high_score);
-  } else if (this->mode == PANEL_MODE_SPEED) {
-    mvprintw(this->y, this->x * 2, "%d", game_info.speed);
-  } else if (this->mode == PANEL_MODE_LEVEL) {
-    mvprintw(this->y, this->x * 2, "%d", game_info.level);
-  } else if (this->mode == PANEL_MODE_CUR_SCORE) {
-    mvprintw(this->y, this->x * 2, "%d", game_info.score);
-  } else if (this->mode == PANEL_MODE_NEXT_FIGURE){
-    drawFigure(this, game_info);
+  for (int i = 0; i < count && (start + i) < self->size; i++) {
+    mvprintw(self->y + i, self->x * 2, "%s", self->text[start + i]);
   }
 }
 
-void _drawWindow(Window_t *this) {
-  this->game_field.drawField(&this->game_field);
+void _drawPanel(Panel_t *self) {
+  GameInfo_t game_info = updateCurrentState();
+  if (!(self->mode == PANEL_MODE_NEXT_FIGURE && !game_info.next)) {
+    drawPanelHead(self);
+  }
 
-  this->help_panel.draw(&this->help_panel);
-  this->score_panel.draw(&this->score_panel);
-  this->high_score_panel.draw(&this->high_score_panel);
-  this->level_panel.draw(&this->level_panel);
-  this->next_figure_panel.draw(&this->next_figure_panel);
-  this->speed_panel.draw(&this->speed_panel);
+  mvprintw(self->y, (self->x) * 2, "       ");  // Clean Field
+  if (self->mode == PANEL_MODE_TEXT) {
+    drawText(self);   
+  } else if (self->mode == PANEL_MODE_HIGH_SCORE) {
+    mvprintw(self->y, self->x * 2, "%d", game_info.high_score);
+  } else if (self->mode == PANEL_MODE_SPEED) {
+    mvprintw(self->y, self->x * 2, "%d", game_info.speed);
+  } else if (self->mode == PANEL_MODE_LEVEL) {
+    mvprintw(self->y, self->x * 2, "%d", game_info.level);
+  } else if (self->mode == PANEL_MODE_CUR_SCORE) {
+    mvprintw(self->y, self->x * 2, "%d", game_info.score);
+  } else if (self->mode == PANEL_MODE_NEXT_FIGURE){
+    drawFigure(self, game_info);
+  }
 }
 
-void drawCleanField(GameField_t *this) {
-  for (int i = 0; i < this->height; i++) {
-    for (int j = 0; j < this->width; j++) {
-      if (i == this->height - 1 || j == this->width - 1 || i == 0 || j == 0) {
-        mvprintw(this->y + i, (this->x + j) * 2, "[]");
+void _drawWindow(Window_t *self) {
+  self->game_field.drawField(&self->game_field);
+
+  self->help_panel.draw(&self->help_panel);
+  self->score_panel.draw(&self->score_panel);
+  self->high_score_panel.draw(&self->high_score_panel);
+  self->level_panel.draw(&self->level_panel);
+  self->next_figure_panel.draw(&self->next_figure_panel);
+  self->speed_panel.draw(&self->speed_panel);
+}
+
+void drawCleanField(GameField_t *self) {
+  for (int i = 0; i < self->height; i++) {
+    for (int j = 0; j < self->width; j++) {
+      if (i == self->height - 1 || j == self->width - 1 || i == 0 || j == 0) {
+        mvprintw(self->y + i, (self->x + j) * 2, "[]");
       } else {
-        mvprintw(this->y + i, (this->x + j) * 2, "  ");
+        mvprintw(self->y + i, (self->x + j) * 2, "  ");
       }
     }
   }
@@ -88,41 +98,41 @@ bool _checkGameExit() {
 }
 
 
-void _drawField(GameField_t *this) {
+void _drawField(GameField_t *self) {
   GameInfo_t game = updateCurrentState();
 
-  for (int i = 0; i < this->height; i++) {
-    for (int j = 0; j < this->width; j++) {
-      mvprintw(this->y + i, (this->x + j) * 2, "  ");
+  for (int i = 0; i < self->height; i++) {
+    for (int j = 0; j < self->width; j++) {
+      mvprintw(self->y + i, (self->x + j) * 2, "  ");
     }
   }
 
   if (game.pause == PAUSE_MODE_GAME_CONTINUE) {
-    for (int i = 0; i < this->height; i++) {
-      for (int j = 0; j < this->width; j++) {
+    for (int i = 0; i < self->height; i++) {
+      for (int j = 0; j < self->width; j++) {
         
         if (game.field[i][j] == OBJECT_CODE_WALL) {
-          mvprintw(this->y + i, (this->x + j) * 2, "[]");
+          mvprintw(self->y + i, (self->x + j) * 2, "[]");
         } else if (isTetraminoCode(game.field[i][j]) || game.field[i][j] == OBJECT_CODE_SNAKE) {
           attron(COLOR_PAIR(game.field[i][j]));
-          mvprintw(this->y + i, (this->x + j) * 2, "[]");
+          mvprintw(self->y + i, (self->x + j) * 2, "[]");
           attroff(COLOR_PAIR(game.field[i][j]));
         } else if (game.field[i][j] == OBJECT_CODE_AIR) {
-          mvprintw(this->y + i, (this->x + j) * 2, "  ");
+          mvprintw(self->y + i, (self->x + j) * 2, "  ");
         } else if (game.field[i][j] == OBJECT_CODE_APPLE) {
-          mvprintw(this->y + i, (this->x + j) * 2, "()");
+          mvprintw(self->y + i, (self->x + j) * 2, "()");
         }
       }
     }
   } else if (game.pause == PAUSE_MODE_START) {
-    drawCleanField(this);
-    mvprintw(this->height / 2, ((this->width - 1) / 2) * 2, "START");
+    drawCleanField(self);
+    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "START");
   } else if (game.pause == PAUSE_MODE_PAUSE) {
-    drawCleanField(this);
-    mvprintw(this->height / 2, ((this->width - 1) / 2) * 2, "PAUSE");
+    drawCleanField(self);
+    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "PAUSE");
   } else if (game.pause == PAUSE_MODE_GAME_OVER) {
-    drawCleanField(this);
-    mvprintw(this->height / 2, ((this->width - 1) / 2) * 2, "GAME_OVER");
+    drawCleanField(self);
+    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "GAME_OVER");
   }
 }
 
@@ -132,15 +142,14 @@ Panel_t createPanel(int x, int y,
                    const char **text, 
                    int size, 
                    PanelColor_t color, 
-                   PanelMode mode,
+                   PanelMode_t mode,
                    void (*drawFunc)(Panel_t*)) {
   Panel_t panel = {
       .x = x,
       .y = y,
-      .head_text = "",
       .size = size,
-      .color = color,
       .mode = mode,
+      .color = color,
       .draw = drawFunc,
   };
   strncpy(panel.head_text, title, sizeof(panel.head_text) - 1);

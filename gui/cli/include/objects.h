@@ -13,6 +13,7 @@
 typedef enum {
   OBJECT_CODE_AIR = -2,
   OBJECT_CODE_WALL = -1,
+
   OBJECT_CODE_TETRAMINO_I = 1,
   OBJECT_CODE_TETRAMINO_O = 2,
   OBJECT_CODE_TETRAMINO_T = 3,
@@ -23,7 +24,7 @@ typedef enum {
 
   OBJECT_CODE_SNAKE = 10,
   OBJECT_CODE_APPLE = 11
-} ObjectCode;
+} ObjectCode_t;
 
 typedef enum {
   PAUSE_MODE_PAUSE = 1,
@@ -31,7 +32,7 @@ typedef enum {
   PAUSE_MODE_START = 3,
   PAUSE_MODE_GAME_OVER = 4,
   PAUSE_MODE_EXIT = 5
-} PauseMode;
+} PauseMode_t;
 
 typedef enum {
   PANEL_COLOR_GREEN = 21, /**< Green color for the panel */
@@ -47,6 +48,6 @@ typedef enum {
     PANEL_MODE_LEVEL      = -6,
     PANEL_MODE_CUR_SCORE  = -7,
     PANEL_MODE_NEXT_FIGURE = -8
-} PanelMode;
+} PanelMode_t;
 
 #endif  // OBJECTS_CODE_H

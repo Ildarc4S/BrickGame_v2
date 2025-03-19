@@ -1,5 +1,5 @@
-#include "./utils.h"
-#include "./tetris.h"
+#include "./include/utils.h"
+#include "./include/tetris.h"
 
 void clearField(int** field) {
   for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
@@ -13,18 +13,28 @@ void clearField(int** field) {
   }
 }
 
+void clearTetraminoFromField(Tetris_t* tetris) {
+  for (int i = 0; i < FIELD_HEIGHT+2; i++) {
+    for (int j = 0; j < FIELD_WIDTH+2; j++) {
+      if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR && tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
+        tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
+      }
+    }
+  }
+}
+
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
       if (tetramino->brick[i][j]) {
         int global_x = tetramino->x + j;
         int global_y = tetramino->y + i;
-        /*       
+               
         if (global_x < 1 || global_x >= FIELD_WIDTH+1 ||
             global_y < 1 || global_y >= FIELD_HEIGHT+1) {
           return 1;
         }
-          */      
+
         if (self->game_info.field[global_y][global_x] != -2) {
           return 1;
         }

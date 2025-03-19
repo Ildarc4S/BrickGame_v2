@@ -1,4 +1,4 @@
-#include "./data_base.h"
+#include "./include/data_base.h"
 
 int _readToFile(DataBase_t *self) {
   int high_score = 0;

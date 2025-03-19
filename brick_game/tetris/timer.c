@@ -1,4 +1,4 @@
-#include "./timer.h"
+#include "./include/timer.h"
 
 void _updateCurrentTime(Timer_t *self) {
   struct timeval time = {0};

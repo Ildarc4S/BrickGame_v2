@@ -1,5 +1,5 @@
-#include "./tetramino_collection.h"
-#include "./stdlib.h"
+#include "./include/tetramino_collection.h"
+#include <stdlib.h>
 
 void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
   Tetramino_t tetramino_i = {

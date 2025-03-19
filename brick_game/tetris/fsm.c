@@ -1,30 +1,8 @@
-#include "./fsm.h"
-
-void cleanTetraminoFromField(Tetris_t* tetris) {
-  for (int i = 0; i < FIELD_HEIGHT+2; i++) {
-    for (int j = 0; j < FIELD_WIDTH+2; j++) {
-      if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR && tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
-        tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
-      }
-    }
-  }
-}
-
-void printG(int** field) {
-  if(!field) return;
-  printf("G\n");
-  for (int i = 0; i < FIELD_HEIGHT+2; i++) { 
-    for (int j = 0; j < FIELD_WIDTH+2; j++) { 
-      printf("%+d ", field[i][j]);
-    }
-    printf("\n");
-  }
-}
+#include "./include/fsm.h"
 
 void updateFSM(UserAction_t action, bool hold) {
   Tetris_t *tetris = initTetris();
-  cleanTetraminoFromField(tetris);
- // printG(tetris->game_info.field);
+  clearTetraminoFromField(tetris);
   switch (tetris->state) {
     case TETRIS_STATE_START:
       startHandler(tetris, action);

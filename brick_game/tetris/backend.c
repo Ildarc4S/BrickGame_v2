@@ -1,5 +1,5 @@
-#include "./tetris.h"
-#include "./fsm.h"
+#include "./include/tetris.h"
+#include "./include/fsm.h"
 
 void userInput(UserAction_t action, bool hold) {
   updateFSM(action, hold);

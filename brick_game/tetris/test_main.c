@@ -1,4 +1,4 @@
-#include "./tetris.h"
+#include "./include/tetris.h"
 
 void printField(int** field) {
   for (int i = 0; i < FIELD_HEIGHT+2; i++) { 

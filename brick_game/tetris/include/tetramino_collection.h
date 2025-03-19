@@ -3,6 +3,8 @@
 
 #include "./tetramino.h"
 
+#include <stdlib.h>
+
 #define TETRAMINO_COLLCECTION_SIZE 7
 
 typedef struct _tetramino_collection {

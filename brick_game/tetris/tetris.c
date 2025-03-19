@@ -1,6 +1,6 @@
-#include "./tetris.h"
-#include "./utils.h"
-#include "./memory_utils.h"
+#include "./include/tetris.h"
+#include "./include/utils.h"
+#include "./include/memory_utils.h"
 
 void _restoreInfo(Tetris_t* self) {
   clearField(self->game_info.field);
@@ -182,18 +182,20 @@ void _updateTetrisLevel(Tetris_t *self) {
   self->game_info.level = self->level.level;
 }
 
-void cleanTetraminoF(Tetris_t* tetris) {
-  for (int i = 0; i < FIELD_HEIGHT+2; i++) {
-    for (int j = 0; j < FIELD_WIDTH+2; j++) {
-      if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR && tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
-        tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
+void insertTetraminoToFieldWithColor(Tetris_t* self) {
+  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      if (self->curr_tetramino && self->curr_tetramino->brick[i][j]) {
+        int x = self->curr_tetramino->x + j;
+        int y = self->curr_tetramino->y + i;
+        self->game_info.field[y][x] = self->curr_tetramino->color;
       }
     }
   }
 }
 
 void _updateTetrisState(Tetris_t* self) {
-  cleanTetraminoF(self);
+  clearTetraminoFromField(self);
   if (self->state == TETRIS_STATE_MOVE) {
     if (self->timer.calcDiff(&self->timer) >= self->timer.tick) {
       self->down(self, true);
@@ -204,15 +206,7 @@ void _updateTetrisState(Tetris_t* self) {
     self->spawn(self);
   }
   
-   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
-    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
-      if (self->curr_tetramino && self->curr_tetramino->brick[i][j]) {
-        int x = self->curr_tetramino->x + j;
-        int y = self->curr_tetramino->y + i;
-        self->game_info.field[y][x] = self->curr_tetramino->color;
-      }
-    }
-  }
+  insertTetraminoToFieldWithColor(self);
 }
 
 void _pauseGame(Tetris_t *tetris) {

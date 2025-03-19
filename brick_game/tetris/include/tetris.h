@@ -3,7 +3,7 @@
 
 #include "./tetris_state.h"
 #include "./tetramino_collection.h"
-#include "./../spec/game_spec.h"
+#include "./../../spec/game_spec.h"
 #include "./timer.h"
 #include "./data_base.h"
 #include "./level_manager.h"

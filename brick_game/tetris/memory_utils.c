@@ -1,4 +1,4 @@
-#include "./memory_utils.h"
+#include "./include/memory_utils.h"
 
 int **newField(int width, int height) {
   int error_code = 0;

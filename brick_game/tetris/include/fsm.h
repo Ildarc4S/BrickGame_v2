@@ -2,6 +2,7 @@
 #define FSM_H
 
 #include "./tetris.h"
+#include "./utils.h"
 
 void updateFSM(UserAction_t action, bool hold);
 

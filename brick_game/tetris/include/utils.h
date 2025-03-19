@@ -4,6 +4,7 @@
 #include "./tetris.h"
 
 void clearField(int** field);
+void clearTetraminoFromField(Tetris_t* tetris);
 int isCollide(Tetris_t *tetris, Tetramino_t *tetramino);
 
 void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino);

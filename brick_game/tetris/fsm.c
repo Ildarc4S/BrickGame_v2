@@ -1,18 +1,41 @@
-#include "./include/fsm.h"
+#include "./fsm.h"
 
-void userInput(UserAction_t action, bool hold) {
+void cleanTetraminoFromField(Tetris_t* tetris) {
+  for (int i = 0; i < FIELD_HEIGHT+2; i++) {
+    for (int j = 0; j < FIELD_WIDTH+2; j++) {
+      if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR && tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
+        tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
+      }
+    }
+  }
+}
+
+void printG(int** field) {
+  if(!field) return;
+  printf("G\n");
+  for (int i = 0; i < FIELD_HEIGHT+2; i++) { 
+    for (int j = 0; j < FIELD_WIDTH+2; j++) { 
+      printf("%+d ", field[i][j]);
+    }
+    printf("\n");
+  }
+}
+
+void updateFSM(UserAction_t action, bool hold) {
   Tetris_t *tetris = initTetris();
+  cleanTetraminoFromField(tetris);
+ // printG(tetris->game_info.field);
   switch (tetris->state) {
-    case START:
+    case TETRIS_STATE_START:
       startHandler(tetris, action);
       break;
-    case MOVE:
+    case TETRIS_STATE_MOVE:
       moveHandler(tetris, action, hold);
       break;
-    case PAUSE:
+    case TETRIS_STATE_PAUSE:
       pauseHandler(tetris, action);
       break;
-    case GAME_OVER:
+    case TETRIS_STATE_GAME_OVER:
       gameOverHandler(tetris, action);
       break;
 
@@ -94,10 +117,3 @@ void gameOverHandler(Tetris_t *tetris, UserAction_t action) {
   };
 }
 
-
-GameInfo_t updateCurrentState() {
-  Tetris_t* tetris = initTetris(); 
-  tetris->updateTetrisState(tetris);
-
-  return tetris->info.game_info;
-}

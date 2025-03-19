@@ -1,4 +1,5 @@
 #include "./color_convert.h"
+#include <QDebug>
 
 namespace s21 {
 

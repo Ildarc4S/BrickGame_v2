@@ -1,4 +1,0 @@
-data_base
-level_manager
-tetramino_collection
-timer

@@ -1,5 +1,6 @@
 #include "./window.h"
 #include <QDebug>
+#include "./color_convert.h"
 #include <QKeyEvent>
 #include <QPaintEvent>
 #include <QPainter>
@@ -58,7 +59,7 @@ void GameArea::drawField(QPainter &painter) {
   for (int i = 0; i < field_rows; i++) {
     for (int j = 0; j < field_cols; j++) {
       ObjectCode code = static_cast<ObjectCode>(game_info_->field[i][j]);
-      QColor cellColor = convertObjectCodeToColor(code);
+      QColor cellColor = ColorConverter::convertObjectToColor(code);
 
       painter.setPen(wallColor);
       painter.drawRect(j * cell_size, i * cell_size, cell_size, cell_size);

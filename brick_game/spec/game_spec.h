@@ -27,7 +27,7 @@ typedef struct {
     int pause;
 } GameInfo_t;
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 

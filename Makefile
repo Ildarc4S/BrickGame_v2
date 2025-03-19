@@ -1,30 +1,35 @@
+# Настройки компилятора C
 CC = gcc
-CFLAGS = -Wall -Wextra
-LDFLAGS = -lncurses
-SRC_DIR = gui/cli
-OBJ_DIR = build/obj
+CFLAGS = -Wall -Wextra -Iinclude
+AR = ar
+ARFLAGS = rcs
 
-# Разделяем исходники из SRC_DIR и main.c
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-MAIN_FILE = main.c
-ALL_SRCS = $(SRC_FILES) $(MAIN_FILE)
+# Пути
+TETRIS_SRC_DIR = brick_game/tetris
+TETRIS_OBJ_DIR = build/obj/tetris
+LIB_DIR = build/lib
 
-# Правильное преобразование путей
-OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES)) \
-       $(OBJ_DIR)/main.o
+# Исходники и объекты тетриса
+TETRIS_SRCS = $(wildcard $(TETRIS_SRC_DIR)/*.c)
+TETRIS_OBJS = $(patsubst $(TETRIS_SRC_DIR)/%.c, $(TETRIS_OBJ_DIR)/%.o, $(TETRIS_SRCS))
 
-all: $(OBJS)
+# Цели
+all: $(LIB_DIR)/s21_tetris.a
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(LIB_DIR)/s21_tetris.a: $(TETRIS_OBJS) | $(LIB_DIR)
+	$(AR) $(ARFLAGS) $@ $^
+
+$(TETRIS_OBJ_DIR)/%.o: $(TETRIS_SRC_DIR)/%.c | $(TETRIS_OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/main.o: main.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TETRIS_OBJ_DIR):
+	mkdir -p $@
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+$(LIB_DIR):
+	mkdir -p $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf build/obj
+	rm -rf build/lib
 
 .PHONY: all clean

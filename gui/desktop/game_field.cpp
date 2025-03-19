@@ -22,7 +22,8 @@ void NextFigureWidget::paintEvent(QPaintEvent *event) {
 
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; ++j) {
-        ObjectCode object_code = static_cast<ObjectCode>(game_info_->next[i][j]);
+        ObjectCode object_code = 
+           static_cast<ObjectCode>(game_info_->next[i][j]);
         painter.fillRect(
           j * cell_size,
           i * cell_size,

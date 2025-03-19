@@ -12,6 +12,6 @@ typedef struct _data_base {
   void (*write)(struct _data_base *db, int data);
 } DataBase_t;
 
-DataBase_t initDatabase(char *file_name);
+DataBase_t initDataBase(char *file_name);
 
 #endif  // DATA_BASE_H

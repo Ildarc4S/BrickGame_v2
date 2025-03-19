@@ -5,6 +5,7 @@ namespace s21 {
 enum class ObjectCode {
   kAir = -2,
   kWall = -1,
+
   kTetraminoI = 1,
   kTetraminoO = 2,
   kTetraminoT = 3,

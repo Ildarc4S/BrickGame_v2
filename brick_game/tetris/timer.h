@@ -9,6 +9,7 @@ typedef struct _timer {
   struct timeval current_time;
   struct timeval last_time;
   long tick;
+  long default_tick;
 
   void (*updateCurrenTime)(struct _timer *timer);
   void (*updateLastTime)(struct _timer *timer);
@@ -17,4 +18,4 @@ typedef struct _timer {
 
 Timer_t initTimer();
 
-#endif /* TIMER_H */
+#endif // TIMER_H

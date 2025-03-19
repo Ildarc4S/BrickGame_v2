@@ -1,4 +1,4 @@
-#include "./include/data_base.h"
+#include "./data_base.h"
 
 int _readToFile(DataBase_t *self) {
   int high_score = 0;
@@ -18,7 +18,7 @@ void _writeToFile(DataBase_t *self, int high_score) {
   }
 }
 
-DataBase_t initDatabase(char *file_name) {
+DataBase_t initDataBase(char *file_name) {
   DataBase_t db = {.read = _readToFile, .write = _writeToFile};
   sprintf(db.file_name, "%s", file_name);
   return db;

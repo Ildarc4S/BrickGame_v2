@@ -2,6 +2,8 @@
 #include "./include/tetris.h"
 
 void clearField(int** field) {
+  if (!field) return;
+
   for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
     for (int j = 0; j < FIELD_WIDTH + 2; j++) {
       if (i == 0 || j == 0 || i == FIELD_HEIGHT + 1 || j == FIELD_WIDTH + 1) {
@@ -14,6 +16,8 @@ void clearField(int** field) {
 }
 
 void clearTetraminoFromField(Tetris_t* tetris) {
+  if (!tetris->game_info.field) return; 
+
   for (int i = 0; i < FIELD_HEIGHT+2; i++) {
     for (int j = 0; j < FIELD_WIDTH+2; j++) {
       if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR && tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
@@ -24,6 +28,8 @@ void clearTetraminoFromField(Tetris_t* tetris) {
 }
 
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
+  if (!tetramino || !self->game_info.field) return -1;
+
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
       if (tetramino->brick[i][j]) {
@@ -41,10 +47,13 @@ int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
       }
     }
  }
+
  return 0;
 }
 
 void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
+  if (!tetramino || !self->game_info.field) return;
+
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_HEIGHT; j++) {
       self->curr_tetramino->brick[i][j] = tetramino->brick[i][j];
@@ -55,6 +64,8 @@ void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
 }
 
 void insertTetraminoToField(Tetris_t *self) {
+  if (!self->game_info.field) return;
+
   int x = self->curr_tetramino->x;
   int y = self->curr_tetramino->y;
 

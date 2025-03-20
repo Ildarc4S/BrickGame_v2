@@ -14,23 +14,24 @@ int **newField(int width, int height) {
     }
   }
 
-  if (error_code == 1) {
-    freeField(field, height);
+  if (error_code) {
+    freeField(&field, height);
     field = NULL;
   }
 
   return field;
 }
 
-void freeField(int **field, int height) {
-  if (field == NULL) {
+void freeField(int ***field, int height) {
+  if (!*field || !field) {
     return;
   }
 
   for (int i = 0; i < height; i++) {
-    free(field[i]);
-    field[i] = NULL;
+    free((*field)[i]);
+    (*field)[i] = NULL;
   }
 
-  free(field);
+  free(*field);
+  *field = NULL;
 }

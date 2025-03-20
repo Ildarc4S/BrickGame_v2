@@ -28,26 +28,6 @@ void _startGame(Tetris_t *self) {
   self->game_info.pause = PAUSE_MODE_CONTINUE;
 }
 
-void printF(int** field) {
-  if(!field) return;
-  for (int i = 0; i < FIELD_HEIGHT+2; i++) { 
-    for (int j = 0; j < FIELD_WIDTH+2; j++) { 
-      printf("%+d ", field[i][j]);
-    }
-    printf("\n");
-  }
-}
-
-void printT(Tetramino_t* t) {
-  for (int i = 0; i < TETRAMINO_HEIGHT; i++) { 
-    for (int j = 0; j < TETRAMINO_WIDTH; j++) { 
-      printf("%+d ", t->brick[i][j]);
-    }
-    printf("\n");
-  }
-  printf("Coord: (%d, %d)\n", t->x, t->y);
-}
-
 void _spawn(Tetris_t *self) {
   if (!self) {
     return;
@@ -217,6 +197,11 @@ void _exitGame(Tetris_t *self) {
   self->db.write(&self->db, self->game_info.high_score);
   self->game_info.pause = PAUSE_MODE_EXIT;
   self->state = TETRIS_STATE_EXIT;
+  freeField(&self->game_info.field, FIELD_HEIGHT + 2);
+  freeField(&self->game_info.next, TETRAMINO_HEIGHT);
+
+  self->curr_tetramino = NULL;
+  self->next_tetramino = NULL;
 }
 
 

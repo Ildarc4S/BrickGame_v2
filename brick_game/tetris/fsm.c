@@ -1,8 +1,10 @@
 #include "./include/fsm.h"
+#include <ncurses.h>
 
 void updateFSM(UserAction_t action, bool hold) {
   Tetris_t *tetris = initTetris();
   clearTetraminoFromField(tetris);
+
   switch (tetris->state) {
     case TETRIS_STATE_START:
       startHandler(tetris, action);

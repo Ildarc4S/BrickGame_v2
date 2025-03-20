@@ -72,21 +72,14 @@ void Controller::processUserInput(int key, bool hold) {
 
 void Controller::update_game() {
   GameInfo_t game_info = updateCurrentState();
-/*
-  for (int i = 0; i < 22; i++) {
-    QString str = "";
-    for (int j = 0; j < 12; j++) {
-     str += QString::number(game_info.field[i][j]);
-     str += " ";
-    }
-    qDebug() << str;
-  }
-*/
+
   if (game_info.pause == static_cast<int>(PauseMode::kExit)) {
     QApplication::quit();
   } else {
-    view_->setGameInfo(game_info);
-    view_->update();
+    if (game_info.field) {
+      view_->setGameInfo(game_info);
+      view_->update();
+    }
   }
 }
 

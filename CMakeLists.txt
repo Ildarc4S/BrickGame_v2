@@ -6,6 +6,9 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -fno-omit-frame-pointer")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 # file(GLOB TETRIS_SOURCES "brick_games/tetris/*.c")
 # add_library(s21_tetris STATIC ${TETRIS_SOURCES})
 set(TETRIS_LIB_DIR ${CMAKE_SOURCE_DIR}/build/lib)

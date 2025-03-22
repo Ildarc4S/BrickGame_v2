@@ -1,35 +1,91 @@
-# Настройки компилятора C
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
-AR = ar
-ARFLAGS = rcs
+FLAGS = -Wall -Wextra -Werror -std=c11
+NCURSES_FLAGS = -lncurses
+GCOV_FLAGS = --coverage
+CHECK_FLAGS = -lcheck -lm -lsubunit
 
-# Пути
-TETRIS_SRC_DIR = brick_game/tetris
-TETRIS_OBJ_DIR = build/obj/tetris
-LIB_DIR = build/lib
+SRC_DIR = brick_game/tetris
+TEST_DIR = tests/tetris_tests
+GUI_DIR = gui/cli
+BUILD_DIR = build/tetris
+OBJ_DIR = $(BUILD_DIR)/obj
+COV_DIR = $(BUILD_DIR)/coverage
+LIB_DIR = lib
 
-# Исходники и объекты тетриса
-TETRIS_SRCS = $(wildcard $(TETRIS_SRC_DIR)/*.c)
-TETRIS_OBJS = $(patsubst $(TETRIS_SRC_DIR)/%.c, $(TETRIS_OBJ_DIR)/%.o, $(TETRIS_SRCS))
+CFILES = $(wildcard $(SRC_DIR)/*.c)
+TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/tetris/%.o,$(CFILES))
+TEST_OBJS = $(patsubst $(TEST_DIR)/%.c,$(OBJ_DIR)/tests/%.o,$(TEST_FILES))
+BIN_DIR = bin
 
-# Цели
-all: $(LIB_DIR)/s21_tetris.a
+PREFIX = /usr/local
+BINDIR = $(PREFIX)/bin
+LIBDIR = $(PREFIX)/lib
+DOCDIR = $(PREFIX)/share/doc/s21_tetris
 
-$(LIB_DIR)/s21_tetris.a: $(TETRIS_OBJS) | $(LIB_DIR)
-	$(AR) $(ARFLAGS) $@ $^
+LIB_PATH = $(LIB_DIR)/s21_tetris.a
+LIB_NAME= s21_tetris.a
+EXEC_NAME = s21_tetris
+TEST_EXEC = test_exec
 
-$(TETRIS_OBJ_DIR)/%.o: $(TETRIS_SRC_DIR)/%.c | $(TETRIS_OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+DOCGEN = doxygen
+DOXYFILE = Doxyfile
 
-$(TETRIS_OBJ_DIR):
-	mkdir -p $@
+.PHONY: all install uninstall clean dvi dist test gcov_report rebuild
 
-$(LIB_DIR):
-	mkdir -p $@
+all: $(LIB_NAME) $(EXEC_NAME)
+
+$(LIB_NAME): $(OBJS)
+	mkdir -p $(LIB_DIR)
+	ar rcs $@ $^
+	ranlib $@
+
+$(OBJ_DIR)/tetris/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/tetris
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(OBJ_DIR)/tests/%.o: $(TEST_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/tests
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(EXEC_NAME): $(GUI_DIR)/*.c main.c $(LIB_NAME)
+	mkdir -p $(BIN_DIR)
+	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(NCURSES_FLAGS)
+
+test: $(TEST_EXEC)
+	./$(BIN_DIR)/$<
+
+$(TEST_EXEC): $(TEST_OBJS) $(LIB_PATH)
+	mkdir -p $(BIN_DIR)
+	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(CHECK_FLAGS)
+
+gcov_report: $(TEST_FILES) $(CFILES)
+	mkdir -p $(BIN_DIR) $(COV_DIR)
+	$(CC) $(FLAGS) $^ $(CHECK_FLAGS) $(GCOV_FLAGS) -o $(BIN_DIR)/gcov_exec
+	./$(BIN_DIR)/gcov_exec
+	lcov --capture --directory . --output-file $(COV_DIR)/coverage.info
+	genhtml $(COV_DIR)/coverage.info --output-directory $(COV_DIR)
+
+install: $(EXEC_NAME)
+	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
+	install -m 0755 $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
+	install -m 0644 $(LIB_PATH) $(LIBDIR)
+
+uninstall:
+	rm -f $(BINDIR)/$(EXEC_NAME)
+	rm -f $(LIBDIR)/s21_tetris.a
+	rm -rf $(DOCDIR)
+
+dvi:
+	$(DOCGEN) $(DOXYFILE)
+
+dist: clean
+	mkdir -p package
+	cp -r $(SRC_DIR) $(TEST_DIR) $(GUI_DIR) Makefile tetris_readme.md package
+	tar -czvf s21_tetris.tar.gz package
+	rm -rf package
 
 clean:
-	rm -rf build/obj
-	rm -rf build/lib
+	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info
 
-.PHONY: all clean
+rebuild: clean all

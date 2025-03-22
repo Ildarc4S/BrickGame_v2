@@ -120,7 +120,9 @@ void _drawField(GameField_t *self) {
         } else if (game.field[i][j] == OBJECT_CODE_AIR) {
           mvprintw(self->y + i, (self->x + j) * 2, "  ");
         } else if (game.field[i][j] == OBJECT_CODE_APPLE) {
+          attron(COLOR_PAIR(game.field[i][j]));
           mvprintw(self->y + i, (self->x + j) * 2, "()");
+          attroff(COLOR_PAIR(game.field[i][j]));
         }
       }
     }

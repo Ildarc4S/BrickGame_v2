@@ -14,7 +14,7 @@ GameArea::GameArea(QWidget *parent) : QWidget(parent), game_info_(nullptr) {}
 
 void GameArea::paintEvent(QPaintEvent *event) {
   Q_UNUSED(event);
-  if (!game_info_ || !game_info_->field) {
+  if (!game_info_ || !game_info_->field ) {
     return;
   }
 
@@ -133,7 +133,7 @@ void MenuWidget::updateButtons(int pause_mode) {
   }
 }
 
-Window::Window(QWidget *parent) : QWidget(parent) {
+Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   setStyleSheet("QWidget {"
                 "    background-color: #2E2E2E;" // Темный фон для всего окна
                 "    color: white;"              // Белый текст
@@ -159,9 +159,9 @@ Window::Window(QWidget *parent) : QWidget(parent) {
   QHBoxLayout *main_layout = new QHBoxLayout(this);
   main_layout->setContentsMargins(0, 0, 0, 0);
 
-  left_stack_ = new QStackedWidget;
-  game_area_ = new GameArea;
-  menu_ = new MenuWidget;
+  left_stack_ = new QStackedWidget();
+  game_area_ = new GameArea();
+  menu_ = new MenuWidget();
   left_stack_->addWidget(game_area_);
   left_stack_->addWidget(menu_);
 
@@ -295,9 +295,7 @@ void Window::setGameInfo(const GameInfo_t &game_info) {
         QFrame *next_figure_block = createNextFigureBlock();
         next_figure_widget_ = next_figure_block->findChild<NextFigureWidget *>(
             "nextFigureWidget");
-        if (next_figure_widget_) {
           right_layout->addWidget(next_figure_block);
-        }
       }
     }
 

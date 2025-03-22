@@ -14,7 +14,7 @@
 typedef struct _tetris {
   TetrisState_t state;
   GameInfo_t game_info;
-  Tetramino_t* curr_tetramino;
+  Tetramino_t curr_tetramino;
   Tetramino_t* next_tetramino;
   TetraminoCollection_t collection;
 

@@ -37,9 +37,9 @@ void _spawn(Tetris_t *self) {
     self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
   }
 
-  self->curr_tetramino = self->next_tetramino;
-  self->curr_tetramino->x = FIELD_WIDTH / 2;
-  self->curr_tetramino->y = 1;
+  copyTetraminoToCurr(self, self->next_tetramino);
+  self->curr_tetramino.y = 0; 
+  self->curr_tetramino.x = FIELD_WIDTH / 2;
 
   self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
 
@@ -54,7 +54,7 @@ void _spawn(Tetris_t *self) {
 
   self->state = TETRIS_STATE_MOVE;
 
-  if (isCollide(self, self->curr_tetramino)) {
+  if (isCollide(self, &self->curr_tetramino)) {
     self->game_info.pause = PAUSE_MODE_GAME_OVER;
     self->db.write(&self->db, self->game_info.high_score);
     self->state = TETRIS_STATE_GAME_OVER;
@@ -68,7 +68,7 @@ void _left(Tetris_t* self, bool hold) {
   }
   (void)hold;
 
-  Tetramino_t *tetramino = self->curr_tetramino;
+  Tetramino_t *tetramino = &self->curr_tetramino;
   tetramino->x--;
   if (isCollide(self, tetramino)) {
     tetramino->x++;
@@ -83,7 +83,7 @@ void _right(Tetris_t *tetris, bool hold) {
   }
   (void)hold;
 
-  Tetramino_t *tetramino = tetris->curr_tetramino;
+  Tetramino_t *tetramino = &tetris->curr_tetramino;
   tetramino->x++;
   if (isCollide(tetris, tetramino)) {
     tetramino->x--;
@@ -99,11 +99,11 @@ void _up(Tetris_t *self, bool hold) {
 }
 
 void _down(Tetris_t *self, bool hold) {
-  if (!self || !self->curr_tetramino) {
+  if (!self) {
     return;
   }
 
-  Tetramino_t *tetramino = self->curr_tetramino;
+  Tetramino_t *tetramino = &self->curr_tetramino;
   bool is_collide = false;
 
   if (hold) {
@@ -125,7 +125,6 @@ void _down(Tetris_t *self, bool hold) {
   if (is_collide) {
     self->state = TETRIS_STATE_ATTACH;
     insertTetraminoToField(self);
-    self->curr_tetramino = NULL;
   }
 }
 
@@ -135,8 +134,8 @@ void _action(Tetris_t *tetris, bool hold) {
   }
   (void)hold;
 
-  Tetramino_t *tetramino = tetris->curr_tetramino;
-  int temp_tetramino[TETRAMINO_WIDTH][TETRAMINO_HEIGHT];
+  Tetramino_t *tetramino = &tetris->curr_tetramino;
+  int temp_tetramino[TETRAMINO_HEIGHT][TETRAMINO_WIDTH];
   copyTetramino(temp_tetramino, tetramino->brick);
   rotateTetramino(tetramino);
 
@@ -162,12 +161,14 @@ void _updateTetrisLevel(Tetris_t *self) {
 }
 
 void insertTetraminoToFieldWithColor(Tetris_t* self) {
+  if (!self->game_info.field) return;
+
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
-      if (self->curr_tetramino && self->curr_tetramino->brick[i][j]) {
-        int x = self->curr_tetramino->x + j;
-        int y = self->curr_tetramino->y + i;
-        self->game_info.field[y][x] = self->curr_tetramino->color;
+      if (self->curr_tetramino.brick[i][j]) {
+        int x = self->curr_tetramino.x + j;
+        int y = self->curr_tetramino.y + i;
+        self->game_info.field[y][x] = self->curr_tetramino.color;
       }
     }
   }
@@ -197,10 +198,10 @@ void _exitGame(Tetris_t *self) {
   self->db.write(&self->db, self->game_info.high_score);
   self->game_info.pause = PAUSE_MODE_EXIT;
   self->state = TETRIS_STATE_EXIT;
+
   freeField(&self->game_info.field, FIELD_HEIGHT + 2);
   freeField(&self->game_info.next, TETRAMINO_HEIGHT);
 
-  self->curr_tetramino = NULL;
   self->next_tetramino = NULL;
 }
 
@@ -215,7 +216,11 @@ Tetris_t constructorTetris() {
                     .level = 1,
                     .speed = 0,
                     .pause = PAUSE_MODE_START},
-    .curr_tetramino = NULL,
+    .curr_tetramino = {
+        .x = 0,
+        .y = 0,
+        .color = TETRAMINO_COLOR_BLUE,
+        .brick = {{0}} },
     .next_tetramino = NULL,
     .collection = initTetraminoCollection(),
    

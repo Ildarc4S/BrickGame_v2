@@ -11,6 +11,7 @@ void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino);
 void insertTetraminoToField(Tetris_t *self);
 void copyTetramino(int brick_one[TETRAMINO_WIDTH][TETRAMINO_HEIGHT],
                    int brick_two[TETRAMINO_WIDTH][TETRAMINO_HEIGHT]);
+void copyTetraminoToCurr(Tetris_t* tetris, Tetramino_t* tetramino);
 void rotateTetramino(Tetramino_t *tetramino);
 void shiftLines(Tetris_t *self, int *index);
 void clearLines(Tetris_t *self);

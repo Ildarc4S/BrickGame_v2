@@ -55,23 +55,23 @@ void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
   if (!tetramino || !self->game_info.field) return;
 
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
-    for (int j = 0; j < TETRAMINO_HEIGHT; j++) {
-      self->curr_tetramino->brick[i][j] = tetramino->brick[i][j];
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      self->curr_tetramino.brick[i][j] = tetramino->brick[i][j];
     }
   }
-  self->curr_tetramino->x = tetramino->x;
-  self->curr_tetramino->y = tetramino->y;
+  self->curr_tetramino.x = tetramino->x;
+  self->curr_tetramino.y = tetramino->y;
 }
 
 void insertTetraminoToField(Tetris_t *self) {
   if (!self->game_info.field) return;
 
-  int x = self->curr_tetramino->x;
-  int y = self->curr_tetramino->y;
+  int x = self->curr_tetramino.x;
+  int y = self->curr_tetramino.y;
 
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
-      if (self->curr_tetramino->brick[i][j]) {
+      if (self->curr_tetramino.brick[i][j]) {
         self->game_info.field[y + i][x + j] = OBJECT_CODE_WALL;
       }
     }
@@ -85,6 +85,17 @@ void copyTetramino(int brick_one[TETRAMINO_WIDTH][TETRAMINO_HEIGHT],
       brick_one[i][j] = brick_two[i][j];
     }
   }
+}
+
+void copyTetraminoToCurr(Tetris_t* tetris, Tetramino_t* tetramino) {
+  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      tetris->curr_tetramino.brick[i][j] = tetramino->brick[i][j];
+    }
+  }
+  tetris->curr_tetramino.x  = tetramino->x;
+  tetris->curr_tetramino.y  = tetramino->y;
+  tetris->curr_tetramino.color = tetramino->color;
 }
 
 void rotateTetramino(Tetramino_t *tetramino) {

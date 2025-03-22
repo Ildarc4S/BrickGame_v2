@@ -1,5 +1,4 @@
 #include <check.h>
-#include "./../brick_game/tetris/include/timer.h"
 #include "tests.h"
 
 START_TEST(test_timer_init) {

@@ -1,6 +1,5 @@
 #include <check.h>
 
-#include "./../brick_game/tetris/include/tetris.h"
 #include "tests.h"
 
 START_TEST(test_fsm_states) {

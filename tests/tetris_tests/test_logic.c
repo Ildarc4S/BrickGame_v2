@@ -1,8 +1,6 @@
 #include <check.h>
 #include <unistd.h>
 
-#include "./../brick_game/tetris/include/tetris.h"
-#include "./../brick_game/tetris/include/utils.h"
 #include "tests.h"
 
 START_TEST(test_tetris_initialization) {
@@ -15,7 +13,6 @@ START_TEST(test_tetris_initialization) {
   ck_assert_int_eq(tetris->game_info.pause, PAUSE_MODE_START);
   ck_assert_int_eq(tetris->game_info.level, 1);
   ck_assert_int_eq(tetris->game_info.score, 0);
-  ck_assert_ptr_null(tetris->curr_tetramino);
   ck_assert_ptr_null(tetris->next_tetramino);
 
   tetris->exit(tetris);
@@ -25,11 +22,11 @@ START_TEST(test_tetris_update_state) {
 
   tetris->start(tetris);
   tetris->state = TETRIS_STATE_MOVE;
-  int tetramino_y = tetris->curr_tetramino->y;
+  int tetramino_y = tetris->curr_tetramino.y;
   sleep(1);
   GameInfo_t game_info = updateCurrentState();
 
-  ck_assert_int_eq(tetramino_y + 1, tetris->curr_tetramino->y);
+  ck_assert_int_eq(tetramino_y + 1, tetris->curr_tetramino.y);
 
   tetris->state = TETRIS_STATE_ATTACH;
   int score = tetris->game_info.score;
@@ -46,7 +43,6 @@ START_TEST(test_spawn_and_collision_detection) {
   Tetris_t* tetris = initTetris();
   tetris->spawn(tetris);
 
-  ck_assert_ptr_nonnull(tetris->curr_tetramino);
   ck_assert_ptr_nonnull(tetris->next_tetramino);
   ck_assert_int_eq(tetris->state, TETRIS_STATE_MOVE);
 
@@ -67,18 +63,16 @@ START_TEST(test_movement_and_collision) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
   
-  int initial_x = tetris->curr_tetramino->x;
-  int initial_y = tetris->curr_tetramino->y;
+  int initial_x = tetris->curr_tetramino.x;
 
   tetris->left(tetris, false);
-  ck_assert_int_eq(tetris->curr_tetramino->x, initial_x - 1);
+  ck_assert_int_eq(tetris->curr_tetramino.x, initial_x - 1);
 
   tetris->right(tetris, false);
-  ck_assert_int_eq(tetris->curr_tetramino->x, initial_x);
+  ck_assert_int_eq(tetris->curr_tetramino.x, initial_x);
 
   tetris->down(tetris, false);
   ck_assert_int_eq(tetris->state, TETRIS_STATE_ATTACH);
-  ck_assert_ptr_null(tetris->curr_tetramino);
 
   tetris->exit(tetris);
 }
@@ -88,13 +82,13 @@ START_TEST(test_right_movement_at_right_boundary) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
 
-  tetris->curr_tetramino = &tetris->collection.tetraminos[0];
-  tetris->curr_tetramino->x = FIELD_WIDTH - TETRAMINO_WIDTH + 2;
-  int initial_x = tetris->curr_tetramino->x;
+  tetris->curr_tetramino = tetris->collection.tetraminos[0];
+  tetris->curr_tetramino.x = FIELD_WIDTH - TETRAMINO_WIDTH + 2;
+  int initial_x = tetris->curr_tetramino.x;
 
   tetris->right(tetris, false);
 
-  ck_assert_int_eq(tetris->curr_tetramino->x, initial_x);
+  ck_assert_int_eq(tetris->curr_tetramino.x, initial_x);
 
   tetris->exit(tetris);
 }
@@ -104,13 +98,13 @@ START_TEST(test_left_movement_at_left_boundary) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
 
-  tetris->curr_tetramino = &tetris->collection.tetraminos[0];
-  tetris->curr_tetramino->x = 0;
-  int initial_x = tetris->curr_tetramino->x;
+  tetris->curr_tetramino = tetris->collection.tetraminos[0];
+  tetris->curr_tetramino.x = 0;
+  int initial_x = tetris->curr_tetramino.x;
 
   tetris->left(tetris, false);
 
-  ck_assert_int_eq(tetris->curr_tetramino->x, initial_x);
+  ck_assert_int_eq(tetris->curr_tetramino.x, initial_x);
 
   tetris->exit(tetris);
 }
@@ -120,21 +114,21 @@ START_TEST(test_rotation_logic) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
 
-  tetris->curr_tetramino = &tetris->collection.tetraminos[tetris->collection.size - 1];
-  tetris->curr_tetramino->y = 5;
-  int original_brick[4][4];
-  copyTetramino(original_brick, tetris->curr_tetramino->brick);
+  tetris->curr_tetramino = tetris->collection.tetraminos[tetris->collection.size - 1];
+  tetris->curr_tetramino.y = 5;
+  int original_brick[TETRAMINO_HEIGHT][TETRAMINO_WIDTH];
+  copyTetramino(original_brick, tetris->curr_tetramino.brick);
 
   tetris->action(tetris, false);
-  ck_assert(memcmp(original_brick, tetris->curr_tetramino->brick, sizeof(original_brick)) != 0);
+  ck_assert(memcmp(original_brick, tetris->curr_tetramino.brick, sizeof(original_brick)) != 0);
 
-  Tetramino_t temp = *tetris->curr_tetramino;
+  Tetramino_t temp = tetris->curr_tetramino;
   while (!isCollide(tetris, &temp)) {
     temp.x++;
   }
   replaceTetramino(tetris, &temp);
   tetris->action(tetris, false);
-  ck_assert(memcmp(temp.brick, tetris->curr_tetramino->brick, sizeof(temp.brick)) == 0);
+  ck_assert(memcmp(temp.brick, tetris->curr_tetramino.brick, sizeof(temp.brick)) == 0);
 
   tetris->exit(tetris);
 }

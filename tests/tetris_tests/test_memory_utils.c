@@ -1,5 +1,4 @@
 #include <check.h>
-#include "./../brick_game/tetris/include/memory_utils.h"
 #include "tests.h"
 
 START_TEST(test_newField_creates_valid_field) {

@@ -1,5 +1,4 @@
 #include <check.h>
-#include "./../brick_game/tetris/include/level_manager.h"
 #include "tests.h"
 
 START_TEST(test_score_basic) {

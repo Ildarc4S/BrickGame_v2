@@ -1,4 +1,7 @@
 #include "./../../brick_game/snake/include/snake.h"
+#include "./../../brick_game/spec/game_spec.h"
+
+#include <thread>
 #include <gtest/gtest.h>
 
 namespace s21 {
@@ -23,9 +26,16 @@ public:
     return game.snake_; 
   }
 
-  
+  bool isTimerExpired(SnakeGame& game) {
+    return game.timer_.isExpired();
+  }
+
   void setGameState(SnakeGame& game, State state) {
     game.state_ = state;
+  }
+
+  void setTimerInterval(SnakeGame& game, int interval) {
+    game.timer_.setInterval(interval, false);
   }
     
   void setSnakeDirection(SnakeGame& game, Direction dir) {
@@ -308,12 +318,93 @@ TEST(SnakeGameTest, MoveHandleEatApple) {
     tester.setApplePosition(game, apple_pos);
 
     int initial_score = tester.getGameScore(game);
+    tester.setGameState(game, State::MOVE);
     game.userInput(UserAction_t::Right, false);
 
     EXPECT_EQ(tester.getGameScore(game), initial_score + tester.getAddScore(game));
     EXPECT_NE(tester.getApplePosition(game), Point(5, 4));
        
     EXPECT_EQ(tester.getSnakeBody(game).size(), begin_body.size() + 1);
+}
+
+TEST(SnakeGameTest, MoveHandleCollideWithBody) {
+    SnakeGame game;
+    SnakeGameTest tester;
+
+    tester.setGameState(game, State::MOVE);
+    game.userInput(UserAction_t::Down, false); 
+    game.userInput(UserAction_t::Left, false); 
+    game.userInput(UserAction_t::Up, false); 
+
+    EXPECT_EQ(tester.getGameState(game), State::GAME_OVER);
+}
+
+TEST(SnakeGameTest, MoveHandleOppositeDirection) {
+    SnakeGame game;
+    SnakeGameTest tester;
+
+    tester.setGameState(game, State::MOVE);
+    userInput(UserAction_t::Left, false); 
+
+    EXPECT_EQ(tester.getGameState(game), State::MOVE);
+}
+
+TEST(SnakeGameTest, UpdateCurrState) {
+    SnakeGame game;
+    SnakeGameTest tester;
+
+    GameInfo_t game_info = updateCurrentState();
+
+    const int expected_y = FIELD_HEIGHT / 2;
+    const int start_x = FIELD_WIDTH / 2;
+
+    for (int i = 0; i < 4; ++i) {
+        int x = start_x + i;
+        EXPECT_EQ(game_info.field[expected_y][x], static_cast<int>(FigureCode::SNAKE));
+    }
+
+    for (int i = 0; i < FIELD_HEIGHT + 2; ++i) {
+        EXPECT_EQ(game_info.field[i][0], static_cast<int>(FigureCode::WALL));
+        EXPECT_EQ(game_info.field[i][FIELD_WIDTH + 1], static_cast<int>(FigureCode::WALL));
+    }
+
+    for (int j = 0; j < FIELD_WIDTH + 2; ++j) {
+        EXPECT_EQ(game_info.field[0][j], static_cast<int>(FigureCode::WALL));
+        EXPECT_EQ(game_info.field[FIELD_HEIGHT + 1][j], static_cast<int>(FigureCode::WALL));
+    }
+
+    bool apple_exists = false;
+    for (int i = 1; i <= FIELD_HEIGHT && !apple_exists; i++) {
+      for (int j = 1; j <= FIELD_WIDTH && !apple_exists; j++) {
+        if (game_info.field[i][j] == static_cast<int>(FigureCode::APPLE)) {
+          apple_exists = true;
+        }
+      }
+    }
+    EXPECT_TRUE(apple_exists);
+}
+TEST(SnakeGameTest, SnakeMovesAfterTimerExpirationRealTime) {
+    SnakeGame game;
+    SnakeGameTest tester;
+    
+    Point initial_head = tester.getSnakeBody(game).back();
+
+    tester.setGameState(game, State::MOVE);
+    GameInfo_t game_info = updateCurrentState();
+    
+    bool da = false;
+    
+    while(!da) {
+      da = tester.isTimerExpired(game);
+      //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      game_info = updateCurrentState();
+    }
+    
+    Point new_head = tester.getSnakeBody(game).back();
+    EXPECT_NE(initial_head, new_head) 
+        << "X: " << initial_head.getX() << "Y: " << initial_head.getY()
+        << "X: " << new_head.getX() << "Y: " << new_head.getY()
+        << " " << da;
 }
 
 }  // namespace s21

@@ -13,9 +13,9 @@ Controller::Controller(Window* view, QObject* parent)
       connect(view_, &Window::restartClicked, this, &Controller::handleRestart);
       connect(view_, &Window::exitClicked, this, &Controller::handleExit);
 
-      QTimer *timer = new QTimer(this);
-      connect(timer, &QTimer::timeout, this, &Controller::update_game);
-      timer->start(1);
+      timer_ = new QTimer(this);
+      connect(timer_, &QTimer::timeout, this, &Controller::update_game);
+      timer_->start(1);
 }
 
 UserAction_t Controller::convertKeyToAction(int key) {
@@ -52,6 +52,7 @@ UserAction_t Controller::convertKeyToAction(int key) {
 
 void Controller::handleExit() {
   userInput(UserAction_t::Terminate, false);
+  QApplication::quit();
   qDebug() << "Exit button clicked!";
 }
 
@@ -68,19 +69,16 @@ void Controller::handleRestart() {
 void Controller::processUserInput(int key, bool hold) {
   UserAction_t action = convertKeyToAction(key);
   userInput(action, hold);
+  if (action == Terminate) {
+    QApplication::quit();
+  }
 }
 
 void Controller::update_game() {
   GameInfo_t game_info = updateCurrentState();
 
-  if (game_info.pause == static_cast<int>(PauseMode::kExit)) {
-    QApplication::quit();
-  } else {
-    if (game_info.field) {
-      view_->setGameInfo(game_info);
-      view_->update();
-    }
-  }
+  view_->setGameInfo(game_info);
+  view_->update();
 }
 
 }  // namespace s21

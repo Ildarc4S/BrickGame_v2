@@ -28,6 +28,7 @@ class Controller : public QObject {
 
  private:
   Window* view_;
+  QTimer* timer_;
 };
 
 }  // namespace s21

@@ -1,7 +1,6 @@
 #include "./include/snake.h"
 #include <vector>
 #include <utility>
-#include <QDebug>
 
 namespace s21 {
 
@@ -76,7 +75,7 @@ SnakeGame::SnakeGame()
   : state_(State::START),
     action_(UserAction_t::Start),
     snake_(),
-    timer_(300),
+    timer_(500),
     boost_time_(false),
     db_("snake_db.txt") {
 
@@ -104,6 +103,7 @@ int** SnakeGame::fillField(int width, int height) {
   }
   return ptr;
 }
+
 
 void Snake::move(bool apple_eat) {
   Point new_head = calcAndGetNewHeadPos();
@@ -195,7 +195,6 @@ void SnakeGame::start() {
   if (state_ == State::START) {
     spawn();
     game_info_.high_score = db_.read();
-    qDebug() << game_info_.high_score;
   } else if (state_ == State::PAUSE) {
     state_ = State::MOVE;
   } else if (state_ == State::GAME_OVER) {
@@ -345,7 +344,6 @@ void SnakeGame::clearField(int width, int height) {
 GameInfo_t SnakeGame::getGameInfo() {
   if (state_ == State::MOVE && timer_.isExpired()) {
     moveHandle(snake_.getDirection(), false);
-    timer_.update();
   }
 
   if (game_info_.field != nullptr) {

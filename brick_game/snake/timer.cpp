@@ -1,5 +1,4 @@
 #include "./include/timer.h"
-#include <QDebug>
 
 namespace s21 {
 
@@ -27,8 +26,6 @@ void Timer::setInterval(int interval, bool save) {
   }
   interval_ = interval;
 
-  qDebug() << interval_;
-  qDebug() << last_interval_;
 }
 
 void Timer::updateLastinterval() {

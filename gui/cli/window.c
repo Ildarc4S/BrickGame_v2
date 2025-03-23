@@ -110,7 +110,6 @@ void _drawField(GameField_t *self) {
   if (game.pause == PAUSE_MODE_GAME_CONTINUE) {
     for (int i = 0; i < self->height; i++) {
       for (int j = 0; j < self->width; j++) {
-        
         if (game.field[i][j] == OBJECT_CODE_WALL) {
           mvprintw(self->y + i, (self->x + j) * 2, "[]");
         } else if (isTetraminoCode(game.field[i][j]) || game.field[i][j] == OBJECT_CODE_SNAKE) {

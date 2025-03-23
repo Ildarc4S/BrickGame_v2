@@ -7,8 +7,9 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "./../../brick_game/spec/game_spec.h"
+#include "./../../../brick_game/spec/game_spec.h"
 #include "./color_convert.h"
+#include "./game_field.h"
 
 namespace s21 {
 
@@ -47,43 +48,6 @@ private:
   QLabel *status_label_;
 };
 
-class NextFigureWidget : public QWidget {
-public:
-  explicit NextFigureWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-
-  void setGameInfo(const GameInfo_t *game_info) {
-    game_info_ = game_info;
-    update();
-  }
-
-protected:
-  void paintEvent(QPaintEvent *event) override {
-    Q_UNUSED(event);
-    if (!game_info_ || !game_info_->next)
-      return;
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-
-    const int cell_size = qMin(width() / 4, height() / 4);
-    const QColor blockColor = Qt::cyan;
-
-    for (int i = 0; i < 4; ++i) {
-      for (int j = 0; j < 4; ++j) {
-        if (game_info_->next[i][j]) {
-          painter.fillRect(j * cell_size, i * cell_size, cell_size, cell_size,
-                           blockColor);
-          painter.setPen(Qt::black);
-          painter.drawRect(j * cell_size, i * cell_size, cell_size, cell_size);
-        }
-      }
-    }
-  }
-
-private:
-  const GameInfo_t *game_info_ = nullptr;
-};
-
 class Window : public QWidget {
   Q_OBJECT
 
@@ -93,7 +57,6 @@ public:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  // void resizeEvent(QResizeEvent* event) override;
 
 signals:
   void keyPressed(int key, bool hoold);

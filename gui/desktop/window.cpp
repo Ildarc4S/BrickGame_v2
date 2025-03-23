@@ -1,6 +1,6 @@
 #include "./window.h"
-#include <QDebug>
 #include "./color_convert.h"
+
 #include <QKeyEvent>
 #include <QPaintEvent>
 #include <QPainter>
@@ -14,7 +14,7 @@ GameArea::GameArea(QWidget *parent) : QWidget(parent), game_info_(nullptr) {}
 
 void GameArea::paintEvent(QPaintEvent *event) {
   Q_UNUSED(event);
-  if (!game_info_ || !game_info_->field ) {
+  if (!game_info_ || !game_info_->field) {
     return;
   }
 
@@ -159,9 +159,9 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   QHBoxLayout *main_layout = new QHBoxLayout(this);
   main_layout->setContentsMargins(0, 0, 0, 0);
 
-  left_stack_ = new QStackedWidget();
-  game_area_ = new GameArea();
-  menu_ = new MenuWidget();
+  left_stack_ = new QStackedWidget;
+  game_area_ = new GameArea;
+  menu_ = new MenuWidget;
   left_stack_->addWidget(game_area_);
   left_stack_->addWidget(menu_);
 

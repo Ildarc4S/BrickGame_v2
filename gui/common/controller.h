@@ -1,6 +1,7 @@
 #pragma once
-#include "./../gui/desktop/window.h"
-#include "./../brick_game/spec/game_spec.h"
+
+#include "./../desktop/window.h"
+#include "./../../brick_game/spec/game_spec.h"
 
 namespace s21 {
 

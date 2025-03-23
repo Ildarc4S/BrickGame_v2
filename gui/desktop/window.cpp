@@ -134,6 +134,7 @@ void MenuWidget::updateButtons(int pause_mode) {
 }
 
 Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
+  setFixedSize(600, 800);
   setStyleSheet("QWidget {"
                 "    background-color: #2E2E2E;" // Темный фон для всего окна
                 "    color: white;"              // Белый текст

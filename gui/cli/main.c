@@ -1,6 +1,6 @@
 #include <time.h>
 
-#include "./gui/cli/include/frontend.h"
+#include "./include/frontend.h"
 
 #include <stdlib.h>
 

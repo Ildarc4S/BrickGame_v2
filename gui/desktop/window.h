@@ -7,7 +7,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "./../../../brick_game/spec/game_spec.h"
+#include "./../../brick_game/spec/game_spec.h"
 #include "./color_convert.h"
 #include "./game_field.h"
 

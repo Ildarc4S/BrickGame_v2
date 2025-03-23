@@ -2,55 +2,55 @@
 
 #include "./include/tetris.h"
 
-int checkCollideWithWall(int x, int y) {
-  return (x < 1 || x >= FIELD_WIDTH + 1 ||
-          y < 1 || y >= FIELD_HEIGHT + 1);
-}
-
-void clearFieldArea(int **field, Tetris_t *tetris, bool full_clear) {
-  if (!field || (tetris && !tetris->game_info.field)) return;
-
-  int **target = tetris ? tetris->game_info.field : field;
-  for (int i = 0; i < FIELD_HEIGHT + 2; i++)
-    for (int j = 0; j < FIELD_WIDTH + 2; j++)
-      if (full_clear) {
-        target[i][j] = checkCollideWithWall(i, j) ? OBJECT_CODE_WALL : OBJECT_CODE_AIR;
-      } else if (target[i][j] != OBJECT_CODE_AIR && target[i][j] != OBJECT_CODE_WALL) {
-        target[i][j] = OBJECT_CODE_AIR;
-      }
-}
-
 void clearField(int **field) {
-  clearFieldArea(field, NULL, true);
+  if (!field) return;
+
+  for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
+    for (int j = 0; j < FIELD_WIDTH + 2; j++) {
+      if (i == 0 || j == 0 || i == FIELD_HEIGHT + 1 || j == FIELD_WIDTH + 1) {
+        field[i][j] = OBJECT_CODE_WALL;
+      } else {
+        field[i][j] = OBJECT_CODE_AIR;
+      }
+    }
+  }
 }
 
 void clearTetraminoFromField(Tetris_t *tetris) {
-  clearFieldArea(NULL, tetris, false);
+  if (!tetris->game_info.field) return;
+
+  for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
+    for (int j = 0; j < FIELD_WIDTH + 2; j++) {
+      if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR &&
+          tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
+        tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
+      }
+    }
+  }
 }
 
+int checkCollideWithWall(int x, int y) {
+  return (x < 1 || x >= FIELD_WIDTH + 1 || y >= FIELD_HEIGHT + 1);
+}
 
-
-int checkCollideWithBlock(Tetris_t* tetris, int x, int y) {
-  return (tetris->game_info.field[y][x] != OBJECT_CODE_AIR);
+static int checkCollideWithBlock(Tetris_t *self, int x, int y) {
+  if (y < 1 || !self || !self->game_info.field) return 0;
+  return (self->game_info.field[y][x] != OBJECT_CODE_AIR);
 }
 
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
-  if (!tetramino || !self->game_info.field) return -1;
-
+  if (!tetramino || !self || !self->game_info.field) return -1;
+  
   int result = 0;
-
   for (int i = 0; i < TETRAMINO_HEIGHT && !result; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH && !result; j++) {
       if (tetramino->brick[i][j]) {
         int global_x = tetramino->x + j;
         int global_y = tetramino->y + i;
-
         result = checkCollideWithWall(global_x, global_y) || checkCollideWithBlock(self, global_x, global_y);
-        
       }
     }
   }
-
   return result;
 }
 
@@ -113,36 +113,41 @@ void rotateTetramino(Tetramino_t *tetramino) {
   copyTetramino(tetramino->brick, temp);
 }
 
-void shiftLines(Tetris_t *self, int *index) {
+void shiftLines(Tetris_t *tetris, int *index) {
   for (int k = *index; k > 1; k--) {
     for (int j = 1; j <= FIELD_WIDTH+1; j++) {
-      self->game_info.field[k][j] = self->game_info.field[k - 1][j];
+      tetris->game_info.field[k][j] = tetris->game_info.field[k - 1][j];
     }
   }
   *index += 1;
 }
 
-void clearLines(Tetris_t *self) {
+int countEraseLines(Tetris_t* tetris) {
   int erase_line_count = 0;
   for (int i = FIELD_HEIGHT; i > 0; i--) {
     bool erase_line = true;
     for (int j = 1; j < FIELD_WIDTH + 1; j++) {
-      if (self->game_info.field[i][j] == OBJECT_CODE_AIR) {
+      if (tetris->game_info.field[i][j] == OBJECT_CODE_AIR) {
         erase_line = false;
       }
     }
     if (erase_line) {
       erase_line_count++;
-      shiftLines(self, &i);
+      shiftLines(tetris, &i);
     }
   }
+  return erase_line_count;
+}
 
-  Score_t score = initScore();
-  score.convertLineCountToScore(&score, erase_line_count);
+void updateScoreAndLeve(Tetris_t* tetris, int erase_line_count) {
+  tetris->level.score.convertLineCountToScore(&tetris->level.score, erase_line_count);
+  tetris->level.updateLevel(&tetris->level);
 
-  self->level.score.score += score.score;
-  self->level.updateLevel(&self->level);
+  tetris->updateScore(tetris);
+  tetris->updateLevel(tetris);
+}
 
-  self->updateScore(self);
-  self->updateLevel(self);
+void clearLines(Tetris_t *self) {
+  int erase_line_count = countEraseLines(self);
+  updateScoreAndLeve(self, erase_line_count);
 }

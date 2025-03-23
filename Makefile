@@ -16,7 +16,7 @@ CFILES = $(wildcard $(SRC_DIR)/*.c)
 TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/tetris/%.o,$(CFILES))
 TEST_OBJS = $(patsubst $(TEST_DIR)/%.c,$(OBJ_DIR)/tests/%.o,$(TEST_FILES))
-BIN_DIR = bin
+BIN_DIR = bin/tetris
 
 PREFIX = /usr/local
 BINDIR = $(PREFIX)/bin
@@ -24,8 +24,8 @@ LIBDIR = $(PREFIX)/lib
 DOCDIR = $(PREFIX)/share/doc/s21_tetris
 
 LIB_PATH = $(LIB_DIR)/s21_tetris.a
-LIB_NAME= s21_tetris.a
-EXEC_NAME = s21_tetris
+LIB_NAME = s21_tetris.a
+EXEC_NAME = s21_tetris_cli
 TEST_EXEC = test_exec
 
 DOCGEN = doxygen
@@ -48,7 +48,7 @@ $(OBJ_DIR)/tests/%.o: $(TEST_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/tests
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(EXEC_NAME): $(GUI_DIR)/*.c  $(LIB_NAME)
+$(EXEC_NAME): $(GUI_DIR)/*.c $(LIB_PATH)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(NCURSES_FLAGS)
 
@@ -69,11 +69,11 @@ gcov_report: $(TEST_FILES) $(CFILES)
 install: $(EXEC_NAME)
 	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
 	install -m 0755 $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
-	install -m 0644 $(LIB_PATH) $(LIBDIR)
+	install -m 0644 $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)
 
 uninstall:
 	rm -f $(BINDIR)/$(EXEC_NAME)
-	rm -f $(LIBDIR)/s21_tetris.a
+	rm -f $(LIBDIR)/$(LIB_NAME)
 	rm -rf $(DOCDIR)
 
 dvi:

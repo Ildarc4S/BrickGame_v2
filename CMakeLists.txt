@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 project(BrickGame LANGUAGES CXX C)
 
-# Настройки стандарта C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Настройки стандарта C (для ncurses)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Включение автоматической генерации MOC, RCC и UIC для Qt
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -38,6 +35,7 @@ set(TEST_BIN_DIR ${CMAKE_SOURCE_DIR}/bin/tests)
 set(COV_BIN_DIR ${CMAKE_SOURCE_DIR}/bin/coverage)
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
 set(COV_DIR ${CMAKE_SOURCE_DIR}/coverage/snake)
+set(DOCS_DIR ${CMAKE_SOURCE_DIR}/docs/snake)
 
 set(SNAKE_LIB_NAME s21_snake)
 set(TETRIS_LIB_NAME s21_tetris)
@@ -227,9 +225,9 @@ add_custom_target(uninstall
 
 # Цель dvi
 add_custom_target(dvi
-    COMMAND doxygen Doxyfile
+    COMMAND doxygen snake_doxy 
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Generating documentation with Doxygen"
+    COMMENT "Generating documentation with Doxygen in docs/snake"
 )
 
 # Цель dist
@@ -270,5 +268,5 @@ add_custom_target(gcov_report
 
 set_directory_properties(PROPERTIES
     ADDITIONAL_CLEAN_FILES
-    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${CMAKE_SOURCE_DIR}/*.tar.gz;${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
+    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${CMAKE_SOURCE_DIR}/*.tar.gz;${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
 )

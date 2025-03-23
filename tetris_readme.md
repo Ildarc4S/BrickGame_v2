@@ -4,7 +4,7 @@
 
 Логика игры построена на конечных автоматах (Finite State Machines, FSM), схему которых вы можете увидеть ниже:
 
-![FSM Diagram](image/fsm.png)
+![FSM Diagram](image/tetris/fsm.png)
 
 ---
 

@@ -29,7 +29,7 @@ EXEC_NAME = s21_tetris
 TEST_EXEC = test_exec
 
 DOCGEN = doxygen
-DOXYFILE = Doxyfile
+DOXYFILE = tetris_doxy 
 
 .PHONY: all install uninstall clean dvi dist test gcov_report rebuild
 
@@ -48,7 +48,7 @@ $(OBJ_DIR)/tests/%.o: $(TEST_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/tests
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(EXEC_NAME): $(GUI_DIR)/*.c main.c $(LIB_NAME)
+$(EXEC_NAME): $(GUI_DIR)/*.c  $(LIB_NAME)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(NCURSES_FLAGS)
 

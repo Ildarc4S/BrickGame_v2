@@ -39,7 +39,7 @@ void _spawn(Tetris_t *self) {
         self->collection.getRandomTetranimo(&self->collection);
   }
 
-  copyTetraminoToCurr(self, self->next_tetramino);
+  copyTetraminoToCurrentTetramino(self, self->next_tetramino);
   self->curr_tetramino.y = -1;
   self->curr_tetramino.x = FIELD_WIDTH / 2;
 

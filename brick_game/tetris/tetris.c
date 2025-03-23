@@ -63,32 +63,34 @@ void _spawn(Tetris_t *self) {
   }
 }
 
+void moveHorizontal(Tetris_t* tetris, int direction) {
+    if (!tetris) {
+      return; 
+    }
+
+  Tetramino_t *tetramino = &tetris->curr_tetramino;
+  tetramino->x += direction;
+  if (isCollide(tetris, tetramino)) {
+    tetramino->x -=direction;
+  }
+  replaceTetramino(tetris, tetramino);
+}
+
 void _left(Tetris_t *self, bool hold) {
   if (!self) {
     return;
   }
   (void)hold;
-
-  Tetramino_t *tetramino = &self->curr_tetramino;
-  tetramino->x--;
-  if (isCollide(self, tetramino)) {
-    tetramino->x++;
-  }
-  replaceTetramino(self, tetramino);
+  moveHorizontal(self, -1);
 }
 
-void _right(Tetris_t *tetris, bool hold) {
-  if (!tetris) {
+void _right(Tetris_t *self, bool hold) {
+  if (!self) {
     return;
   }
   (void)hold;
 
-  Tetramino_t *tetramino = &tetris->curr_tetramino;
-  tetramino->x++;
-  if (isCollide(tetris, tetramino)) {
-    tetramino->x--;
-  }
-  replaceTetramino(tetris, tetramino);
+  moveHorizontal(self, 1);
 }
 
 void _up(Tetris_t *self, bool hold) {

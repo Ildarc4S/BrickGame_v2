@@ -6,6 +6,7 @@ namespace s21 {
 
 Snake::Snake()
   : direction_(Direction::RIGHT),
+    body_(),
     speed_(1) {
   int mid_x = FIELD_WIDTH / 2;
   int mid_y = FIELD_HEIGHT / 2;
@@ -17,13 +18,15 @@ Snake::Snake()
 
 Snake::Snake(const Snake& other)
   : direction_(other.direction_),
-    speed_(other.speed_),
-    body_(other.body_) {}
+    body_(other.body_),
+    speed_(other.speed_)
+{}
 
 Snake::Snake(Snake&& other)
   : direction_(std::move(other.direction_)),
-    speed_(std::move(other.speed_)),
-    body_(std::move(other.body_)) {}
+    body_(std::move(other.body_)),
+    speed_(std::move(other.speed_))
+{}
 
 Snake& Snake::operator=(const Snake& other) {
   if (this != &other) {
@@ -74,12 +77,11 @@ Point Snake::calcAndGetNewHeadPos() {
 SnakeGame::SnakeGame()
   : state_(State::START),
     action_(UserAction_t::Start),
+    timer_(500),
     snake_(),
     apple_(snake_.getBody()),
-    timer_(500),
-    boost_time_(false),
-    db_("snake_db.txt") {
-
+    db_("snake_db.txt"),
+    boost_time_(false){
     game_info_.field = MemoryUtility::createField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     game_info_.next = nullptr;
     game_info_.score = 0;
@@ -275,7 +277,7 @@ bool SnakeGame::isCollision(const Point& new_head) {
   }
 
   const std::vector<Point>& snake_body = snake_.getBody();
-  for (int i = 0; i < snake_body.size() - 1 && !result; i++) {
+  for (size_t i = 0; i < snake_body.size() - 1 && !result; i++) {
     if (new_head == snake_body[i]) {
       result = true;
     }
@@ -302,6 +304,7 @@ void SnakeGame::moveHandle(Direction direction, bool hold) {
   if (isOppositeDirection(direction)) {
     return;
   }
+  (void)hold;
 
   snake_.setDirection(direction);
   Point new_head = snake_.calcAndGetNewHeadPos();

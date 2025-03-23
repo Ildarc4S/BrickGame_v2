@@ -52,6 +52,7 @@ class Snake {
   Direction direction_;
   std::vector<Point> body_;
   int speed_;
+
  public:
   Snake();
   Snake(const Snake& other);

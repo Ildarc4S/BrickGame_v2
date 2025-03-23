@@ -6,8 +6,8 @@
 #include "./objects.h"
 
 #define TEXT_SIZE 50
-#define TEXT_LINE_COUNT 10
-#define CUR_TEXT_LINEC_COUNT 6
+#define TEXT_LINE_COUNT 12
+#define CUR_TEXT_LINEC_COUNT 12
 
 typedef struct _panel {
   int x;

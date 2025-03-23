@@ -6,37 +6,37 @@ QColor ColorConverter::convertObjectToColor(ObjectCode code) {
   QColor color = Qt::white;
   switch (code) {
   case ObjectCode::kAir:
-    color = QColor(80, 80, 80);  // gray
+    color = QColor(80, 80, 80);    // Dark gray
     break;
   case ObjectCode::kWall:
-    color = Qt::black;
+    color = Qt::black;             // Black
     break;
   case ObjectCode::kTetraminoI:
-    color = Qt::red;
+    color = QColor(255, 0, 0);     // Red
     break;
   case ObjectCode::kTetraminoO:
-    color = Qt::magenta;
+    color = QColor(255, 0, 255);   // Magenta
     break;
   case ObjectCode::kTetraminoT:
-    color = Qt::blue;
+    color = QColor(0, 0, 255);     // Blue
     break;
   case ObjectCode::kTetraminoS:
-    color = Qt::green;
+    color = QColor(0, 255, 0);     // Green
     break;
   case ObjectCode::kTetraminoZ:
-    color = Qt::darkMagenta;
+    color = QColor(128, 0, 128);   // Purple
     break;
   case ObjectCode::kTetraminoJ:
-    color = Qt::darkYellow;
+    color = QColor(255, 165, 0);   // Orange
     break;
   case ObjectCode::kTetraminoL:
-    color = Qt::yellow;
+    color = QColor(255, 255, 0);   // Yellow
     break;
   case ObjectCode::kSnake:
-    color = Qt::green;
+    color = QColor(0, 255, 0);     // Green (same as TetraminoS)
     break;
   case ObjectCode::kApple:
-    color = Qt::red;
+    color = QColor(255, 0, 0);     // Red (same as TetraminoI)
     break;
   default:
     break;

@@ -25,13 +25,12 @@ void drawText(Panel_t *self) {
   GameInfo_t game_info = updateCurrentState();
   
   int start = 0;
-  int count = 5;
+  int count = 6;
   
   if (game_info.next == NULL) {
-    start = 5;
-    count = 5;
+    start = 6;
+    count = 6;
   }
-
   for (int i = 0; i < count && (start + i) < self->size; i++) {
     mvprintw(self->y + i, self->x * 2, "%s", self->text[start + i]);
   }
@@ -175,12 +174,19 @@ GameField_t createGameField(int width, int height,
 Window_t initWindow() {
   return (Window_t){
     .help_panel = createPanel(15, 16, "Help:",
-                      (const char *[]){"Press q to quit", "Press p to pause",
-                                       "Press left/right to move figure",
-                                       "Press double down to move figure down",
+                      (const char *[]){"Press q to quit", 
+                                       "Press p to pause",
                                        "Press s to start",
-                                       "Press space to rotate figure"},
-                      6,
+                                       "Press left/right to move figure",
+                                       "Press down to move figure down",
+                                       "Press space to rotate figure",
+                                       "Press q to quit", 
+                                       "Press p to pause",
+                                       "Press s to start",
+                                       "Press left/right to move snake horizontally",
+                                       "Press up/down to move snake vertically",
+                                       "Press space to boost snake"},
+                      12,
                       PANEL_COLOR_GREEN, 
                       PANEL_MODE_TEXT,
                       _drawPanel),

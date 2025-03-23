@@ -66,7 +66,7 @@ TEST(SnakeGameTest, SnakeMovesAfterTimerExpirationRealTime) {
     tester.setTimerInterval(game, -1);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    GameInfo_t game_info = game.getGameInfo();
+    game.getGameInfo();
 
     Point new_head = tester.getSnakeBody(game).back();
     EXPECT_NE(initial_head, new_head);

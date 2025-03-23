@@ -75,11 +75,12 @@ SnakeGame::SnakeGame()
   : state_(State::START),
     action_(UserAction_t::Start),
     snake_(),
+    apple_(snake_.getBody()),
     timer_(500),
     boost_time_(false),
     db_("snake_db.txt") {
 
-    game_info_.field = fillField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
+    game_info_.field = MemoryUtility::createField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
     game_info_.next = nullptr;
     game_info_.score = 0;
     game_info_.high_score = 0;
@@ -93,17 +94,11 @@ SnakeGame::SnakeGame()
     max_score_ = 200;
     interval_diff_ = 50;
     interval_boost_diff_ = 80;
-  apple_.genRandPosition(snake_.getBody());
 }
 
-int** SnakeGame::fillField(int width, int height) {
-  int** ptr = new int*[height];
-  for (int i = 0; i < height; i++) {
-    ptr[i] = new int[width];
-  }
-  return ptr;
+SnakeGame::~SnakeGame() {
+  MemoryUtility::removeField(game_info_.field, FIELD_HEIGHT+2);
 }
-
 
 void Snake::move(bool apple_eat) {
   Point new_head = calcAndGetNewHeadPos();
@@ -215,12 +210,8 @@ void SnakeGame::start() {
 
 
 void SnakeGame::spawn() {
-  if (state_ == State::EAT) {
-    apple_.genRandPosition(snake_.getBody());
-  } else {
-    snake_ = Snake();
-    state_ = State::MOVE;
-  }
+  snake_ = Snake();
+  state_ = State::MOVE;
 }
 
 void SnakeGame::pause() {
@@ -330,6 +321,8 @@ void SnakeGame::moveHandle(Direction direction, bool hold) {
 }
 
 void SnakeGame::clearField(int width, int height) {
+  if (game_info_.field == nullptr) return;
+
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
       if (i == 0 || j == 0 || i == height-1 || j == width-1) {
@@ -342,7 +335,7 @@ void SnakeGame::clearField(int width, int height) {
 }
 
 GameInfo_t SnakeGame::getGameInfo() {
-  if (state_ == State::MOVE && timer_.isExpired()) {
+  if (state_ == State::MOVE && timer_.isExpired() && game_info_.field != nullptr) {
     moveHandle(snake_.getDirection(), false);
   }
 

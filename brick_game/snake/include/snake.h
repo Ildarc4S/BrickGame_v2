@@ -5,6 +5,7 @@
 
 #include "./../../spec/game_spec.h"
 
+#include "./memory_utils.h"
 #include "./point.h"
 #include "./apple.h"
 #include "./data_base.h"
@@ -68,6 +69,7 @@ class Snake {
 
   void move(bool apple_eat = false);
   Point calcAndGetNewHeadPos();
+  friend class SnakeGameTest;
 };
 
 
@@ -104,13 +106,15 @@ class SnakeGame {
   bool isAppleCollide(const Point& head);
   bool isOppositeDirection(const Direction& direction);
 
-  int** fillField(int width, int height);
   void clearField(int width, int height);
   void restoreGameInfoDate();
  public:
   SnakeGame();
+  ~SnakeGame();
   void userInput(UserAction_t action, bool hold);
   GameInfo_t getGameInfo();
+  
+  friend class SnakeGameTest;
 };
 
 class SnakeGameSingleton {

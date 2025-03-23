@@ -25,7 +25,6 @@ void Timer::setInterval(int interval, bool save) {
     updateLastinterval();
   }
   interval_ = interval;
-
 }
 
 void Timer::updateLastinterval() {

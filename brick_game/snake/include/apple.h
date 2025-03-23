@@ -14,6 +14,7 @@ class Apple {
   Apple(const std::vector<Point>& snake_body);
 
   Point getPosition() const;
+  void setPosition(const Point& position);
   void genRandPosition(const std::vector<Point>& snake_body);
 };
 

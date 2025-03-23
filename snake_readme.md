@@ -54,7 +54,7 @@ GameInfo_t updateCurrentState();
 ```
 
 Передаваемые данные:
-```
+```c
 typedef enum {
     Start,
     Pause,

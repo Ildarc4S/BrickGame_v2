@@ -97,8 +97,6 @@ void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
   self->curr_tetramino.y = tetramino->y;
 }
 
-#include <ncurses.h>
-
 void insertTetraminoToField(Tetris_t *self) {
   if (!self->game_info.field) return;
 
@@ -108,7 +106,6 @@ void insertTetraminoToField(Tetris_t *self) {
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
       if (self->curr_tetramino.brick[i][j]) {
-        //mvprintw(27, 17, "Vstav");
         self->game_info.field[y + i][x + j] = OBJECT_CODE_WALL;
       }
     }

@@ -1,48 +1,128 @@
-# School 21 - BrickGame - Tetris
+# School 21 - BrickGame - Snake
 
-Tetris is one of the most addictive games in the BrickGame series. Here is a classic interpretation of the game written in C, with ncurses-based console graphics to spice up the gameplay.
+Добро пожаловать в Snake — легендарную игру из серии BrickGame, которая проверит вашу ловкость и реакцию! Эта классическая версия написана на языке C и использует консольную графику на базе библиотеки `ncurses` и графику на `QT`, чтобы сделать игровой процесс увлекательным и стильным.
 
-The game logic is based on finite state machines, a diagram of which you can see below.
+Логика игры реализована с использованием конечных автоматов (Finite State Machines, FSM), схему которых вы можете увидеть ниже:
 
-![FSM](image/fsm.png)
+![FSM Diagram](image/snake/fsm.png)
 
-### Game control
-- **Start Game**: Press `s`
-- **End the Game**: Press `q`
-- **Pause the Game**: Press `p`
-- **Move Left**: Press the `Left Arrow`
-- **Move Right**: Press the `Right Arrow`
-- **Accelerate (Move Down double)**: Press double the `Down Arrow`
-- **Rotate the Tetramino**: Press `Space`
+## Управление игрой
 
-### Scoring
-- Clearing `1` row: `100` points
-- Clearing `2` rows: `300` points
-- Clearing `3` rows: `700` points
-- Clearing `4` rows: `1500` points
+Управляйте змейкой с помощью интуитивных клавиш:
 
-### Levels
-- The game starts at level `1`.
-- Every time you score `600` points, the level increases by `1`, and the speed of falling tetrominoes increases.
-- The maximum level is `10`.
+- **Начать игру**: Нажмите `s`  
+- **Завершить игру**: Нажмите `q`  
+- **Поставить на паузу**: Нажмите `p`  
+- **Двигаться влево**: Нажмите `←` (стрелка влево)  
+- **Двигаться вправо**: Нажмите `→` (стрелка вправо)  
+- **Двигаться вверх**: Нажмите `↑` (стрелка вверх)  
+- **Двигаться вниз**: Нажмите `↓` (стрелка вниз)  
 
-### End of the Game
-The game ends when a new tetromino cannot be placed at the top of the playing field, meaning the blocks have piled up too high. Your final score will be displayed, and if it’s higher than your previous best, it will be saved as the new high score
+## Подсчет очков
 
-Good luck, and enjoy the game!
+Собирайте еду и увеличивайте свой счет:
 
-### Installation
-To install the game, make sure you have the ncurses library.
+- За каждую съеденную еду вы получаете `10` очков.  
+- Чем длиннее змейка, тем выше сложность и тем больше ваш потенциальный рекорд!
 
-```bash
-make install
+## Уровни
+
+Чувствуйте, как игра набирает обороты:
+
+- Игра начинается с **уровня 1**.  
+- Каждый раз, когда вы съедаете `5` единиц еды, уровень увеличивается на `1`, а скорость змейки возрастает.  
+- Максимальный уровень — **10**.  
+
+Сможете ли вы стать мастером Snake?
+
+
+## Завершение игры
+
+Игра заканчивается, если змейка врезается в стену или в саму себя. Ваш итоговый счет будет отображен, и если он превзойдет предыдущий рекорд, он станет новым лучшим результатом!
+
+Удачи и приятной игры!
+
+---
+
+## Интерфейс библиотеки
+
+Взаимодействие с библиотекой осуществляется через следующие функции:
+
+```c
+void userInput(UserAction_t action, bool hold);
+GameInfo_t updateCurrentState();
 ```
 
-### Documentation generation
-
-Install packages:
-* graphviz
-* doxygen
-```bash
-make dvi 
+Передаваемые данные:
 ```
+typedef enum {
+    Start,
+    Pause,
+    Terminate,
+    Left,
+    Right,
+    Up,
+    Down,
+    Action
+} UserAction_t;
+
+typedef struct {
+    int **field;
+    int **next; // Не используется в Snake, но оставлено для совместимости
+    int score;
+    int high_score;
+    int level;
+    int speed;
+    int pause;
+} GameInfo_t;
+```
+
+Эти функции позволяют вам создавать любой интерфейс для игры Snake, получая данные напрямую от библиотеки.
+
+## Сборка проекта
+Проект использует CMake для сборки. Убедитесь, что у вас установлены необходимые зависимости (`cmake`, `ncurses`, `qt5`).
+
+Создайте директорию сборки и сконфигурируйте проект:
+```bash
+mkdir build 
+cd build 
+cmake ..
+```
+
+Соберите библиотеку и исполняемые файлы:
+```bash
+make
+```
+
+Это создаст библиотеку `s21_snake.a` и исполняемые файлы `s21_snake_cli` (консольная версия) и `s21_snake_desktop` (графическая версия на Qt) в папке `bin`.
+
+## Установка
+Для установки игры выполните:
+```bash
+sudo make install
+```
+
+Это установит:
+
+`s21_snake_cli`, `s21_snake_desktop`, `s21_tetris_desktop` в `/usr/local/bin`.
+Библиотеки `s21_snake.a` и `s21_tetris.a` в `/usr/local/lib`.
+Также вызовет make install из Makefile для установки `s21_tetris_cli`.
+
+## Удаление
+Чтобы удалить установленные файлы:
+```bash
+sudo make uninstall
+```
+
+Это удалит все установленные файлы и вызовет `make uninstall` из `Makefile` тетриса для удаления `s21_tetris_cli`.
+
+## Генерация документации
+Для создания документации с помощью `Doxygen` установите необходимые пакеты:
+* `graphviz` (для генерации графов)
+* `doxygen` (основной инструмент)
+
+Затем выполните:
+```bash
+make dvi
+```
+Документация будет сгенерирована в папке `docs`.

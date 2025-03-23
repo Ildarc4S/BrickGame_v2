@@ -37,8 +37,8 @@ all: $(LIB_NAME) $(EXEC_NAME)
 
 $(LIB_NAME): $(OBJS)
 	mkdir -p $(LIB_DIR)
-	ar rcs $@ $^
-	ranlib $@
+	ar rcs $(LIB_PATH) $^
+	ranlib $(LIB_PATH)
 
 $(OBJ_DIR)/tetris/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/tetris

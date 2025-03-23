@@ -1,5 +1,4 @@
 #pragma once
-#include <QObject>
 #include "./../gui/desktop/window.h"
 #include "./../brick_game/spec/game_spec.h"
 

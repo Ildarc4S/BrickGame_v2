@@ -1,4 +1,5 @@
 #include "./include/fsm.h"
+
 #include <ncurses.h>
 
 void updateFSM(UserAction_t action, bool hold) {
@@ -96,4 +97,3 @@ void gameOverHandler(Tetris_t *tetris, UserAction_t action) {
       break;
   };
 }
-

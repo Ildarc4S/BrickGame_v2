@@ -1,4 +1,5 @@
 #include "./include/tetramino_collection.h"
+
 #include <stdlib.h>
 
 void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
@@ -43,7 +44,7 @@ void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
       .y = 0,
       .color = TETRAMINO_COLOR_YELLOW,
       .brick = {{0, 0, 0, 0}, {0, 0, 1, 0}, {1, 1, 1, 0}, {0, 0, 0, 0}}};
-  
+
   self->tetraminos[0] = tetramino_i;
   self->tetraminos[1] = tetramino_o;
   self->tetraminos[2] = tetramino_t;
@@ -53,18 +54,16 @@ void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
   self->tetraminos[6] = tetramino_l;
 }
 
-Tetramino_t* _getRandomTetramino(TetraminoCollection_t *self) {
+Tetramino_t *_getRandomTetramino(TetraminoCollection_t *self) {
   int rand_index = rand() % self->size;
   return &self->tetraminos[rand_index];
 }
 
 TetraminoCollection_t initTetraminoCollection() {
-  TetraminoCollection_t collection =  {
-    .size = TETRAMINO_COLLCECTION_SIZE,
-    .getRandomTetranimo = _getRandomTetramino
-  };
+  TetraminoCollection_t collection = {
+      .size = TETRAMINO_COLLCECTION_SIZE,
+      .getRandomTetranimo = _getRandomTetramino};
 
   initAllTetraminoCollectionBricks(&collection);
   return collection;
 }
-

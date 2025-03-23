@@ -1,8 +1,9 @@
 #include "./include/tetris.h"
-#include "./include/utils.h"
-#include "./include/memory_utils.h"
 
-void _restoreInfo(Tetris_t* self) {
+#include "./include/memory_utils.h"
+#include "./include/utils.h"
+
+void _restoreInfo(Tetris_t *self) {
   clearField(self->game_info.field);
 
   self->timer.tick = 1000;
@@ -34,11 +35,12 @@ void _spawn(Tetris_t *self) {
   }
 
   if (!self->next_tetramino) {
-    self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
+    self->next_tetramino =
+        self->collection.getRandomTetranimo(&self->collection);
   }
 
   copyTetraminoToCurr(self, self->next_tetramino);
-  self->curr_tetramino.y = 0; 
+  self->curr_tetramino.y = -1;
   self->curr_tetramino.x = FIELD_WIDTH / 2;
 
   self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
@@ -59,10 +61,9 @@ void _spawn(Tetris_t *self) {
     self->db.write(&self->db, self->game_info.high_score);
     self->state = TETRIS_STATE_GAME_OVER;
   }
-
 }
 
-void _left(Tetris_t* self, bool hold) {
+void _left(Tetris_t *self, bool hold) {
   if (!self) {
     return;
   }
@@ -74,7 +75,6 @@ void _left(Tetris_t* self, bool hold) {
     tetramino->x++;
   }
   replaceTetramino(self, tetramino);
-
 }
 
 void _right(Tetris_t *tetris, bool hold) {
@@ -125,6 +125,7 @@ void _down(Tetris_t *self, bool hold) {
   if (is_collide) {
     self->state = TETRIS_STATE_ATTACH;
     insertTetraminoToField(self);
+    //self->spawn(self);
   }
 }
 
@@ -153,14 +154,15 @@ void _updateTetrisScore(Tetris_t *self) {
 
 void _updateTetrisLevel(Tetris_t *self) {
   long tick = self->timer.tick;
-  if (self->level.level > self->game_info.level && tick >= self->timer.default_tick /*80*/) {
+  if (self->level.level > self->game_info.level &&
+      tick >= self->timer.default_tick /*80*/) {
     self->game_info.speed += self->speed_diff;
     self->timer.tick -= self->tick_diff;
   }
   self->game_info.level = self->level.level;
 }
 
-void insertTetraminoToFieldWithColor(Tetris_t* self) {
+void insertTetraminoToFieldWithColor(Tetris_t *self) {
   if (!self->game_info.field) return;
 
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
@@ -168,24 +170,27 @@ void insertTetraminoToFieldWithColor(Tetris_t* self) {
       if (self->curr_tetramino.brick[i][j]) {
         int x = self->curr_tetramino.x + j;
         int y = self->curr_tetramino.y + i;
-        self->game_info.field[y][x] = self->curr_tetramino.color;
+        if (x >= 1 && x < FIELD_WIDTH + 1 && y >= 1 && y < FIELD_HEIGHT + 1) {
+          self->game_info.field[y][x] = self->curr_tetramino.color;
+        }
       }
     }
   }
 }
 
-void _updateTetrisState(Tetris_t* self) {
+void _updateTetrisState(Tetris_t *self) {
   clearTetraminoFromField(self);
   if (self->state == TETRIS_STATE_MOVE) {
     if (self->timer.calcDiff(&self->timer) >= self->timer.tick) {
       self->down(self, true);
       self->timer.updateLastTime(&self->timer);
     }
-  } else if (self->state == TETRIS_STATE_ATTACH) {
+  } 
+  if (self->state == TETRIS_STATE_ATTACH) {
     clearLines(self);
     self->spawn(self);
   }
-  
+
   insertTetraminoToFieldWithColor(self);
 }
 
@@ -205,57 +210,55 @@ void _exitGame(Tetris_t *self) {
   self->next_tetramino = NULL;
 }
 
-
 Tetris_t constructorTetris() {
-  Tetris_t self = (Tetris_t) {
-    .state = TETRIS_STATE_START,
-    .game_info = {.field = newField(FIELD_WIDTH + 2, FIELD_HEIGHT + 2),
+  Tetris_t self = (Tetris_t){
+      .state = TETRIS_STATE_START,
+      .game_info = {.field = newField(FIELD_WIDTH + 2, FIELD_HEIGHT + 2),
                     .next = newField(TETRAMINO_WIDTH, TETRAMINO_HEIGHT),
                     .score = 0,
                     .high_score = 0,
                     .level = 1,
                     .speed = 0,
                     .pause = PAUSE_MODE_START},
-    .curr_tetramino = {
-        .x = 0,
-        .y = 0,
-        .color = TETRAMINO_COLOR_BLUE,
-        .brick = {{0}} },
-    .next_tetramino = NULL,
-    .collection = initTetraminoCollection(),
-   
-    .timer = initTimer(),
-    .level = initLevel(),
-    .db = initDataBase("tetris_db.txt"),
-    .speed_diff = 10,
-    .tick_diff = 70,
+      .curr_tetramino = {.x = 0,
+                         .y = 0,
+                         .color = TETRAMINO_COLOR_BLUE,
+                         .brick = {{0}}},
+      .next_tetramino = NULL,
+      .collection = initTetraminoCollection(),
 
-    .start = _startGame,
-    .spawn = _spawn,
-    .action = _action,
-    .left = _left,
-    .right = _right,
-    .up = _up,
-    .down = _down,
-    .pause = _pauseGame,
-    .exit = _exitGame,
-    .restoreInfo = _restoreInfo,
-    .updateScore = _updateTetrisScore,
-    .updateLevel = _updateTetrisLevel,
-    .updateTetrisState = _updateTetrisState};
+      .timer = initTimer(),
+      .level = initLevel(),
+      .db = initDataBase("tetris_db.txt"),
+      .speed_diff = 10,
+      .tick_diff = 70,
+
+      .start = _startGame,
+      .spawn = _spawn,
+      .action = _action,
+      .left = _left,
+      .right = _right,
+      .up = _up,
+      .down = _down,
+      .pause = _pauseGame,
+      .exit = _exitGame,
+      .restoreInfo = _restoreInfo,
+      .updateScore = _updateTetrisScore,
+      .updateLevel = _updateTetrisLevel,
+      .updateTetrisState = _updateTetrisState};
   _restoreInfo(&self);
   clearField(self.game_info.field);
   return self;
 }
 
-Tetris_t* initTetris() {
-    static Tetris_t tetris;
-    static bool initialized = false;
+Tetris_t *initTetris() {
+  static Tetris_t tetris;
+  static bool initialized = false;
 
-    if (!initialized) {
-        tetris = constructorTetris();
-        initialized = true;
-    }
+  if (!initialized) {
+    tetris = constructorTetris();
+    initialized = true;
+  }
 
-    return &tetris;
+  return &tetris;
 }

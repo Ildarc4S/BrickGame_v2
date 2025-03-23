@@ -6,9 +6,7 @@ void _updateCurrentTime(Timer_t *self) {
   self->current_time = time;
 }
 
-void _updateLastTime(Timer_t *self) {
-  self->last_time = self->current_time;
-}
+void _updateLastTime(Timer_t *self) { self->last_time = self->current_time; }
 
 long _calcTimeDiff(Timer_t *self) {
   self->updateCurrenTime(self);
@@ -20,12 +18,12 @@ Timer_t initTimer() {
   struct timeval time = {0};
   gettimeofday(&time, NULL);
 
-  return (Timer_t) {
-    .current_time = time,
-    .last_time = time,
-    .tick = 1000,
-    .updateCurrenTime = _updateCurrentTime,
-    .updateLastTime = _updateLastTime,
-    .calcDiff = _calcTimeDiff,
+  return (Timer_t){
+      .current_time = time,
+      .last_time = time,
+      .tick = 1000,
+      .updateCurrenTime = _updateCurrentTime,
+      .updateLastTime = _updateLastTime,
+      .calcDiff = _calcTimeDiff,
   };
 }

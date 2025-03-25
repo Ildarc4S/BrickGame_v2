@@ -120,8 +120,6 @@ void shiftLines(Tetris_t *tetris, int *index) {
   *index += 1;
 }
 
-#include <ncurses.h>
-
 int countEraseLines(Tetris_t* tetris) {
   int erase_line_count = 0;
   for (int i = FIELD_HEIGHT; i > 0; i--) {
@@ -132,7 +130,6 @@ int countEraseLines(Tetris_t* tetris) {
       }
     }
     if (erase_line) {
-      mvprintw(25, 15, "Da");
       erase_line_count++;
       shiftLines(tetris, &i);
     }

@@ -120,6 +120,8 @@ void shiftLines(Tetris_t *tetris, int *index) {
   *index += 1;
 }
 
+#include <ncurses.h>
+
 int countEraseLines(Tetris_t* tetris) {
   int erase_line_count = 0;
   for (int i = FIELD_HEIGHT; i > 0; i--) {
@@ -130,6 +132,7 @@ int countEraseLines(Tetris_t* tetris) {
       }
     }
     if (erase_line) {
+      mvprintw(25, 15, "Da");
       erase_line_count++;
       shiftLines(tetris, &i);
     }
@@ -147,7 +150,9 @@ void updateScoreAndLeve(Tetris_t* tetris, int erase_line_count) {
 
 void clearLines(Tetris_t *self) {
   int erase_line_count = countEraseLines(self);
-  updateScoreAndLeve(self, erase_line_count);
+  if (erase_line_count) {
+    updateScoreAndLeve(self, erase_line_count);
+  }
 }
 
 void moveHorizontal(Tetris_t* tetris, int direction) {

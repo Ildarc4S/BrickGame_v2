@@ -1,12 +1,11 @@
 #include "./include/utils.h"
-
 #include "./include/tetris.h"
 
 void clearField(int **field) {
   if (!field) return;
 
-  for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
-    for (int j = 0; j < FIELD_WIDTH + 2; j++) {
+  for (int i = 0; i < FIELD_HEIGHT + FIELD_BORDER; i++) {
+    for (int j = 0; j < FIELD_WIDTH + FIELD_BORDER; j++) {
       if (i == 0 || j == 0 || i == FIELD_HEIGHT + 1 || j == FIELD_WIDTH + 1) {
         field[i][j] = OBJECT_CODE_WALL;
       } else {
@@ -19,8 +18,8 @@ void clearField(int **field) {
 void clearTetraminoFromField(Tetris_t *tetris) {
   if (!tetris->game_info.field) return;
 
-  for (int i = 0; i < FIELD_HEIGHT + 2; i++) {
-    for (int j = 0; j < FIELD_WIDTH + 2; j++) {
+  for (int i = 0; i < FIELD_HEIGHT + FIELD_BORDER; i++) {
+    for (int j = 0; j < FIELD_WIDTH + FIELD_BORDER; j++) {
       if (tetris->game_info.field[i][j] != OBJECT_CODE_AIR &&
           tetris->game_info.field[i][j] != OBJECT_CODE_WALL) {
         tetris->game_info.field[i][j] = OBJECT_CODE_AIR;
@@ -34,14 +33,14 @@ int checkCollideWithWall(int x, int y) {
 }
 
 static int checkCollideWithBlock(Tetris_t *self, int x, int y) {
-  if (y < 1 || !self || !self->game_info.field) return 0;
+  if (y < 1 || !self || !self->game_info.field) return UTILS_NOT_COLLIDE;
   return (self->game_info.field[y][x] != OBJECT_CODE_AIR);
 }
 
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
-  if (!tetramino || !self || !self->game_info.field) return -1;
+  if (!tetramino || !self || !self->game_info.field) return UTILS_ERROR;
   
-  int result = 0;
+  int result = UTILS_NOT_COLLIDE;
   for (int i = 0; i < TETRAMINO_HEIGHT && !result; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH && !result; j++) {
       if (tetramino->brick[i][j]) {
@@ -100,7 +99,6 @@ void insertTetraminoToField(Tetris_t *self) {
   }
 }
 
-
 void rotateTetramino(Tetramino_t *tetramino) {
   int temp[TETRAMINO_WIDTH][TETRAMINO_HEIGHT];
   copyTetramino(temp, tetramino->brick);
@@ -151,3 +149,33 @@ void clearLines(Tetris_t *self) {
   int erase_line_count = countEraseLines(self);
   updateScoreAndLeve(self, erase_line_count);
 }
+
+void moveHorizontal(Tetris_t* tetris, int direction) {
+    if (!tetris) {
+      return; 
+    }
+
+  Tetramino_t *tetramino = &tetris->curr_tetramino;
+  tetramino->x += direction;
+  if (isCollide(tetris, tetramino)) {
+    tetramino->x -=direction;
+  }
+  replaceTetramino(tetris, tetramino);
+}
+
+void insertTetraminoToFieldWithColor(Tetris_t *self) {
+  if (!self->game_info.field) return;
+
+  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      if (self->curr_tetramino.brick[i][j]) {
+        int x = self->curr_tetramino.x + j;
+        int y = self->curr_tetramino.y + i;
+        if (x >= 1 && x < FIELD_WIDTH + 1 && y >= 1 && y < FIELD_HEIGHT + 1) {
+          self->game_info.field[y][x] = self->curr_tetramino.color;
+        }
+      }
+    }
+  }
+}
+

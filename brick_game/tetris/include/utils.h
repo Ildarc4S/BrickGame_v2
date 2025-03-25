@@ -3,6 +3,9 @@
 
 #include "./tetris.h"
 
+#define UTILS_ERROR -1
+#define UTILS_NOT_COLLIDE 0
+
 void clearField(int** field);
 void clearTetraminoFromField(Tetris_t* tetris);
 int isCollide(Tetris_t *tetris, Tetramino_t *tetramino);
@@ -15,6 +18,10 @@ void copyTetraminoToCurrentTetramino(Tetris_t *tetris, Tetramino_t *tetramino);
 void rotateTetramino(Tetramino_t *tetramino);
 void shiftLines(Tetris_t *self, int *index);
 void clearLines(Tetris_t *self);
+
+void moveHorizontal(Tetris_t* tetris, int direction);
+
+void insertTetraminoToFieldWithColor(Tetris_t *self);
 
 #endif  // UTILS_H
 

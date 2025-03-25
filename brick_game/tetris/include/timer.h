@@ -22,4 +22,4 @@ typedef struct _timer {
 
 Timer_t initTimer();
 
-#endif // TIMER_H
+#endif  // TIMER_H

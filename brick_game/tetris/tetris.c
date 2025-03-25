@@ -2,6 +2,7 @@
 
 #include "./include/memory_utils.h"
 #include "./include/utils.h"
+#include "./include/init_utils.h"
 
 void _restoreInfo(Tetris_t *self) {
   clearField(self->game_info.field);
@@ -63,18 +64,6 @@ void _spawn(Tetris_t *self) {
   }
 }
 
-void moveHorizontal(Tetris_t* tetris, int direction) {
-    if (!tetris) {
-      return; 
-    }
-
-  Tetramino_t *tetramino = &tetris->curr_tetramino;
-  tetramino->x += direction;
-  if (isCollide(tetris, tetramino)) {
-    tetramino->x -=direction;
-  }
-  replaceTetramino(tetris, tetramino);
-}
 
 void _left(Tetris_t *self, bool hold) {
   if (!self) {
@@ -163,22 +152,6 @@ void _updateTetrisLevel(Tetris_t *self) {
   self->game_info.level = self->level.level;
 }
 
-void insertTetraminoToFieldWithColor(Tetris_t *self) {
-  if (!self->game_info.field) return;
-
-  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
-    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
-      if (self->curr_tetramino.brick[i][j]) {
-        int x = self->curr_tetramino.x + j;
-        int y = self->curr_tetramino.y + i;
-        if (x >= 1 && x < FIELD_WIDTH + 1 && y >= 1 && y < FIELD_HEIGHT + 1) {
-          self->game_info.field[y][x] = self->curr_tetramino.color;
-        }
-      }
-    }
-  }
-}
-
 void _updateTetrisState(Tetris_t *self) {
   clearTetraminoFromField(self);
   if (self->state == TETRIS_STATE_MOVE) {
@@ -209,27 +182,6 @@ void _exitGame(Tetris_t *self) {
   freeField(&self->game_info.next, TETRAMINO_HEIGHT);
 
   self->next_tetramino = NULL;
-}
-
-GameInfo_t initGameInfo() {
-    return (GameInfo_t){
-        .field = newField(FIELD_WIDTH + FIELD_BORDER, FIELD_HEIGHT + FIELD_BORDER),
-        .next = newField(TETRAMINO_WIDTH, TETRAMINO_HEIGHT),
-        .score = LEVEL_MANAGER_INITIAL_SCORE,
-        .high_score = TETRIS_INITIAL_HIGH_SCORE,
-        .level = LEVEL_MANAGER_INITIAL_LEVEL,
-        .speed = TETRIS_INITIAL_SPEED,
-        .pause = PAUSE_MODE_START
-    };
-}
-
-Tetramino_t initCurrentTetramino() {
-    return (Tetramino_t){
-        .x = TETRAMINO_COLLCECTION_INITIAL_X,
-        .y = TETRAMINO_COLLCECTION_INITIAL_Y,
-        .color = TETRAMINO_COLOR_BLUE,
-        .brick = {{0}}
-    };
 }
 
 void assignFunctionPointers(Tetris_t *self) {

@@ -10,23 +10,23 @@ TEST(SnakeGameTest, UpdateCurrState) {
 
     for (int i = 0; i < 4; ++i) {
         int x = start_x + i;
-        EXPECT_EQ(game_info.field[expected_y][x], static_cast<int>(FigureCode::SNAKE));
+        EXPECT_EQ(game_info.field[expected_y][x], static_cast<int>(FigureCode::kSnake));
     }
 
     for (int i = 0; i < FIELD_HEIGHT + 2; ++i) {
-        EXPECT_EQ(game_info.field[i][0], static_cast<int>(FigureCode::WALL));
-        EXPECT_EQ(game_info.field[i][FIELD_WIDTH + 1], static_cast<int>(FigureCode::WALL));
+        EXPECT_EQ(game_info.field[i][0], static_cast<int>(FigureCode::kWall));
+        EXPECT_EQ(game_info.field[i][FIELD_WIDTH + 1], static_cast<int>(FigureCode::kWall));
     }
 
     for (int j = 0; j < FIELD_WIDTH + 2; ++j) {
-        EXPECT_EQ(game_info.field[0][j], static_cast<int>(FigureCode::WALL));
-        EXPECT_EQ(game_info.field[FIELD_HEIGHT + 1][j], static_cast<int>(FigureCode::WALL));
+        EXPECT_EQ(game_info.field[0][j], static_cast<int>(FigureCode::kWall));
+        EXPECT_EQ(game_info.field[FIELD_HEIGHT + 1][j], static_cast<int>(FigureCode::kWall));
     }
 
     bool apple_exists = false;
     for (int i = 1; i <= FIELD_HEIGHT && !apple_exists; i++) {
       for (int j = 1; j <= FIELD_WIDTH && !apple_exists; j++) {
-        if (game_info.field[i][j] == static_cast<int>(FigureCode::APPLE)) {
+        if (game_info.field[i][j] == static_cast<int>(FigureCode::kApple)) {
           apple_exists = true;
         }
       }

@@ -6,14 +6,14 @@ TEST(SnakeGameTest, MoveHandleEatApple) {
     SnakeGame game;
     SnakeGameTest tester;
 
-    tester.setSnakeDirection(game, Direction::UP);
+    tester.setSnakeDirection(game, Direction::kUp);
     std::vector<Point> begin_body = tester.getSnakeBody(game); 
 
     Point apple_pos(FIELD_WIDTH / 2 + begin_body.size(), FIELD_HEIGHT / 2);
     tester.setApplePosition(game, apple_pos);
 
     int initial_score = tester.getGameScore(game);
-    tester.setGameState(game, State::MOVE);
+    tester.setGameState(game, State::kMove);
     game.userInput(UserAction_t::Right, false);
 
     EXPECT_EQ(tester.getGameScore(game), initial_score + tester.getAddScore(game));
@@ -26,34 +26,34 @@ TEST(SnakeGameTest, MoveHandleCollideWithBody) {
     SnakeGame game;
     SnakeGameTest tester;
 
-    tester.setGameState(game, State::MOVE);
+    tester.setGameState(game, State::kMove);
     game.userInput(UserAction_t::Down, false);
     game.userInput(UserAction_t::Left, false);
     game.userInput(UserAction_t::Up, false);
 
-    EXPECT_EQ(tester.getGameState(game), State::GAME_OVER);
+    EXPECT_EQ(tester.getGameState(game), State::kGameOver);
 }
 
 TEST(SnakeGameTest, MoveHandleCollisionWithWalls) {
     SnakeGame game;
     SnakeGameTest tester;
 
-    tester.setGameState(game, State::MOVE);
+    tester.setGameState(game, State::kMove);
     game.userInput(UserAction_t::Right, false);
     game.userInput(UserAction_t::Right, false);
     game.userInput(UserAction_t::Right, false);
 
-    EXPECT_EQ(tester.getGameState(game), State::GAME_OVER);
+    EXPECT_EQ(tester.getGameState(game), State::kGameOver);
 }
 
 TEST(SnakeGameTest, MoveHandleOppositeDirection) {
     SnakeGame game;
     SnakeGameTest tester;
 
-    tester.setGameState(game, State::MOVE);
+    tester.setGameState(game, State::kMove);
     game.userInput(UserAction_t::Left, false);
 
-    EXPECT_EQ(tester.getGameState(game), State::MOVE);
+    EXPECT_EQ(tester.getGameState(game), State::kMove);
 }
 
 TEST(SnakeGameTest, SnakeMovesAfterTimerExpirationRealTime) {

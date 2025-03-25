@@ -16,12 +16,12 @@ TEST(SnakeGameTest, EatIncreasesScore) {
 TEST(SnakeGameTest, EatGeneratesNewApplePosition) {
     SnakeGame game;
     SnakeGameTest tester;
-    
+ 
     const Point initial_apple = tester.getApplePosition(game);
     tester.eatGame(game);
 
     EXPECT_NE(tester.getApplePosition(game), initial_apple);
-    
+ 
 }
 
 TEST(SnakeGameTest, EatIncreasesLevelWhenThresholdReached) {
@@ -40,13 +40,12 @@ TEST(SnakeGameTest, EatIncreasesLevelWhenThresholdReached) {
 TEST(SnakeGameTest, EatTriggersGameOverOnMaxScore) {
     SnakeGame game;
     SnakeGameTest tester;
-    
+
     tester.setGameScore(game, tester.getMaxScore(game) - 1);
     tester.eatGame(game);
 
-    EXPECT_EQ(tester.getGameState(game), State::GAME_OVER);
-    EXPECT_EQ(tester.getGmaeInfo(game).pause, static_cast<int>(PauseMode::WIN));
-    
+    EXPECT_EQ(tester.getGameState(game), State::kGameOver);
+    EXPECT_EQ(tester.getGmaeInfo(game).pause, static_cast<int>(PauseMode::kWin));
 }
 }  // namespace s21
 

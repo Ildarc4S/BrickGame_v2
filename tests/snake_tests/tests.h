@@ -1,7 +1,7 @@
 #ifndef SNAKE_TESTS
 #define SNAKE_TESTS
 
-#include "./../../brick_game/snake/include/snake.h"
+#include "./../../brick_game/snake/include/game_manager.h"
 #include "./../../brick_game/spec/game_spec.h"
 
 #include <gtest/gtest.h>

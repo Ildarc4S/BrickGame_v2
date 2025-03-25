@@ -5,25 +5,25 @@ namespace s21 {
 TEST(SnakeGameTest, UserInputStartFromStartState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Start, State::START, State::MOVE);
+    tester.testUserInputAutomaton(game, UserAction_t::Start, State::kStart, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputTerminateFromStartState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::START, State::EXIT);
+    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::kStart, State::kExit);
 }
 
 TEST(SnakeGameTest, UserInputPauseFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Pause, State::MOVE, State::PAUSE);
+    tester.testUserInputAutomaton(game, UserAction_t::Pause, State::kMove, State::kPause);
 }
 
 TEST(SnakeGameTest, UserInputTerminateFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::MOVE, State::EXIT);
+    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::kMove, State::kExit);
 }
 
 TEST(SnakeGameTest, UserInputLeftFromMoveState) {
@@ -38,32 +38,32 @@ TEST(SnakeGameTest, UserInputLeftFromMoveState) {
     };
 
     tester.setSnakeBody(game, new_body);
-    tester.setSnakeDirection(game, Direction::UP);
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Left, State::MOVE, Direction::LEFT, State::MOVE);
+    tester.setSnakeDirection(game, Direction::kUp);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Left, State::kMove, Direction::kLeft, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputRightFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Right, State::MOVE, Direction::RIGHT, State::MOVE);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Right, State::kMove, Direction::kRight, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputUpFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Up, State::MOVE, Direction::UP, State::MOVE);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Up, State::kMove, Direction::kUp, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputDownFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Down, State::MOVE, Direction::DOWN, State::MOVE);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Down, State::kMove, Direction::kDown, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputActionFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.setGameState(game, State::MOVE);
+    tester.setGameState(game, State::kMove);
     game.userInput(UserAction_t::Action, false);
     EXPECT_TRUE(tester.getGameBoostTime(game));
     game.userInput(UserAction_t::Action, false);
@@ -74,48 +74,48 @@ TEST(SnakeGameTest, UserInputActionFromMoveState) {
 TEST(SnakeGameTest, UserInputStartFromPauseState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Start, State::PAUSE, tester.getSnakeDirection(game), State::MOVE);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Start, State::kPause, tester.getSnakeDirection(game), State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputTerminateFromPauseState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomatonDirection(game, UserAction_t::Terminate, State::PAUSE, tester.getSnakeDirection(game), State::EXIT);
+    tester.testUserInputAutomatonDirection(game, UserAction_t::Terminate, State::kPause, tester.getSnakeDirection(game), State::kExit);
 }
 TEST(SnakeGameTest, UserInputStartFromGameOverState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Start, State::GAME_OVER, State::MOVE);
+    tester.testUserInputAutomaton(game, UserAction_t::Start, State::kGameOver, State::kMove);
 }
 
 TEST(SnakeGameTest, UserInputTerminateFromGameOverState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::GAME_OVER, State::EXIT);
+    tester.testUserInputAutomaton(game, UserAction_t::Terminate, State::kGameOver, State::kExit);
 }
 
 TEST(SnakeGameTest, UserInputInvalidActionFromStartState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Left, State::START, State::START);
+    tester.testUserInputAutomaton(game, UserAction_t::Left, State::kStart, State::kStart);
 }
 
 TEST(SnakeGameTest, UserInputInvalidActionFromPauseState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Left, State::PAUSE, State::PAUSE);  
+    tester.testUserInputAutomaton(game, UserAction_t::Left, State::kPause, State::kPause);  
 }
 
 TEST(SnakeGameTest, UserInputInvalidActionFromGameOverState) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Left, State::GAME_OVER, State::GAME_OVER);
+    tester.testUserInputAutomaton(game, UserAction_t::Left, State::kGameOver, State::kGameOver);
 }
 
 TEST(SnakeGameTest, UserInput) {
     SnakeGame game;
     SnakeGameTest tester;
-    tester.testUserInputAutomaton(game, UserAction_t::Left, State::GAME_OVER, State::GAME_OVER);
+    tester.testUserInputAutomaton(game, UserAction_t::Left, State::kGameOver, State::kGameOver);
 }
 
 }  // namespace 21

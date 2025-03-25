@@ -5,8 +5,8 @@
 
 #include "./include/apple.h"
 
-namespace s21 {
 
+namespace s21 {
 
 Apple::Apple(const std::vector<Point>& snake_body) : position_() {
   srand(time(NULL));
@@ -16,8 +16,8 @@ Apple::Apple(const std::vector<Point>& snake_body) : position_() {
 void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   Point temp;
   do {
-    temp = Point(rand() % 8 + 1, rand() % 18 + 1);
-  } while(std::find(snake_body.begin(), snake_body.end(), temp) != snake_body.end());
+    temp = Point(rand() % (FIELD_WIDTH + 1) + 1, rand() % (FIELD_HEIGHT+1) + 1);
+  } while (std::find(snake_body.begin(), snake_body.end(), temp) != snake_body.end());
   position_ = temp;
 }
 

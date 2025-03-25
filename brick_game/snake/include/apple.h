@@ -1,8 +1,10 @@
-#pragma once
+#ifndef APPLE_H
+#define APPLE_H
 
 #include <vector>
 
 #include "./point.h"
+#include "./../../spec/game_spec.h"
 
 namespace s21 {
 
@@ -19,3 +21,6 @@ class Apple {
 };
 
 }  // namespace s21
+
+#endif  // APPLE_H
+

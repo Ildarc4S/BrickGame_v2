@@ -1,51 +1,16 @@
-#pragma once
+#ifndef SNAKE_H
+#define SNAKE_H
 
 #include <vector>
-#include <iostream>
 
 #include "./../../spec/game_spec.h"
 
-#include "./memory_utils.h"
+#include "./objects_code.h"
 #include "./point.h"
-#include "./apple.h"
-#include "./data_base.h"
-#include "./timer.h"
+
+#define SNAKE_SIZE 4
 
 namespace s21 {
-
-enum class State {
-  START = 0,
-  SPAWN,
-  MOVE,
-  EAT,
-  PAUSE,
-  GAME_OVER,
-  EXIT
-};
-
-enum class Direction {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT
-};
-
-enum class PauseMode {
-  PAUSE = 1,
-  GAME_CONTINUE = 2,
-  START = 3,
-  GAME_OVER = 4,
-  EXIT = 5,
-  WIN = 6
-};
-
-enum class FigureCode {
-  AIR = -2,
-  WALL = -1,
-
-  SNAKE = 10,
-  APPLE = 11
-};
 
 class Snake {
  private:
@@ -73,63 +38,7 @@ class Snake {
   friend class SnakeGameTest;
 };
 
-
-
-class SnakeGame {
- private:
-  State state_;
-  UserAction_t action_;
-  GameInfo_t game_info_;
-  Timer timer_;
-
-  Snake snake_;
-  Apple apple_;
-  DataBase db_;
-
-  int max_level_score_;
-  int max_level_;
-  int max_score_;
-  int add_score_;
-  int add_speed_;
-  int interval_diff_;
-  int interval_boost_diff_;
-  bool boost_time_;
-
-  void start();
-  void spawn();
-  void pause();
-  void exit();
-  void eat();
-  void speedBoost();
-  void moveHandle(Direction direction, bool hold);
-
-  bool isCollision(const Point& head);
-  bool isAppleCollide(const Point& head);
-  bool isOppositeDirection(const Direction& direction);
-
-  void clearField(int width, int height);
-  void restoreGameInfoDate();
- public:
-  SnakeGame();
-  ~SnakeGame();
-  void userInput(UserAction_t action, bool hold);
-  GameInfo_t getGameInfo();
-  
-  friend class SnakeGameTest;
-};
-
-class SnakeGameSingleton {
- private:
-   SnakeGameSingleton() = default;
-   ~SnakeGameSingleton() = default;
-
-   SnakeGameSingleton(const SnakeGameSingleton&) = delete;
-   SnakeGameSingleton& operator=(const SnakeGameSingleton&) = delete;
- public:
-  static SnakeGame& getSnakeGame() {
-    static SnakeGame snake_game;
-    return snake_game;
-  }
-};
-
 }  // namespace s21
+
+#endif  // SNAKE_H
+

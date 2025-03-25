@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POINT_H
+#define POINT_H
 
 namespace s21 {
 
@@ -32,3 +33,5 @@ class Point {
 };
 
 }  // namespace s21
+
+#endif  // POINT_H

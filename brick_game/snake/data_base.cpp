@@ -1,7 +1,4 @@
 #include "./include/data_base.h"
-#include <filesystem>
-#include <string>
-
 namespace s21 {
 
 DataBase::DataBase(const std::string& file_name) : file_name_(file_name) {

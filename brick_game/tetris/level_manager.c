@@ -13,16 +13,22 @@ void _updateLevel(Level_t *self) {
 
 Score_t initScore() {
   return (Score_t){
-      .score = 0,
-      .score_converter = {100, 300, 700, 1500},
+      .score = LEVEL_MANAGER_INITIAL_SCORE,
+      .score_converter = {
+        LEVEL_MANAGER_SCORE_FOR_ONE_LINE, 
+        LEVEL_MANAGER_SCORE_FOR_TWO_LINES, 
+        LEVEL_MANAGER_SCORE_FOR_THREE_LINES, 
+        LEVEL_MANAGER_SCORE_FOR_FOUR_LINES},
       .convertLineCountToScore = _convertLineCountToScore,
   };
 }
 
 Level_t initLevel() {
-  return (Level_t){.score = initScore(),
-                   .level = 1,
-                   .max_level_score = 600,
-                   .max_level = 10,
-                   .updateLevel = _updateLevel};
+  return (Level_t){
+      .score = initScore(),
+      .level = LEVEL_MANAGER_INITIAL_LEVEL,
+      .max_level_score = LEVEL_MANAGER_MAX_LEVEL_SCORE,
+      .max_level = LEVEL_MANAGER_MAX_LEVEL,
+      .updateLevel = _updateLevel
+  };
 }

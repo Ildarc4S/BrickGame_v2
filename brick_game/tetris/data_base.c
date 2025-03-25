@@ -1,7 +1,7 @@
 #include "./include/data_base.h"
 
 int _readToFile(DataBase_t *self) {
-  int high_score = 0;
+  int high_score = DB_MIN_HIGH_SCORE;
   FILE *file = fopen(self->file_name, "r");
   if (file) {
     fscanf(file, "high_score: %d", &high_score);

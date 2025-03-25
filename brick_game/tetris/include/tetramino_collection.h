@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 #define TETRAMINO_COLLCECTION_SIZE 7
+#define TETRAMINO_COLLCECTION_INITIAL_X 0
+#define TETRAMINO_COLLCECTION_INITIAL_Y 0
 
 typedef struct _tetramino_collection {
   Tetramino_t tetraminos[TETRAMINO_COLLCECTION_SIZE];

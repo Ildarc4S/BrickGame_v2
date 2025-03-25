@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#define TIMER_MILLISECONDS_PER_SECOND 1000
+#define TIMER_MICROSECONDS_PER_MILLISECOND 1000
+#define TIMER_INITIAL_TICK_INTERVAL 1000
+
 typedef struct _timer {
   struct timeval current_time;
   struct timeval last_time;

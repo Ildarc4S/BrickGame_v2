@@ -2,19 +2,19 @@
 
 void drawPanelHead(Panel_t *self) {
   attron(COLOR_PAIR(self->color));
-  mvprintw(self->y - 1, (self->x) * 2, "%s", self->head_text);
+  mvprintw(self->y - 1, (self->x) * WINDOW_CELL_WIDTH, "%s", self->head_text);
   attroff(COLOR_PAIR(self->color));
 }
 
 void drawFigure(Panel_t *self, GameInfo_t game_info) {
   if (!game_info.next) return;
 
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      mvprintw(self->y + i + 1, (self->x + j + 1) * 2, "  ");
+  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      mvprintw(self->y + i + 1, (self->x + j + 1) * WINDOW_CELL_WIDTH, "  ");
       if (game_info.next[i][j]) {
         attron(COLOR_PAIR(game_info.next[i][j]));
-        mvprintw(self->y + i + 1, (self->x + j + 1) * 2, "[]");
+        mvprintw(self->y + i + 1, (self->x + j + 1) * WINDOW_CELL_WIDTH, "[]");
         attroff(COLOR_PAIR(game_info.next[i][j]));
       }
     }
@@ -24,15 +24,15 @@ void drawFigure(Panel_t *self, GameInfo_t game_info) {
 void drawText(Panel_t *self) {
   GameInfo_t game_info = updateCurrentState();
   
-  int start = 0;
-  int count = 6;
+  int start = WINDOW_TETRIS_HELP_TEXT_START;
+  int count = WINDOW_TETRIS_HELP_TEXT_COUNT;
   
   if (game_info.next == NULL) {
-    start = 6;
-    count = 6;
+    start = WINDOW_SNAKE_HELP_TEXT_START;
+    count = WINDOW_SNAKE_HELP_TEXT_COUNT;
   }
   for (int i = 0; i < count && (start + i) < self->size; i++) {
-    mvprintw(self->y + i, self->x * 2, "%s", self->text[start + i]);
+    mvprintw(self->y + i, self->x * WINDOW_CELL_WIDTH, "%s", self->text[start + i]);
   }
 }
 
@@ -42,17 +42,17 @@ void _drawPanel(Panel_t *self) {
     drawPanelHead(self);
   }
 
-  mvprintw(self->y, (self->x) * 2, "       ");  // Clean Field
+  mvprintw(self->y, (self->x) * WINDOW_CELL_WIDTH, "       ");  // Clean Field
   if (self->mode == PANEL_MODE_TEXT) {
     drawText(self);   
   } else if (self->mode == PANEL_MODE_HIGH_SCORE) {
-    mvprintw(self->y, self->x * 2, "%d", game_info.high_score);
+    mvprintw(self->y, self->x * WINDOW_CELL_WIDTH, "%d", game_info.high_score);
   } else if (self->mode == PANEL_MODE_SPEED) {
-    mvprintw(self->y, self->x * 2, "%d", game_info.speed);
+    mvprintw(self->y, self->x * WINDOW_CELL_WIDTH, "%d", game_info.speed);
   } else if (self->mode == PANEL_MODE_LEVEL) {
-    mvprintw(self->y, self->x * 2, "%d", game_info.level);
+    mvprintw(self->y, self->x * WINDOW_CELL_WIDTH, "%d", game_info.level);
   } else if (self->mode == PANEL_MODE_CUR_SCORE) {
-    mvprintw(self->y, self->x * 2, "%d", game_info.score);
+    mvprintw(self->y, self->x * WINDOW_CELL_WIDTH, "%d", game_info.score);
   } else if (self->mode == PANEL_MODE_NEXT_FIGURE){
     drawFigure(self, game_info);
   }
@@ -73,9 +73,9 @@ void drawCleanField(GameField_t *self) {
   for (int i = 0; i < self->height; i++) {
     for (int j = 0; j < self->width; j++) {
       if (i == self->height - 1 || j == self->width - 1 || i == 0 || j == 0) {
-        mvprintw(self->y + i, (self->x + j) * 2, "[]");
+        mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "[]");
       } else {
-        mvprintw(self->y + i, (self->x + j) * 2, "  ");
+        mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "  ");
       }
     }
   }
@@ -102,7 +102,7 @@ void _drawField(GameField_t *self) {
 
   for (int i = 0; i < self->height; i++) {
     for (int j = 0; j < self->width; j++) {
-      mvprintw(self->y + i, (self->x + j) * 2, "  ");
+      mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "  ");
     }
   }
 
@@ -110,29 +110,29 @@ void _drawField(GameField_t *self) {
     for (int i = 0; i < self->height; i++) {
       for (int j = 0; j < self->width; j++) {
         if (game.field[i][j] == OBJECT_CODE_WALL) {
-          mvprintw(self->y + i, (self->x + j) * 2, "[]");
+          mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "[]");
         } else if (isTetraminoCode(game.field[i][j]) || game.field[i][j] == OBJECT_CODE_SNAKE) {
           attron(COLOR_PAIR(game.field[i][j]));
-          mvprintw(self->y + i, (self->x + j) * 2, "[]");
+          mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "[]");
           attroff(COLOR_PAIR(game.field[i][j]));
         } else if (game.field[i][j] == OBJECT_CODE_AIR) {
-          mvprintw(self->y + i, (self->x + j) * 2, "  ");
+          mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "  ");
         } else if (game.field[i][j] == OBJECT_CODE_APPLE) {
           attron(COLOR_PAIR(game.field[i][j]));
-          mvprintw(self->y + i, (self->x + j) * 2, "()");
+          mvprintw(self->y + i, (self->x + j) * WINDOW_CELL_WIDTH, "()");
           attroff(COLOR_PAIR(game.field[i][j]));
         }
       }
     }
   } else if (game.pause == PAUSE_MODE_START) {
     drawCleanField(self);
-    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "START");
+    mvprintw(self->height / WINDOW_CENTER_DIVISOR, ((self->width - WINDOW_CENTER_OFFSET) / WINDOW_CENTER_DIVISOR) * WINDOW_CELL_WIDTH, "START");
   } else if (game.pause == PAUSE_MODE_PAUSE) {
     drawCleanField(self);
-    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "PAUSE");
+    mvprintw(self->height / WINDOW_CENTER_DIVISOR, ((self->width - WINDOW_CENTER_OFFSET) / WINDOW_CENTER_DIVISOR) * WINDOW_CELL_WIDTH, "PAUSE");
   } else if (game.pause == PAUSE_MODE_GAME_OVER) {
     drawCleanField(self);
-    mvprintw(self->height / 2, ((self->width - 1) / 2) * 2, "GAME_OVER");
+    mvprintw(self->height / WINDOW_CENTER_DIVISOR, ((self->width - WINDOW_CENTER_OFFSET) / WINDOW_CENTER_DIVISOR) * WINDOW_CELL_WIDTH, "GAME_OVER");
   }
 }
 
@@ -154,7 +154,7 @@ Panel_t createPanel(int x, int y,
   };
   strncpy(panel.head_text, title, sizeof(panel.head_text) - 1);
 
-  for (int i = 0; i < size && i < 50; i++) {
+  for (int i = 0; i < size && i < WINDOW_TEXT_SIZE; i++) {
     strncpy(panel.text[i], text[i], sizeof(panel.text[i]) - 1);
   }
   return panel;
@@ -163,8 +163,8 @@ Panel_t createPanel(int x, int y,
 GameField_t createGameField(int width, int height,
                             void (*drawFieldFunc)(GameField_t *)) {
   return (GameField_t){
-      .x = 0,
-      .y = 0,
+      .x = WINDOW_GAME_FIELD_INIT_X,
+      .y = WINDOW_GAME_FIELD_INIT_Y,
       .width = width,
       .height = height,
       .drawField = drawFieldFunc,
@@ -173,7 +173,7 @@ GameField_t createGameField(int width, int height,
 
 Window_t initWindow() {
   return (Window_t){
-    .help_panel = createPanel(15, 16, "Help:",
+    .help_panel = createPanel(WINDOW_PANEL_COLUMN_ONE_X, WINDOW_PANEL_HELP_Y, "Help:",
                       (const char *[]){"Press q to quit", 
                                        "Press p to pause",
                                        "Press s to start",
@@ -186,42 +186,42 @@ Window_t initWindow() {
                                        "Press left/right to move snake horizontally",
                                        "Press up/down to move snake vertically",
                                        "Press space to boost snake"},
-                      12,
+                      WINDOW_TEXT_LINE_COUNT,
                       PANEL_COLOR_GREEN, 
                       PANEL_MODE_TEXT,
                       _drawPanel),
       
-      .next_figure_panel = createPanel(15, 1, "Next figure:", 
-                                    NULL, 0,
+      .next_figure_panel = createPanel(WINDOW_PANEL_COLUMN_ONE_X, WINDOW_PANEL_NEXT_FIGURE_Y, "Next figure:", 
+                                    NULL, WINDOW_TEXT_LINE_COUNT_ZERO,
                                     PANEL_COLOR_BLUE, 
                                     PANEL_MODE_NEXT_FIGURE,
                                     _drawPanel),
       
-      .score_panel = createPanel(15, 8, "Score:", 
-                               NULL, 0,
+      .score_panel = createPanel(WINDOW_PANEL_COLUMN_ONE_X, WINDOW_PANEL_ROW_ONE_Y, "Score:", 
+                               NULL, WINDOW_TEXT_LINE_COUNT_ZERO,
                                PANEL_COLOR_GREEN, 
                                PANEL_MODE_CUR_SCORE,
                                _drawPanel),
       
-      .high_score_panel = createPanel(20, 8, "High value:", 
-                                     NULL, 0,
+      .high_score_panel = createPanel(WINDOW_PANEL_COLUMN_TWO_X, WINDOW_PANEL_ROW_ONE_Y, "High value:", 
+                                     NULL, WINDOW_TEXT_LINE_COUNT_ZERO,
                                      PANEL_COLOR_RED, 
-                                     PANEL_MODE_HIGH_SCORE, // -4
+                                     PANEL_MODE_HIGH_SCORE,
                                      _drawPanel),
       
-      .level_panel = createPanel(15, 12, "Level:", 
-                               NULL, 0,
+      .level_panel = createPanel(WINDOW_PANEL_COLUMN_ONE_X, WINDOW_PANEL_ROW_TWO_Y, "Level:", 
+                               NULL, WINDOW_TEXT_LINE_COUNT_ZERO,
                                PANEL_COLOR_YELLOW, 
-                               PANEL_MODE_LEVEL, // -6
+                               PANEL_MODE_LEVEL,
                                _drawPanel),
       
-      .speed_panel = createPanel(20, 12, "Speed:", 
-                                NULL, 0,
+      .speed_panel = createPanel(WINDOW_PANEL_COLUMN_TWO_X, WINDOW_PANEL_ROW_TWO_Y, "Speed:", 
+                                NULL, WINDOW_TEXT_LINE_COUNT_ZERO,
                                 PANEL_COLOR_GREEN, 
-                                PANEL_MODE_SPEED, // -5
+                                PANEL_MODE_SPEED,
                                 _drawPanel),
       
-      .game_field = createGameField(FIELD_WIDTH + 2, FIELD_HEIGHT + 2,
+      .game_field = createGameField(FIELD_WIDTH + WINDOW_FIELD_BORDER, FIELD_HEIGHT + WINDOW_FIELD_BORDER,
                                    _drawField),
       .draw = _drawWindow,
       .checkGameExit = _checkGameExit

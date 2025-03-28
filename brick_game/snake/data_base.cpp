@@ -7,7 +7,7 @@ int DataBase::read() {
   std::string line;
 
   std::ifstream file(file_name_);
-  int data = 0;
+  int data = INIT_SCORE;
   if (file.is_open()) {
     std::getline(file, line);
     if (line.find("high_score:") != std::string::npos) {

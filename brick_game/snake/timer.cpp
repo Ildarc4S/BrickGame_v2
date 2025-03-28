@@ -16,10 +16,6 @@ int Timer::getLastInterval() {
   return last_interval_;
 }
 
-int Timer::getDefaultInterval() {
-  return default_interval_;
-}
-
 void Timer::setInterval(int interval, bool save) {
   if (save) {
     updateLastinterval();

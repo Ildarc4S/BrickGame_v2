@@ -8,7 +8,6 @@
 #include "./objects_code.h"
 #include "./point.h"
 
-
 namespace s21 {
 
 #define SNAKE_SIZE 4
@@ -29,11 +28,10 @@ class Snake {
   Snake& operator=(const Snake& other);
   Snake& operator=(Snake&& other);
 
-  void setDirection(Direction direction) {
-    direction_ = direction;
-  }
+  void setDirection(Direction direction);
 
   Direction getDirection();
+  int getSpeed();
   const std::vector<Point>& getBody() const;
 
   void move(bool apple_eat = false);

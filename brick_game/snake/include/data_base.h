@@ -7,6 +7,8 @@
 
 namespace s21 {
 
+#define INIT_SCORE 0
+
 class DataBase {
  private:
   std::string file_name_;

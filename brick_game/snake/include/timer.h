@@ -16,7 +16,6 @@ class Timer {
   explicit Timer(int interval);
   int getInterval();
   int getLastInterval();
-  int getDefaultInterval();
 
   void setInterval(int interval, bool save);
   void updateLastinterval();

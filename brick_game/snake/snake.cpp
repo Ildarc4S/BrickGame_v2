@@ -48,8 +48,15 @@ Direction Snake::getDirection() {
     return direction_;
 }
 
+int Snake::getSpeed() {
+  return speed_;
+}
+
 const std::vector<Point>& Snake::getBody() const {
     return body_;
+}
+void Snake::setDirection(Direction direction) {
+    direction_ = direction;
 }
 
 Point Snake::calcAndGetNewHeadPos() {

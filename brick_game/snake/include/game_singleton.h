@@ -14,10 +14,7 @@ class SnakeGameSingleton {
   SnakeGameSingleton& operator=(const SnakeGameSingleton&) = delete;
 
  public:
-  static SnakeGame& getSnakeGame() {
-    static SnakeGame snake_game;
-    return snake_game;
-  }
+  static SnakeGame& getSnakeGame();
 };
 
 }  // namespace s21

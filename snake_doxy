@@ -1,11 +1,11 @@
 PROJECT_NAME           = "Snake Library"
 
 OUTPUT_DIRECTORY       = docs
-OUTPUT_LANGUAGE        = English
+OUTPUT_LANGUAGE        = RUSSIAN
 
 FILE_PATTERNS          = *.cc *.h
 
-INPUT                  = brick_game/snake
+INPUT                  = brick_game/snake brick_game/spec
 OUTPUT_DIRECTORY       = docs/snake
 RECURSIVE              = YES
 GENERATE_HTML          = YES

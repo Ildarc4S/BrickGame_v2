@@ -31,9 +31,7 @@ SnakeGame::~SnakeGame() {
   MemoryUtility::removeField(game_info_.field, FIELD_HEIGHT+2);
 }
 
-void SnakeGame::userInput(UserAction_t action, bool hold) {
-  switch (state_) {
-    case State::kStart:
+void SnakeGame::startHandler(UserAction_t action) {
       switch (action) {
         case Start:
           start();
@@ -45,9 +43,19 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
         default:
           break;
       }
-      break;
-    case State::kMove:
-      switch (action) {
+}
+
+void SnakeGame::toogleBoostTime() {
+          boost_time_ = !boost_time_;
+          if (boost_time_) {
+            timer_.setInterval(timer_.getInterval() - interval_boost_diff_, /*save =*/ true);
+          } else {
+            timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
+          }
+}
+
+void SnakeGame::moveHandler(UserAction_t action, bool hold) {
+  switch (action) {
         case Terminate:
           exit();
           break;
@@ -67,39 +75,51 @@ void SnakeGame::userInput(UserAction_t action, bool hold) {
           moveHandle(Direction::kDown, hold);
           break;
         case Action:
-          boost_time_ = !boost_time_;
-          if (boost_time_) {
-            timer_.setInterval(timer_.getInterval() - interval_boost_diff_, /*save =*/ true);
-          } else {
-            timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
-          }
+          toogleBoostTime();
+       default:
+          break;
+      }
+}
+
+void SnakeGame::pauseHandler(UserAction_t action) {
+  switch (action) {
+        case Terminate:
+          exit();
+          break;
+        case Start:
+          start();
+          break;
         default:
           break;
       }
+}
+
+void SnakeGame::gameOverHandler(UserAction_t action) {
+      switch (action) {
+        case Start:
+          start();
+          break;
+        case Terminate:
+          exit();
+          break;
+        default:
+          break;
+      }
+}
+
+void SnakeGame::userInput(UserAction_t action, bool hold) {
+  switch (state_) {
+    case State::kStart:
+      startHandler(action);
+      break;
+    case State::kMove:
+      moveHandler(action, hold);
       break;
     case State::kPause:
-      switch (action) {
-        case Terminate:
-          exit();
-          break;
-        case Start:
-          start();
-          break;
-        default:
-          break;
-      }
+      pauseHandler(action);
       break;
     case State::kGameOver:
-      switch (action) {
-        case Start:
-          start();
-          break;
-        case Terminate:
-          exit();
-          break;
-        default:
-          break;
-      }
+      gameOverHandler(action);
       break;
 
     default:

@@ -5,8 +5,8 @@ namespace s21 {
 
 class Point {
  private:
-  int x;
-  int y;
+  int x_;
+  int y_;
 
  public:
   Point();
@@ -15,21 +15,10 @@ class Point {
   bool operator==(const Point& other) const;
   bool operator!=(const Point& other) const;
 
-  int getX() const {
-    return x;
-  }
-
-  int getY() const {
-    return y;
-  }
-
-  int& setX() {
-    return x;
-  }
-
-  int& setY() {
-    return y;
-  }
+  int getX() const;
+  int getY() const;
+  int& setX();
+  int& setY();
 };
 
 }  // namespace s21

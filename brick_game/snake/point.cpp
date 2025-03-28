@@ -2,11 +2,27 @@
 
 namespace s21 {
 
-Point::Point() : x(-1), y(-1) {}
-Point::Point(int x, int y) : x(x), y(y) {}
+Point::Point() : x_(-1), y_(-1) {}
+Point::Point(int x_, int y_) : x_(x_), y_(y_) {}
+
+int Point::getX() const {
+    return x_;
+}
+
+int Point::getY() const {
+    return y_;
+}
+
+int&  Point::setX() {
+    return x_;
+}
+
+int&  Point::setY() {
+    return y_;
+}
 
 bool Point::operator==(const Point& other) const {
-  return x == other.x && y == other.y;
+  return x_ == other.x_ && y_ == other.y_;
 }
 
 bool Point::operator!=(const Point& other) const {

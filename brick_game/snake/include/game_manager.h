@@ -50,6 +50,14 @@ class SnakeGame {
  public:
   SnakeGame();
   ~SnakeGame();
+
+
+  void toogleBoostTime();
+  void startHandler(UserAction_t action);
+  void moveHandler(UserAction_t action, bool hold);
+  void pauseHandler(UserAction_t action);
+  void gameOverHandler(UserAction_t action);
+
   void userInput(UserAction_t action, bool hold);
   GameInfo_t getGameInfo();
 

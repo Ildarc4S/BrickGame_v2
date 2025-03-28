@@ -16,7 +16,7 @@ Apple::Apple(const std::vector<Point>& snake_body) : position_() {
 void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   Point temp;
   do {
-    temp = Point(rand() % (FIELD_WIDTH + 1) + 1, rand() % (FIELD_HEIGHT+1) + 1);
+    temp = Point(rand() % FIELD_WIDTH + 1, rand() % FIELD_HEIGHT + 1);
   } while (std::find(snake_body.begin(), snake_body.end(), temp) != snake_body.end());
   position_ = temp;
 }

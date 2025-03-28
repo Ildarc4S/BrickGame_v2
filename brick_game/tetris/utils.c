@@ -49,7 +49,7 @@ int checkCollideWithWall(int x, int y) {
 /**
  * @brief Проверяет столкновение с другими блоками
  */
-static int checkCollideWithBlock(Tetris_t *self, int x, int y) {
+int checkCollideWithBlock(Tetris_t *self, int x, int y) {
   if (y < 1 || !self || !self->game_info.field) return UTILS_NOT_COLLIDE;
   return (self->game_info.field[y][x] != OBJECT_CODE_AIR);
 }
@@ -249,5 +249,43 @@ void insertTetraminoToFieldWithColor(Tetris_t *self) {
         processTetraminoCell(self, i, j);
       }
     }
+  }
+}
+
+/**
+ * @brief Устанавливает текущую тетромино из следующей
+ */
+void setCurrTetramino(Tetris_t *tetris) {
+  copyTetraminoToCurrentTetramino(tetris, tetris->next_tetramino);
+  
+  tetris->curr_tetramino.y = TETRIS_TETRAMINO_SPAWN_Y;
+  tetris->curr_tetramino.x = TETRIS_TETRAMINO_SPAWN_X;
+}
+
+/**
+ * @brief Обновляет следующee тетромино
+ */
+void updateNextTetraminoPreview(Tetris_t *tetris) {
+  tetris->next_tetramino = tetris->collection.getRandomTetranimo(&tetris->collection);
+
+  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
+    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
+      tetris->game_info.next[i][j] = OBJECT_CODE_AIR;
+      
+      if (tetris->next_tetramino->brick[i][j]) {
+        tetris->game_info.next[i][j] = tetris->next_tetramino->color;
+      }
+    }
+  }
+}
+
+/**
+ * @brief Проверяет условие завершения игры
+ */
+void checkGameOver(Tetris_t *tetris) {
+  if (isCollide(tetris, &tetris->curr_tetramino)) {
+    tetris->game_info.pause = PAUSE_MODE_GAME_OVER;
+    tetris->db.write(&tetris->db, tetris->game_info.high_score);
+    tetris->state = TETRIS_STATE_GAME_OVER;
   }
 }

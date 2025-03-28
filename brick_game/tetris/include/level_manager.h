@@ -86,3 +86,4 @@ Level_t initLevel();
 Score_t initScore();
 
 #endif  // LEVEL_MANAGER_H
+

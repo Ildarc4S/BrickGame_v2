@@ -27,3 +27,4 @@ typedef enum {
 } Color_t;
 
 #endif  // COLOR_H
+

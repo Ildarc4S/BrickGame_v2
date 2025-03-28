@@ -91,5 +91,39 @@ void moveHorizontal(Tetris_t* tetris, int direction);
  */
 void insertTetraminoToFieldWithColor(Tetris_t *self);
 
+/**
+ * @brief Устанавливает текущую тетромино из следующей
+ * @param tetris Указатель на объект игры
+ * 
+ * @details Копирует следующую тетромино в текущую и устанавливает
+ * начальные координаты спавна. Вызывается при появлении новой фигуры.
+ * 
+ * @note Перед вызовом должна быть инициализирована следующая тетромино
+ * @see updateNextTetraminoPreview()
+ */
+void setCurrTetramino(Tetris_t *tetris);
+
+/**
+ * @brief Обновляет превью следующей тетромино
+ * @param tetris Указатель на объект игры
+ * 
+ * @details Выбирает случайную тетромино из коллекции и отображает
+ * её в поле game_info.next с сохранением цвета.
+ * 
+ * @note Использует текущую цветовую схему фигур
+ */
+void updateNextTetraminoPreview(Tetris_t *tetris);
+
+/**
+ * @brief Проверяет условие завершения игры
+ * @param tetris Указатель на объект игры
+ * 
+ * @details Проверяет коллизию текущей тетромино при спавне.
+ * Если коллизия есть - игра завершается, сохраняется рекорд.
+ * 
+ * @warning Вызывается только при появлении новой фигуры
+ */
+void checkGameOver(Tetris_t *tetris);
+
 #endif  // UTILS_H
 

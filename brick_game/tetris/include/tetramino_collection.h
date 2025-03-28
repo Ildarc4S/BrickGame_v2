@@ -43,3 +43,4 @@ typedef struct _tetramino_collection {
 TetraminoCollection_t initTetraminoCollection();
 
 #endif  // TETRAMINO_COLLECTION_H
+

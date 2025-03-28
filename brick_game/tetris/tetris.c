@@ -1,9 +1,17 @@
-#include "./include/tetris.h"
+/**
+ * @file tetris.c
+ * @brief Реализация основных функций игры Тетрис
+ */
 
+#include "./include/tetris.h"
 #include "./include/memory_utils.h"
 #include "./include/utils.h"
 #include "./include/init_utils.h"
 
+/**
+ * @brief Восстанавливает начальное состояние игры
+ * @param self Указатель на объект игры
+ */
 void _restoreInfo(Tetris_t *self) {
   clearField(self->game_info.field);
 
@@ -13,10 +21,13 @@ void _restoreInfo(Tetris_t *self) {
 
   self->game_info.level = LEVEL_MANAGER_INITIAL_LEVEL;
   self->game_info.score = LEVEL_MANAGER_INITIAL_SCORE;
-
   self->game_info.speed = TETRIS_INITIAL_SPEED;
 }
 
+/**
+ * @brief Обработчик начала/продолжения игры
+ * @param self Указатель на объект игры
+ */
 void _startGame(Tetris_t *self) {
   if (self->state == TETRIS_STATE_START) {
     self->spawn(self);
@@ -30,69 +41,63 @@ void _startGame(Tetris_t *self) {
   self->game_info.pause = PAUSE_MODE_CONTINUE;
 }
 
+/**
+ * @brief Создает новую фигуру на поле
+ * @param self Указатель на объект игры
+ */
 void _spawn(Tetris_t *self) {
-  if (!self) {
-    return;
-  }
+  if (!self) return;
 
   if (!self->next_tetramino) {
-    self->next_tetramino =
-        self->collection.getRandomTetranimo(&self->collection);
+    self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
   }
 
-  copyTetraminoToCurrentTetramino(self, self->next_tetramino);
-  self->curr_tetramino.y = TETRIS_TETRAMINO_SPAWN_Y;
-  self->curr_tetramino.x = TETRIS_TETRAMINO_SPAWN_X;
-
-  self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
-
-  for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
-    for (int j = 0; j < TETRAMINO_WIDTH; j++) {
-      self->game_info.next[i][j] = OBJECT_CODE_AIR;
-      if (self->next_tetramino->brick[i][j]) {
-        self->game_info.next[i][j] = self->next_tetramino->color;
-      }
-    }
-  }
-
+  setCurrTetramino(self); 
+  updateNextTetraminoPreview(self);
   self->state = TETRIS_STATE_MOVE;
-
-  if (isCollide(self, &self->curr_tetramino)) {
-    self->game_info.pause = PAUSE_MODE_GAME_OVER;
-    self->db.write(&self->db, self->game_info.high_score);
-    self->state = TETRIS_STATE_GAME_OVER;
-  }
+  checkGameOver(self);
 }
 
-
+/**
+ * @brief Движение фигуры влево
+ * @param self Указатель на объект игры
+ * @param hold Флаг удержания клавиши
+ */
 void _left(Tetris_t *self, bool hold) {
-  if (!self) {
-    return;
-  }
+  if (!self) return;
   (void)hold;
   moveHorizontal(self, TETRIS_TETRAMINO_LEFT_DIRECTION);
 }
 
+/**
+ * @brief Движение фигуры вправо
+ * @param self Указатель на объект игры
+ * @param hold Флаг удержания клавиши
+ */
 void _right(Tetris_t *self, bool hold) {
-  if (!self) {
-    return;
-  }
+  if (!self) return;
   (void)hold;
-
   moveHorizontal(self, TETRIS_TETRAMINO_RIGHT_DIRECTION);
 }
 
+/**
+ * @brief Вращение фигуры
+ * @param self Указатель на объект игры
+ * @param hold Флаг удержания клавиши
+ */
 void _up(Tetris_t *self, bool hold) {
-  if (!self) {
-    return;
-  }
+  if (!self) return;
   (void)hold;
+  // Реализация вращения в функции action
 }
 
+/**
+ * @brief Ускоренное падение фигуры
+ * @param self Указатель на объект игры
+ * @param hold Флаг удержания клавиши
+ */
 void _down(Tetris_t *self, bool hold) {
-  if (!self) {
-    return;
-  }
+  if (!self) return;
 
   Tetramino_t *tetramino = &self->curr_tetramino;
   bool is_collide = false;
@@ -119,10 +124,13 @@ void _down(Tetris_t *self, bool hold) {
   }
 }
 
+/**
+ * @brief Поворот фигуры
+ * @param tetris Указатель на объект игры
+ * @param hold Флаг удержания клавиши
+ */
 void _action(Tetris_t *tetris, bool hold) {
-  if (!tetris) {
-    return;
-  }
+  if (!tetris) return;
   (void)hold;
 
   Tetramino_t *tetramino = &tetris->curr_tetramino;
@@ -135,6 +143,10 @@ void _action(Tetris_t *tetris, bool hold) {
   }
 }
 
+/**
+ * @brief Обновляет счет в игровой информации
+ * @param self Указатель на объект игры
+ */
 void _updateTetrisScore(Tetris_t *self) {
   self->game_info.score = self->level.score.score;
   if (self->game_info.score >= self->game_info.high_score) {
@@ -142,6 +154,10 @@ void _updateTetrisScore(Tetris_t *self) {
   }
 }
 
+/**
+ * @brief Обновляет уровень в игровой информации
+ * @param self Указатель на объект игры
+ */
 void _updateTetrisLevel(Tetris_t *self) {
   long tick = self->timer.tick;
   if (self->level.level > self->game_info.level &&
@@ -152,6 +168,10 @@ void _updateTetrisLevel(Tetris_t *self) {
   self->game_info.level = self->level.level;
 }
 
+/**
+ * @brief Основная функция обновления состояния игры
+ * @param self Указатель на объект игры
+ */
 void _updateTetrisState(Tetris_t *self) {
   clearTetraminoFromField(self);
   if (self->state == TETRIS_STATE_MOVE) {
@@ -164,15 +184,22 @@ void _updateTetrisState(Tetris_t *self) {
     clearLines(self);
     self->spawn(self);
   }
-
   insertTetraminoToFieldWithColor(self);
 }
 
+/**
+ * @brief Ставит игру на паузу
+ * @param tetris Указатель на объект игры
+ */
 void _pauseGame(Tetris_t *tetris) {
-  tetris->game_info.pause = PAUSE_MODE_Pause;
+  tetris->game_info.pause = PAUSE_MODE_PAUSE;
   tetris->state = TETRIS_STATE_PAUSE;
 }
 
+/**
+ * @brief Завершает игру и освобождает ресурсы
+ * @param self Указатель на объект игры
+ */
 void _exitGame(Tetris_t *self) {
   self->db.write(&self->db, self->game_info.high_score);
   self->game_info.pause = PAUSE_MODE_EXIT;
@@ -180,10 +207,13 @@ void _exitGame(Tetris_t *self) {
 
   freeField(&self->game_info.field, FIELD_HEIGHT + FIELD_BORDER);
   freeField(&self->game_info.next, TETRAMINO_HEIGHT);
-
   self->next_tetramino = NULL;
 }
 
+/**
+ * @brief Назначает функции-обработчики для объекта игры
+ * @param self Указатель на объект игры
+ */
 void assignFunctionPointers(Tetris_t *self) {
     self->start = _startGame;
     self->spawn = _spawn;
@@ -200,6 +230,10 @@ void assignFunctionPointers(Tetris_t *self) {
     self->updateTetrisState = _updateTetrisState;
 }
 
+/**
+ * @brief Создает и инициализирует объект игры
+ * @return Инициализированный объект игры
+ */
 Tetris_t constructorTetris() {
     Tetris_t self = (Tetris_t){
         .state = TETRIS_STATE_START,
@@ -219,6 +253,12 @@ Tetris_t constructorTetris() {
     return self;
 }
 
+/**
+ * @brief Инициализирует и возвращает указатель на объект игры
+ * @return Указатель на статический объект игры
+ * 
+ * @note Использует статическую переменную для реализации singleton
+ */
 Tetris_t *initTetris() {
   static Tetris_t tetris;
   static bool initialized = false;

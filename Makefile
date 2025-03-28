@@ -69,8 +69,8 @@ gcov_report: $(TEST_FILES) $(CFILES)
 
 install: $(EXEC_NAME)
 	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
-	install -m 0755 $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
-	install -m 0644 $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)
+	install -m $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
+	install -m $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)
 
 uninstall:
 	rm -f $(BINDIR)/$(EXEC_NAME)

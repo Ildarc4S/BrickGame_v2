@@ -22,6 +22,7 @@ PREFIX = /usr/local
 BINDIR = $(PREFIX)/bin
 LIBDIR = $(PREFIX)/lib
 DOCDIR = $(PREFIX)/share/doc/s21_tetris
+DOCS_OUTPUT_DIR = docs/tetris
 
 LIB_PATH = $(LIB_DIR)/s21_tetris.a
 LIB_NAME = s21_tetris.a
@@ -77,6 +78,7 @@ uninstall:
 	rm -rf $(DOCDIR)
 
 dvi:
+	mkdir -p $(DOCS_OUTPUT_DIR)
 	$(DOCGEN) $(DOXYFILE)
 
 dist: clean
@@ -86,6 +88,6 @@ dist: clean
 	rm -rf package
 
 clean:
-	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info
+	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR)
 
 rebuild: clean all

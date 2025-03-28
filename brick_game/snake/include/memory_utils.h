@@ -1,5 +1,5 @@
-#ifndef MEMORY_UTILS
-#define MEMORY_UTILS
+#ifndef SNAKE_MEMORY_UTILS
+#define SNAKE_MEMORY_UTILS
 
 namespace s21 {
 
@@ -11,5 +11,5 @@ class MemoryUtility {
 
 }  // namespace s21
 
-#endif  // MEMORY_UTILS
+#endif  // SNAKE_MEMORY_UTILS
 

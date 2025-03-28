@@ -1,5 +1,5 @@
-#ifndef APPLE_H
-#define APPLE_H
+#ifndef SNAKE_APPLE_H
+#define SNAKE_APPLE_H
 
 #include <vector>
 
@@ -22,5 +22,5 @@ class Apple {
 
 }  // namespace s21
 
-#endif  // APPLE_H
+#endif  // SNAKE_APPLE_H
 

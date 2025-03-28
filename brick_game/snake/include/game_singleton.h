@@ -1,5 +1,5 @@
-#ifndef GAME_SINGLETON_H
-#define GAME_SINGLETON_H
+#ifndef SNAKE_GAME_SINGLETON_H
+#define SNAKE_GAME_SINGLETON_H
 
 #include "./game_manager.h"
 
@@ -22,5 +22,5 @@ class SnakeGameSingleton {
 
 }  // namespace s21
 
-#endif  // GAME_SINGLETON_H
+#endif  // SNAKE_GAME_SINGLETON_H
 

@@ -11,6 +11,17 @@
 #include "./snake.h"
 
 namespace s21 {
+#define INITIAL_TIMER 500
+#define INITIAL_SPEED 10
+#define INITIAL_LEVEL 1
+#define INITIAL_SCORE 0
+#define MAX_LEVEL 10
+#define MAX_SCORE 200
+#define LEVEL_SCORE_THRESHOLD 5
+#define SCORE_INCREMENT 1
+#define SPEED_INCREMENT 1
+#define INTERVAL_DECREMENT 50
+#define BOOST_INTERVAL_DIVISOR 2
 
 class SnakeGame {
  private:

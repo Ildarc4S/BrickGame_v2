@@ -21,3 +21,4 @@ class DataBase {
 }  // namespace s21
 
 #endif  // DATA_BASE_H
+

@@ -5,9 +5,9 @@ namespace s21 {
 Snake::Snake()
   : direction_(Direction::kRight),
     body_(),
-    speed_(1) {
-  int mid_x = FIELD_WIDTH / 2;
-  int mid_y = FIELD_HEIGHT / 2;
+    speed_(SNAKE_DEFAULT_SPEED) {
+  int mid_x = FIELD_WIDTH / MID_SIZE_DIVISOR;
+  int mid_y = FIELD_HEIGHT / MID_SIZE_DIVISOR;
 
   for (int i = 0; i < SNAKE_SIZE; i++) {
     body_.emplace_back(mid_x + i, mid_y);

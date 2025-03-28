@@ -6,29 +6,29 @@ namespace s21 {
 SnakeGame::SnakeGame()
   : state_(State::kStart),
     action_(UserAction_t::Start),
-    timer_(500),
+    timer_(INITIAL_TIMER),
     snake_(),
     apple_(snake_.getBody()),
     db_("snake_db.txt"),
     boost_time_(false){
-    game_info_.field = MemoryUtility::createField(FIELD_WIDTH+2, FIELD_HEIGHT+2);
+    game_info_.field = MemoryUtility::createField(FIELD_WIDTH + FIELD_BORDER, FIELD_HEIGHT + FIELD_BORDER);
     game_info_.next = nullptr;
-    game_info_.score = 0;
-    game_info_.high_score = 0;
-    game_info_.level = 1;
-    game_info_.speed = 10;
+    game_info_.score = INITIAL_SCORE;
+    game_info_.high_score = INITIAL_SCORE;
+    game_info_.level = INITIAL_LEVEL;
+    game_info_.speed = INITIAL_SPEED;
     game_info_.pause = static_cast<int>(PauseMode::kStart);
 
-    max_level_score_ = 5;
-    max_level_ = 10;
-    add_score_ = 1;
-    max_score_ = 200;
-    interval_diff_ = 50;
-    interval_boost_diff_ = 80;
+    max_level_score_ = LEVEL_SCORE_THRESHOLD;
+    max_level_ = MAX_LEVEL;
+    add_score_ = SCORE_INCREMENT;
+    max_score_ = MAX_SCORE;
+    interval_diff_ = INTERVAL_DECREMENT;
+    interval_boost_diff_ = BOOST_INTERVAL_DIVISOR;
 }
 
 SnakeGame::~SnakeGame() {
-  MemoryUtility::removeField(game_info_.field, FIELD_HEIGHT+2);
+  MemoryUtility::removeField(game_info_.field, FIELD_HEIGHT+FIELD_BORDER);
 }
 
 void SnakeGame::startHandler(UserAction_t action) {
@@ -48,7 +48,7 @@ void SnakeGame::startHandler(UserAction_t action) {
 void SnakeGame::toogleBoostTime() {
           boost_time_ = !boost_time_;
           if (boost_time_) {
-            timer_.setInterval(timer_.getInterval() - interval_boost_diff_, /*save =*/ true);
+            timer_.setInterval(timer_.getInterval() / interval_boost_diff_, /*save =*/ true);
           } else {
             timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
           }
@@ -139,9 +139,9 @@ void SnakeGame::start() {
       game_info_.high_score = game_info_.score;
       db_.write(game_info_.high_score);
     }
-    game_info_.level = 1;
-    game_info_.score = 0;
-    game_info_.speed = 10;
+    game_info_.level = INITIAL_LEVEL;
+    game_info_.score = INITIAL_SCORE;
+    game_info_.speed = INITIAL_SPEED;
     timer_.resetInterval();
 
     spawn();
@@ -198,7 +198,7 @@ void SnakeGame::eat() {
 void SnakeGame::speedBoost() {
   boost_time_ = !boost_time_;
   if (boost_time_) {
-    timer_.setInterval(timer_.getInterval() - 80, /*save =*/ true);
+    timer_.setInterval(timer_.getInterval() / BOOST_INTERVAL_DIVISOR, /*save =*/ true);
   } else {
     timer_.setInterval(timer_.getLastInterval(), /*save =*/ false);
   }

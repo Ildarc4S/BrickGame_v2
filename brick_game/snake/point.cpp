@@ -2,7 +2,7 @@
 
 namespace s21 {
 
-Point::Point() : x_(-1), y_(-1) {}
+Point::Point() : x_(POINT_INIT_X), y_(POINT_INIT_Y) {}
 Point::Point(int x_, int y_) : x_(x_), y_(y_) {}
 
 int Point::getX() const {

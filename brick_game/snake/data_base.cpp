@@ -1,10 +1,7 @@
 #include "./include/data_base.h"
 namespace s21 {
 
-DataBase::DataBase(const std::string& file_name) : file_name_(file_name) {
-    std::filesystem::path full_path = std::filesystem::absolute(file_name);
-    file_name_ = full_path.string();
-}
+DataBase::DataBase(const std::string& file_name) : file_name_(file_name) {}
 
 int DataBase::read() {
   std::string line;

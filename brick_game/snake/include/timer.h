@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNAKE_TIMER_H
+#define SNAKE_TIMER_H
 
 #include <chrono>
 
@@ -26,3 +27,6 @@ class Timer {
 };
 
 }  // namespace s21
+
+#endif  // SNAKE_TIMER_H
+

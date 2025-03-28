@@ -1,5 +1,5 @@
-#ifndef OBJECTS_CODE_H
-#define OBJECTS_CODE_H
+#ifndef SNAKE_OBJECTS_CODE_H
+#define SNAKE_OBJECTS_CODE_H
 
 namespace s21 {
 
@@ -38,4 +38,5 @@ enum class FigureCode {
 
 }  // namespace s21
 
-#endif  // OBJECTS_CODE_H
+#endif  // SNAKE_OBJECTS_CODE_H
+

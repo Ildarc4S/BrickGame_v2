@@ -1,7 +1,10 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef SNAKE_POINT_H
+#define SNAKE_POINT_H
 
 namespace s21 {
+
+#define POINT_INIT_X -1
+#define POINT_INIT_Y -1
 
 class Point {
  private:
@@ -23,4 +26,5 @@ class Point {
 
 }  // namespace s21
 
-#endif  // POINT_H
+#endif  // SNAKE_POINT_H
+

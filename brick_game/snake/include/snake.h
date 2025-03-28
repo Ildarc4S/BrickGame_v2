@@ -8,9 +8,12 @@
 #include "./objects_code.h"
 #include "./point.h"
 
-#define SNAKE_SIZE 4
 
 namespace s21 {
+
+#define SNAKE_SIZE 4
+#define MID_SIZE_DIVISOR 2
+#define SNAKE_DEFAULT_SPEED 1
 
 class Snake {
  private:

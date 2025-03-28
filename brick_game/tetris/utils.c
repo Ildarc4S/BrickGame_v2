@@ -1,6 +1,14 @@
+/**
+ * @file utils.c
+ * @brief Реализация вспомогательных функций для Тетриса
+ */
+
 #include "./include/utils.h"
 #include "./include/tetris.h"
 
+/**
+ * @brief Очищает игровое поле, устанавливая границы и воздух
+ */
 void clearField(int **field) {
   if (!field) return;
 
@@ -15,6 +23,9 @@ void clearField(int **field) {
   }
 }
 
+/**
+ * @brief Удаляет текущую фигуру с игрового поля
+ */
 void clearTetraminoFromField(Tetris_t *tetris) {
   if (!tetris->game_info.field) return;
 
@@ -28,15 +39,24 @@ void clearTetraminoFromField(Tetris_t *tetris) {
   }
 }
 
+/**
+ * @brief Проверяет столкновение с границами поля
+ */
 int checkCollideWithWall(int x, int y) {
   return (x < 1 || x >= FIELD_WIDTH + 1 || y >= FIELD_HEIGHT + 1);
 }
 
+/**
+ * @brief Проверяет столкновение с другими блоками
+ */
 static int checkCollideWithBlock(Tetris_t *self, int x, int y) {
   if (y < 1 || !self || !self->game_info.field) return UTILS_NOT_COLLIDE;
   return (self->game_info.field[y][x] != OBJECT_CODE_AIR);
 }
 
+/**
+ * @brief Основная функция проверки коллизий
+ */
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
   if (!tetramino || !self || !self->game_info.field) return UTILS_ERROR;
   
@@ -46,13 +66,17 @@ int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
       if (tetramino->brick[i][j]) {
         int global_x = tetramino->x + j;
         int global_y = tetramino->y + i;
-        result = checkCollideWithWall(global_x, global_y) || checkCollideWithBlock(self, global_x, global_y);
+        result = checkCollideWithWall(global_x, global_y) || 
+                checkCollideWithBlock(self, global_x, global_y);
       }
     }
   }
   return result;
 }
 
+/**
+ * @brief Внутренняя функция копирования матрицы фигуры
+ */
 void copyBrick(int dest[TETRAMINO_HEIGHT][TETRAMINO_WIDTH],
                int src[TETRAMINO_HEIGHT][TETRAMINO_WIDTH]) {
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
@@ -62,11 +86,17 @@ void copyBrick(int dest[TETRAMINO_HEIGHT][TETRAMINO_WIDTH],
   }
 }
 
+/**
+ * @brief Копирует матрицу фигуры
+ */
 void copyTetramino(int brick_one[TETRAMINO_HEIGHT][TETRAMINO_WIDTH],
                    int brick_two[TETRAMINO_HEIGHT][TETRAMINO_WIDTH]) {
   copyBrick(brick_one, brick_two);
 }
 
+/**
+ * @brief Копирует фигуру в текущую фигуру игры
+ */
 void copyTetraminoToCurrentTetramino(Tetris_t *tetris, Tetramino_t *tetramino) {
   if (!tetramino) return;
 
@@ -76,6 +106,9 @@ void copyTetraminoToCurrentTetramino(Tetris_t *tetris, Tetramino_t *tetramino) {
   tetris->curr_tetramino.color = tetramino->color;
 }
 
+/**
+ * @brief Заменяет текущую фигуру
+ */
 void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
   if (!tetramino || !self->game_info.field) return;
 
@@ -84,6 +117,9 @@ void replaceTetramino(Tetris_t *self, Tetramino_t *tetramino) {
   self->curr_tetramino.y = tetramino->y;
 }
 
+/**
+ * @brief Вставляет фигуру в поле (как стену)
+ */
 void insertTetraminoToField(Tetris_t *self) {
   if (!self->game_info.field) return;
 
@@ -99,6 +135,9 @@ void insertTetraminoToField(Tetris_t *self) {
   }
 }
 
+/**
+ * @brief Поворачивает фигуру на 90 градусов
+ */
 void rotateTetramino(Tetramino_t *tetramino) {
   int temp[TETRAMINO_WIDTH][TETRAMINO_HEIGHT];
   copyTetramino(temp, tetramino->brick);
@@ -111,6 +150,9 @@ void rotateTetramino(Tetramino_t *tetramino) {
   copyTetramino(tetramino->brick, temp);
 }
 
+/**
+ * @brief Сдвигает линии вниз после очистки
+ */
 void shiftLines(Tetris_t *tetris, int *index) {
   for (int k = *index; k > 1; k--) {
     for (int j = 1; j <= FIELD_WIDTH+1; j++) {
@@ -120,6 +162,9 @@ void shiftLines(Tetris_t *tetris, int *index) {
   *index += 1;
 }
 
+/**
+ * @brief Подсчитывает количество заполненных линий
+ */
 int countEraseLines(Tetris_t* tetris) {
   int erase_line_count = 0;
   for (int i = FIELD_HEIGHT; i > 0; i--) {
@@ -137,6 +182,9 @@ int countEraseLines(Tetris_t* tetris) {
   return erase_line_count;
 }
 
+/**
+ * @brief Обновляет счет и уровень после очистки линий
+ */
 void updateScoreAndLeve(Tetris_t* tetris, int erase_line_count) {
   tetris->level.score.convertLineCountToScore(&tetris->level.score, erase_line_count);
   tetris->level.updateLevel(&tetris->level);
@@ -145,6 +193,9 @@ void updateScoreAndLeve(Tetris_t* tetris, int erase_line_count) {
   tetris->updateLevel(tetris);
 }
 
+/**
+ * @brief Очищает заполненные линии и обновляет состояние
+ */
 void clearLines(Tetris_t *self) {
   int erase_line_count = countEraseLines(self);
   if (erase_line_count) {
@@ -152,10 +203,11 @@ void clearLines(Tetris_t *self) {
   }
 }
 
+/**
+ * @brief Двигает фигуру горизонтально с проверкой коллизий
+ */
 void moveHorizontal(Tetris_t* tetris, int direction) {
-    if (!tetris) {
-      return; 
-    }
+    if (!tetris) return;
 
   Tetramino_t *tetramino = &tetris->curr_tetramino;
   tetramino->x += direction;
@@ -165,11 +217,17 @@ void moveHorizontal(Tetris_t* tetris, int direction) {
   replaceTetramino(tetris, tetramino);
 }
 
+/**
+ * @brief Проверяет находится ли точка в пределах поля
+ */
 bool isWithinFieldBounds(int x, int y) {
     return x >= 1 && x < FIELD_WIDTH + 1 && 
            y >= 1 && y < FIELD_HEIGHT + 1;
 }
 
+/**
+ * @brief Обрабатывает ячейку фигуры для вставки с цветом
+ */
 void processTetraminoCell(Tetris_t *self, int i, int j) {
     int x = self->curr_tetramino.x + j;
     int y = self->curr_tetramino.y + i;
@@ -179,6 +237,9 @@ void processTetraminoCell(Tetris_t *self, int i, int j) {
     }
 }
 
+/**
+ * @brief Вставляет фигуру в поле с сохранением цвета
+ */
 void insertTetraminoToFieldWithColor(Tetris_t *self) {
   if (!self->game_info.field) return;
 
@@ -190,4 +251,3 @@ void insertTetraminoToFieldWithColor(Tetris_t *self) {
     }
   }
 }
-

@@ -1,5 +1,13 @@
+/**
+ * @file init_utils.c
+ * @brief Реализация функций инициализации
+ */
+
 #include "./include/init_utils.h"
 
+/**
+ * @brief Инициализирует структуру игровой информации
+ */
 GameInfo_t initGameInfo() {
     return (GameInfo_t){
         .field = newField(FIELD_WIDTH + FIELD_BORDER, FIELD_HEIGHT + FIELD_BORDER),
@@ -12,13 +20,14 @@ GameInfo_t initGameInfo() {
     };
 }
 
+/**
+ * @brief Инициализирует текущую тетромино
+ */
 Tetramino_t initCurrentTetramino() {
     return (Tetramino_t){
         .x = TETRAMINO_COLLCECTION_INITIAL_X,
         .y = TETRAMINO_COLLCECTION_INITIAL_Y,
         .color = TETRAMINO_COLOR_BLUE,
-        .brick = {{0}}
+        .brick = {{0}}  // Инициализация нулями
     };
 }
-
-

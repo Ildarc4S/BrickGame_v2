@@ -8,10 +8,6 @@
 #include "./data_base.h"
 #include "./level_manager.h"
 
-#define FIELD_WIDTH 10
-#define FIELD_HEIGHT 20
-#define FIELD_BORDER 2
-
 #define TETRIS_TETRAMINO_SPAWN_X (FIELD_WIDTH / 2)
 #define TETRIS_TETRAMINO_SPAWN_Y -1
 

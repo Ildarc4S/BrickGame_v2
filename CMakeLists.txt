@@ -161,12 +161,12 @@ set_target_properties(${TETRIS_DESKTOP_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${TETRIS_BIN_DIR}
 )
 
-# CLI-версия Tetris (s21_tetris_cli) через Makefile
 add_custom_target(${TETRIS_CLI_EXEC}
     COMMAND make s21_tetris_cli
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Building s21_tetris_cli using Makefile"
-    DEPENDS tetris_lib
+    BYPRODUCTS ${TETRIS_BIN_DIR}/${TETRIS_CLI_EXEC}
+    COMMENT "Building s21_tetris_cli using existing Makefile"
+    DEPENDS tetris_lib  # Зависимость от библиотеки s21_tetris.a
 )
 
 # Тесты для Snake с GTest

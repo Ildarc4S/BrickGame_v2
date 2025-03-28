@@ -9,8 +9,7 @@
 
 #include "./../../brick_game/spec/game_spec.h"
 #include "./color_convert.h"
-#include "./field.h"
-#include "./area.h"
+#include "./field_widget.h"
 #include "./menu.h"
 
 namespace s21 {
@@ -35,21 +34,24 @@ class Window : public QWidget {
   void updateInfoPanel();
   void updateLayout();
   void updateSingleInfoPanel(const QString &title, const QString &value);
+
   QFrame *createInfoBlock(const QString &title, const QString &value);
   QFrame *createHelpBlock();
   QFrame *createNextFigureBlock();
+
   void drawNextFigure(QPainter &painter);
   void paintNextFigureEvent(QPaintEvent *event);
 
  private:
   GameInfo_t game_info_;
   QStackedWidget *left_stack_;
-  GameArea *game_area_;
   MenuWidget *menu_;
   QLabel *score_label_;
   QLabel *level_label_;
   QLabel *speed_label_;
   QVBoxLayout *right_layout;
-  NextFigureWidget *next_figure_widget_;
+
+  FieldWidget *main_field_;
+  FieldWidget *next_figure_widget_;
 };
-} // namespace s21
+}  // namespace s21

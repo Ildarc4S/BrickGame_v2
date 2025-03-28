@@ -9,7 +9,7 @@ QColor ColorConverter::convertObjectToColor(ObjectCode code) {
     color = QColor(80, 80, 80);    // Dark gray
     break;
   case ObjectCode::kWall:
-    color = Qt::black;             // Black
+    color = QColor(50, 50, 50);    // WDark gray
     break;
   case ObjectCode::kTetraminoI:
     color = QColor(255, 0, 0);     // Red

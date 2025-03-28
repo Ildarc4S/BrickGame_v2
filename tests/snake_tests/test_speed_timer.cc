@@ -12,7 +12,6 @@ TEST(SnakeGameTest, SpeedBoostTogglesState) {
 
     tester.speedBoostGame(game);
     EXPECT_EQ(tester.getGameBoostTime(game), initial_boost);
-
 }
 
 TEST(SnakeGameTest, SpeedBoostModifiesTimer) {

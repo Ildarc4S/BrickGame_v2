@@ -89,7 +89,7 @@ int SnakeGameTest::getGameLevel(SnakeGame &game) {
 
 void SnakeGameTest::eatGame(SnakeGame &game) { game.eat(); }
 
-void SnakeGameTest::speedBoostGame(SnakeGame &game) { game.speedBoost(); }
+void SnakeGameTest::speedBoostGame(SnakeGame &game) { game.toogleBoostTime(); }
 
 void SnakeGameTest::setApplePosition(SnakeGame &game, Point &pos) {
   game.apple_.setPosition(pos);

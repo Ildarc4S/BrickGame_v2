@@ -5,8 +5,8 @@ namespace s21 {
 FieldWidget::FieldWidget(FieldType type, QWidget *parent)
     : QWidget(parent), game_info_(nullptr), field_type_(type) {
   if (field_type_ == FieldType::MainField) {
-    rows_ = FIELD_HEIGHT + FIELD_BORDER_SIZE;
-    cols_ = FIELD_WIDTH + FIELD_BORDER_SIZE;
+    rows_ = FIELD_HEIGHT + FIELD_BORDER;
+    cols_ = FIELD_WIDTH + FIELD_BORDER;
     border_color_ = Qt::white;
     use_antialiasing_ = false;
   } else {

@@ -4,12 +4,6 @@
 #include "./../../../brick_game/spec/game_spec.h"
 #include <ncurses.h>
 
-#define FIELD_WIDTH 10
-#define FIELD_HEIGHT 20
-
-#define TETRAMINO_WIDTH 4
-#define TETRAMINO_HEIGHT 4
-
 typedef enum {
   OBJECT_CODE_AIR = -2,
   OBJECT_CODE_WALL = -1,

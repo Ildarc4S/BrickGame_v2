@@ -29,7 +29,7 @@ TEST(SnakeGameTest, UserInputTerminateFromMoveState) {
 TEST(SnakeGameTest, UserInputLeftFromMoveState) {
     SnakeGame game;
     SnakeGameTest tester;
-    
+
     std::vector<Point> new_body = {
         Point(5, 8),
         Point(5, 7),

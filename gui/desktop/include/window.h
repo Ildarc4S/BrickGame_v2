@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 #include "./field_widget.h"
 #include "./menu.h"

@@ -1,8 +1,3 @@
-#include <QWidget>
-#include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
-
 #include "./include/window.h"
 
 namespace s21 {

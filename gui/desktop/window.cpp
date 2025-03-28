@@ -1,7 +1,3 @@
-#include <QKeyEvent>
-#include <QLabel>
-#include <QPushButton>
-
 #include "./include/window.h"
 #include "./include/window_defines.h"
 

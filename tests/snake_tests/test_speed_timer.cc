@@ -21,7 +21,7 @@ TEST(SnakeGameTest, SpeedBoostModifiesTimer) {
 
     const int initial_interval = tester.getTimerInterval(game);
     tester.speedBoostGame(game);
-    EXPECT_EQ(tester.getTimerInterval(game), initial_interval - 80);
+    EXPECT_EQ(tester.getTimerInterval(game), initial_interval / 2);
 
     tester.speedBoostGame(game);
     EXPECT_EQ(tester.getTimerInterval(game), initial_interval);

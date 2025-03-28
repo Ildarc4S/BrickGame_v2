@@ -17,8 +17,6 @@ class SnakeGameTest {
                                        State initial_state,
                                        Direction expected_direction,
                                        State expected_state);
-  void exitGame(SnakeGame &game);
-  Snake getGameSnake(SnakeGame &game);
   bool isTimerExpired(SnakeGame &game);
   void setGameState(SnakeGame &game, State state);
   void setTimerInterval(SnakeGame &game, int interval);
@@ -41,6 +39,10 @@ class SnakeGameTest {
   void eatGame(SnakeGame &game);
   void speedBoostGame(SnakeGame &game);
   void setApplePosition(SnakeGame &game, Point &pos);
+  void snakeCopyConstructor();
+  void snakeMoveConstructor();
+  void snakeCopyAssignment();
+  void snakeMoveAssignment();
 };
 
 }  // namespace s21

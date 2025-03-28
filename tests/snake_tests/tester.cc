@@ -21,14 +21,6 @@ void SnakeGameTest::testUserInputAutomatonDirection(
   EXPECT_EQ(game.state_, expected_state);
 }
 
-void SnakeGameTest::exitGame(SnakeGame &game) { game.exit(); }
-
-Snake SnakeGameTest::getGameSnake(SnakeGame &game) { return game.snake_; }
-
-bool SnakeGameTest::isTimerExpired(SnakeGame &game) {
-  return game.timer_.isExpired();
-}
-
 void SnakeGameTest::setGameState(SnakeGame &game, State state) {
   game.state_ = state;
 }
@@ -102,4 +94,64 @@ void SnakeGameTest::speedBoostGame(SnakeGame &game) { game.speedBoost(); }
 void SnakeGameTest::setApplePosition(SnakeGame &game, Point &pos) {
   game.apple_.setPosition(pos);
 }
+
+void SnakeGameTest::snakeCopyConstructor() {
+    Snake default_snake_;
+    Snake copied_snake(default_snake_);
+
+    EXPECT_EQ(copied_snake.getDirection(), default_snake_.getDirection());
+    EXPECT_EQ(copied_snake.getSpeed(), default_snake_.getSpeed());
+    EXPECT_EQ(copied_snake.getBody(), default_snake_.getBody());
+
+    copied_snake.move(false);
+    EXPECT_NE(copied_snake.getBody(), default_snake_.getBody());
+}
+
+void SnakeGameTest::snakeMoveConstructor() {
+    Snake default_snake_;
+    auto original_dir = default_snake_.getDirection();
+    auto original_speed = default_snake_.getSpeed();
+    auto original_body = default_snake_.getBody();
+
+    Snake moved_snake(std::move(default_snake_));
+
+    EXPECT_EQ(moved_snake.getDirection(), original_dir);
+    EXPECT_EQ(moved_snake.getSpeed(), original_speed);
+    EXPECT_EQ(moved_snake.getBody(), original_body);
+
+    EXPECT_TRUE(default_snake_.getBody().empty());
+}
+
+void SnakeGameTest::snakeCopyAssignment() {
+    Snake default_snake_;
+    Snake another_snake;
+    another_snake.move(false);
+    another_snake = default_snake_;
+
+    EXPECT_EQ(another_snake.getDirection(), default_snake_.getDirection());
+    EXPECT_EQ(another_snake.getSpeed(), default_snake_.getSpeed());
+    EXPECT_EQ(another_snake.getBody(), default_snake_.getBody());
+
+    another_snake = another_snake;
+    EXPECT_EQ(another_snake.getDirection(), default_snake_.getDirection());
+}
+
+void SnakeGameTest::snakeMoveAssignment() {
+    Snake default_snake_;
+    Snake another_snake;
+    another_snake.move(false);
+
+    auto original_dir = default_snake_.getDirection();
+    auto original_speed = default_snake_.getSpeed();
+    auto original_body = default_snake_.getBody();
+
+    another_snake = std::move(default_snake_);
+
+    EXPECT_EQ(another_snake.getDirection(), original_dir);
+    EXPECT_EQ(another_snake.getSpeed(), original_speed);
+    EXPECT_EQ(another_snake.getBody(), original_body);
+
+    EXPECT_TRUE(default_snake_.getBody().empty());
+}
+
 };  // namespace s21

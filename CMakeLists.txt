@@ -46,6 +46,15 @@ set(TETRIS_CLI_EXEC s21_tetris_cli)
 set(SNAKE_TEST_EXEC s21_snake_test)
 set(SNAKE_COV_EXEC s21_snake_coverage)
 
+set(SNAKE_DESKTOP_HEADERS 
+    ${GUI_DESKTOP_DIR}/include/window.h
+    ${GUI_DESKTOP_DIR}/include/menu.h
+    ${GUI_DESKTOP_DIR}/include/field_widget.h
+    ${GUI_DESKTOP_DIR}/include/color_convert.h
+    ${GUI_DESKTOP_DIR}/include/window_defines.h
+    ${GUI_DESKTOP_DIR}/include/objects_code.h
+)
+
 # Создание директорий
 file(MAKE_DIRECTORY ${LIB_DIR})
 file(MAKE_DIRECTORY ${SNAKE_BIN_DIR})
@@ -75,7 +84,6 @@ set_target_properties(snake_lib PROPERTIES
 )
 target_include_directories(snake_lib PUBLIC ${SNAKE_SRC_DIR})
 
-# Проверка наличия s21_tetris.a и вызов Makefile, если его нет
 if(NOT EXISTS "${LIB_DIR}/${TETRIS_LIB_NAME}.a")
     message(STATUS "s21_tetris.a not found in ${LIB_DIR}, building it with Makefile")
     execute_process(
@@ -98,13 +106,16 @@ set_target_properties(tetris_lib PROPERTIES
 add_executable(${SNAKE_DESKTOP_EXEC}
     ${GUI_DESKTOP_SOURCES}
     ${GUI_COMMON_SOURCES}
+    ${SNAKE_DESKTOP_HEADERS}
 )
+
 target_include_directories(${SNAKE_DESKTOP_EXEC} PRIVATE
     ${GUI_DESKTOP_DIR}
     ${GUI_COMMON_DIR}
     ${SNAKE_SRC_DIR}
     ${CMAKE_SOURCE_DIR}/brick_game/spec
 )
+
 target_link_libraries(${SNAKE_DESKTOP_EXEC} PRIVATE
     snake_lib
     Qt5::Widgets
@@ -134,6 +145,7 @@ set_target_properties(${SNAKE_CLI_EXEC} PROPERTIES
 add_executable(${TETRIS_DESKTOP_EXEC}
     ${GUI_DESKTOP_SOURCES}
     ${GUI_COMMON_SOURCES}
+    ${SNAKE_DESKTOP_HEADERS}
 )
 target_include_directories(${TETRIS_DESKTOP_EXEC} PRIVATE
     ${GUI_DESKTOP_DIR}

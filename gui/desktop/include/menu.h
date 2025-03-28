@@ -12,6 +12,11 @@
 
 namespace s21 {
 
+#define BOTTOM_SPACING 20
+#define STATUS_MARGIN_BOTTOM 30
+#define STATUS_FONT_SIZE 32
+#define STATUS_FONT_COLOR "#FFFFFF"
+
 class MenuWidget : public QWidget {
   Q_OBJECT
  public:

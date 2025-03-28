@@ -7,7 +7,6 @@
 
 namespace s21 {
 
-
 MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
   QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -16,11 +15,15 @@ MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
 
   status_label_ = new QLabel(this);
   status_label_->setAlignment(Qt::AlignCenter);
-  status_label_->setStyleSheet("QLabel {"
-                               "   color: #FFFFFF;"
-                               "   font: bold 32px;"
-                               "   margin-bottom: 30px;"
-                               "}");
+    status_label_->setStyleSheet(QString(
+        "QLabel {"
+        "   color: %1;"
+        "   font: bold %2px;"
+        "   margin-bottom: %3px;}")
+        .arg(STATUS_FONT_COLOR)
+        .arg(STATUS_FONT_SIZE)
+        .arg(STATUS_MARGIN_BOTTOM));
+
   status_layout->addWidget(status_label_);
 
   layout->addWidget(status_container);
@@ -32,7 +35,7 @@ MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
   layout->addWidget(start_continue_btn_);
   layout->addWidget(exit_btn_);
   layout->addStretch();
-  layout->addSpacing(20);
+  layout->addSpacing(BOTTOM_SPACING);
 
   connect(start_continue_btn_, &QPushButton::clicked, this,
           &MenuWidget::pauseClicked);

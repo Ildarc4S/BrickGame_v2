@@ -76,14 +76,6 @@ void Controller::processUserInput(int key, bool hold) {
 void Controller::update_game() {
   GameInfo_t game_info = updateCurrentState();
 
-  for (int i = 0; i  < FIELD_HEIGHT+2; i++) {
-    QString str = "";
-    for (int j = 0; j < FIELD_WIDTH+2; j++) {
-      str += QString::number(game_info.field[i][j]);
-      str += " ";
-    }
-    qDebug() << str;
-  }
   view_->setGameInfo(game_info);
   view_->update();
 }

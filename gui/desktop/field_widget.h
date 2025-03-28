@@ -1,10 +1,11 @@
-#ifndef FIELD_WIDGET_H
-#define FIELD_WIDGET_H
+#ifndef DESKTOP_FIELD_WIDGET_H
+#define DESKTOP_FIELD_WIDGET_H
 
-#include "./color_convert.h"
 #include <QPainter>
 #include <QWidget>
+
 #include "./../../brick_game/spec/game_spec.h"
+#include "./color_convert.h"
 
 namespace s21 {
 
@@ -33,4 +34,4 @@ class FieldWidget : public QWidget {
 
 }  // namespace s21
 
-#endif  // FIELD_WIDGET_H
+#endif  // DESKTOP_FIELD_WIDGET_H

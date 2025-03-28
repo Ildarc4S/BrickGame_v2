@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DESKTOP_WINDOW_H
+#define DESKTOP_WINDOW_H
 
 #include <QLabel>
 #include <QMainWindow>
@@ -8,12 +9,10 @@
 #include <QVBoxLayout>
 
 #include "./../../brick_game/spec/game_spec.h"
-#include "./color_convert.h"
 #include "./field_widget.h"
 #include "./menu.h"
 
 namespace s21 {
-
 class Window : public QWidget {
   Q_OBJECT
 
@@ -55,3 +54,6 @@ class Window : public QWidget {
   FieldWidget *next_figure_widget_;
 };
 }  // namespace s21
+
+#endif  // DESKTOP_WINDOW_H
+

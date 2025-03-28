@@ -1,12 +1,9 @@
-#include "./window.h"
-#include "./color_convert.h"
-
-#include <QKeyEvent>
-#include <QPaintEvent>
-#include <QPainter>
+#include <QWidget>
+#include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
-#include <array>
-#include <utility>
+
+#include "./window.h"
 
 namespace s21 {
 

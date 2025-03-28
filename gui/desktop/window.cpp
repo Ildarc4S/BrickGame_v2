@@ -1,4 +1,6 @@
 #include "./window.h"
+#include "./window_defines.h"
+
 #include <QKeyEvent>
 #include <QLabel>
 #include <QPushButton>
@@ -6,15 +8,25 @@
 namespace s21 {
 
 Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
-  setFixedSize(600, 900);
-  setStyleSheet("QWidget { background-color: #2E2E2E; color: white; }"
-                "QPushButton { background-color: #444444; border: 1px solid #666666; color: white; padding: 15px; border-radius: 5px; font-size: 18px; }"
-                "QPushButton:hover { background-color: #555555; }"
-                "QPushButton:pressed { background-color: #333333; }"
-                "QLabel { color: white; }");
+  setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+ setStyleSheet(QString(
+    "QWidget { background-color: %1; color: white; }"
+    "QPushButton { background-color: %2; border: %3px solid %4; color: white; padding: %5px; border-radius: %6px; font-size: %7px; }"
+    "QPushButton:hover { background-color: %8; }"
+    "QPushButton:pressed { background-color: %9; }"
+    "QLabel { color: white; }")
+    .arg(BACKGROUND_COLOR)
+    .arg(BUTTON_NORMAL_COLOR)
+    .arg(BORDER_WIDTH)
+    .arg(BORDER_COLOR)
+    .arg(BUTTON_PADDING)
+    .arg(BORDER_RADIUS)
+    .arg(BUTTON_FONT_SIZE)
+    .arg(BUTTON_HOVER_COLOR)
+    .arg(BUTTON_PRESSED_COLOR));
 
   QHBoxLayout *main_layout = new QHBoxLayout(this);
-  main_layout->setContentsMargins(0, 0, 0, 0);
+  main_layout->setContentsMargins(LAYOUT_MARGIN, LAYOUT_MARGIN, LAYOUT_MARGIN, LAYOUT_MARGIN);
 
   left_stack_ = new QStackedWidget;
   main_field_ = new FieldWidget(FieldWidget::FieldType::MainField);
@@ -25,10 +37,10 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   QWidget *right_panel = new QWidget;
   right_layout = new QVBoxLayout(right_panel);
   right_layout->setAlignment(Qt::AlignTop);
-  right_layout->setSpacing(25);
-  right_layout->setContentsMargins(1, 10, 10, 1);
+  right_layout->setSpacing(RIGHT_PANEL_SPACING);
+  right_layout->setContentsMargins(RIGHT_PANEL_LEFT_MARGIN, RIGHT_PANEL_TOP_MARGIN, RIGHT_PANEL_RIGHT_MARGIN, RIGHT_PANEL_BOTTOM_MARGIN);
 
-  std::array<std::pair<QString, QString>, 4> info_data = {
+  std::array<std::pair<QString, QString>, PANEL_COUNT> info_data = {
       std::make_pair("Score", QString::number(game_info_.score)),
       std::make_pair("High Score", QString::number(game_info_.score)),
       std::make_pair("Level", QString::number(game_info_.level)),
@@ -40,8 +52,8 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
 
   next_figure_widget_ = nullptr;
 
-  main_layout->addWidget(left_stack_, 2);
-  main_layout->addWidget(right_panel, 1);
+  main_layout->addWidget(left_stack_, LEFT_STRETCH_FACTOR);
+  main_layout->addWidget(right_panel, RIGHT_STRETCH_FACTOR);
 
   connect(menu_, &MenuWidget::pauseClicked, this, &Window::pauseClicked);
   connect(menu_, &MenuWidget::restartClicked, this, &Window::restartClicked);
@@ -50,14 +62,24 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
 
 QFrame *Window::createInfoBlock(const QString &title, const QString &value) {
   QFrame *frame = new QFrame;
-  frame->setStyleSheet("QFrame { background: #252525; border-radius: 12px; padding: 1px; }");
+  frame->setStyleSheet(QString(
+    "QFrame { background: %1; border-radius: %2px; padding: %3px; }")
+    .arg(INFO_BLOCK_COLOR)
+    .arg(BORDER_RADIUS)
+    .arg(FRAME_PADDING));
   frame->setObjectName(title);
 
   QLabel *title_label = new QLabel(title, frame);
-  title_label->setStyleSheet("color: #888888; font: bold 16px;");
+  title_label->setStyleSheet(QString(
+    "color: %1; font: bold %2px;")
+    .arg(TITLE_COLOR)
+    .arg(TITLE_FONT_SIZE));
 
   QLabel *value_label = new QLabel(value, frame);
-  value_label->setStyleSheet("color: #FFFFFF; font: bold 28px;");
+  value_label->setStyleSheet(QString(
+    "color: %1; font: bold %2px;")
+    .arg(VALUE_COLOR)
+    .arg(VALUE_FONT_SIZE));
   value_label->setObjectName(title + "Value");
 
   QVBoxLayout *layout = new QVBoxLayout(frame);
@@ -69,7 +91,11 @@ QFrame *Window::createInfoBlock(const QString &title, const QString &value) {
 
 QFrame *Window::createHelpBlock() {
   QFrame *frame = new QFrame;
-  frame->setStyleSheet("QFrame { background: #252525; border-radius: 12px; padding: 2px; }");
+  frame->setStyleSheet(QString(
+    "QFrame { background: %1; border-radius: %2px; padding: %3px; }")
+    .arg(INFO_BLOCK_COLOR)
+    .arg(BORDER_RADIUS)
+    .arg(SMALL_PADDING));
 
   QLabel *help_label = nullptr;
   if (game_info_.next == nullptr) {
@@ -78,7 +104,11 @@ QFrame *Window::createHelpBlock() {
     help_label = new QLabel("CONTROLS:\n← → - Move left/right\n↓ - Move down\nDouble ↓ - Move fast down\nS - Start/Continue\nP - Pause\nQ - Quit");
   }
   help_label->setObjectName("helpFrame");
-  help_label->setStyleSheet("color: #CCCCCC; font: 16px; line-height: 1.5;");
+  help_label->setStyleSheet(QString(
+    "color: %1; font: %2px; line-height: %3;")
+    .arg(HELP_TEXT_COLOR)
+    .arg(HELP_FONT_SIZE)
+    .arg(HELP_LINE_HEIGHT));
   QVBoxLayout *layout = new QVBoxLayout(frame);
   layout->addWidget(help_label);
 
@@ -87,14 +117,21 @@ QFrame *Window::createHelpBlock() {
 
 QFrame *Window::createNextFigureBlock() {
   QFrame *frame = new QFrame;
-  frame->setStyleSheet("QFrame { background: #252525; border-radius: 12px; padding: 5px; }");
+  frame->setStyleSheet(QString(
+    "QFrame { background: %1; border-radius: %2px; padding: %3px; }")
+    .arg(INFO_BLOCK_COLOR)
+    .arg(BORDER_RADIUS)
+    .arg(FRAME_PADDING));
 
   QLabel *title_label = new QLabel("Next Figure", frame);
-  title_label->setStyleSheet("color: #888888; font: bold 16px;");
+  title_label->setStyleSheet(QString(
+    "color: %1; font: bold %2px;")
+    .arg(TITLE_COLOR)
+    .arg(TITLE_FONT_SIZE));
 
   next_figure_widget_ = new FieldWidget(FieldWidget::FieldType::NextFigure, frame);
-  next_figure_widget_->setStyleSheet("background: #222222;");
-  next_figure_widget_->setFixedSize(120, 120);
+  next_figure_widget_->setStyleSheet(QString("background: %1;").arg(NEXT_FIGURE_BG_COLOR));
+  next_figure_widget_->setFixedSize(NEXT_FIGURE_SIZE, NEXT_FIGURE_SIZE);
   next_figure_widget_->setObjectName("nextFigureWidget");
 
   QVBoxLayout *layout = new QVBoxLayout(frame);

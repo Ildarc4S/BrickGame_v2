@@ -5,13 +5,13 @@ namespace s21 {
 FieldWidget::FieldWidget(FieldType type, QWidget *parent)
     : QWidget(parent), game_info_(nullptr), field_type_(type) {
   if (field_type_ == FieldType::MainField) {
-    rows_ = FIELD_HEIGHT + 2;
-    cols_ = FIELD_WIDTH + 2;
+    rows_ = FIELD_HEIGHT + FIELD_BORDER_SIZE;
+    cols_ = FIELD_WIDTH + FIELD_BORDER_SIZE;
     border_color_ = Qt::white;
     use_antialiasing_ = false;
   } else {
-    rows_ = 4;
-    cols_ = 4;
+    rows_ = TETRAMINO_HEIGHT;
+    cols_ = TETRAMINO_WIDTH;
     border_color_ = Qt::black;
     use_antialiasing_ = true;
   }

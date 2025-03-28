@@ -1,5 +1,5 @@
-#ifndef COLOR_CONVERT_H
-#define COLOR_CONVERT_H
+#ifndef DESKTOP_COLOR_CONVERT_H
+#define DESKTOP_COLOR_CONVERT_H
 
 #include "./objects_code.h"
 #include <QColor>
@@ -13,5 +13,5 @@ class ColorConverter {
 
 }   // namespace s21
 
-#endif  // COLOR_CONVERT_H
+#endif  // DESKTOP_COLOR_CONVERT_H
 

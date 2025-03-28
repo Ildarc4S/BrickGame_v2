@@ -4,6 +4,11 @@
 #define FIELD_WIDTH 10
 #define FIELD_HEIGHT 20
 
+#define TETRAMINO_HEIGHT 4
+#define TETRAMINO_WIDTH 4
+
+#define FIELD_BORDER_SIZE 2
+
 #include <stdbool.h>
 
 typedef enum {

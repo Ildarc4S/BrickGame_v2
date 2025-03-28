@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DESKTOP_OBJECTS_CODE
+#define DESKTOP_OBJECTS_CODE
 
 namespace s21 {
 
@@ -27,4 +28,6 @@ enum class PauseMode {
   kWin = 6
 };
 
-} // namespace s21
+}  // namespace s21
+#endif  // DESKTOP_OBJECTS_CODE
+

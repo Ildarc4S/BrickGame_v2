@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DESKTOP_MENU_H
+#define DESKTOP_MENU_H
 
 #include <QLabel>
 #include <QMainWindow>
@@ -8,7 +9,6 @@
 #include <QVBoxLayout>
 
 #include "./../../brick_game/spec/game_spec.h"
-#include "./color_convert.h"
 
 namespace s21 {
 
@@ -29,3 +29,6 @@ class MenuWidget : public QWidget {
   QLabel *status_label_;
 };
 }  // namespace s21
+
+#endif  // DESKTOP_MENU_H
+

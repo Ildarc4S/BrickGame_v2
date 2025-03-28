@@ -165,17 +165,27 @@ void moveHorizontal(Tetris_t* tetris, int direction) {
   replaceTetramino(tetris, tetramino);
 }
 
+bool isWithinFieldBounds(int x, int y) {
+    return x >= 1 && x < FIELD_WIDTH + 1 && 
+           y >= 1 && y < FIELD_HEIGHT + 1;
+}
+
+void processTetraminoCell(Tetris_t *self, int i, int j) {
+    int x = self->curr_tetramino.x + j;
+    int y = self->curr_tetramino.y + i;
+
+    if (isWithinFieldBounds(x, y)) {
+        self->game_info.field[y][x] = self->curr_tetramino.color;
+    }
+}
+
 void insertTetraminoToFieldWithColor(Tetris_t *self) {
   if (!self->game_info.field) return;
 
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
       if (self->curr_tetramino.brick[i][j]) {
-        int x = self->curr_tetramino.x + j;
-        int y = self->curr_tetramino.y + i;
-        if (x >= 1 && x < FIELD_WIDTH + 1 && y >= 1 && y < FIELD_HEIGHT + 1) {
-          self->game_info.field[y][x] = self->curr_tetramino.color;
-        }
+        processTetraminoCell(self, i, j);
       }
     }
   }

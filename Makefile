@@ -11,6 +11,7 @@ BUILD_DIR = build/tetris
 OBJ_DIR = $(BUILD_DIR)/obj
 COV_DIR = $(BUILD_DIR)/coverage
 LIB_DIR = lib
+TETRIS_TAR = s21_tetris.tar.gz
 
 CFILES = $(wildcard $(SRC_DIR)/*.c)
 TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
@@ -56,9 +57,9 @@ $(EXEC_NAME): $(GUI_DIR)/*.c $(LIB_PATH)
 test: $(TEST_EXEC)
 	./$(BIN_DIR)/$<
 
-$(TEST_EXEC): $(TEST_OBJS) $(LIB_PATH)
+$(TEST_EXEC): $(TEST_OBJS) $(LIB_NAME)
 	mkdir -p $(BIN_DIR)
-	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(CHECK_FLAGS)
+	$(CC) $(FLAGS) $(TEST_OBJS) $(LIB_PATH) -o $(BIN_DIR)/$@ $(CHECK_FLAGS)
 
 gcov_report: $(TEST_FILES) $(CFILES)
 	mkdir -p $(BIN_DIR) $(COV_DIR)
@@ -84,10 +85,10 @@ dvi:
 dist: clean
 	mkdir -p package
 	cp -r $(SRC_DIR) $(TEST_DIR) $(GUI_DIR) Makefile tetris_readme.md package
-	tar -czvf s21_tetris.tar.gz package
+	tar -czvf  $(TETRIS_TAR) package
 	rm -rf package
 
 clean:
-	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR)
+	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR) $(TETRIS_TAR)
 
 rebuild: clean all

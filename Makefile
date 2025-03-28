@@ -90,6 +90,6 @@ dist: clean
 	rm -rf package
 
 clean:
-	rm -rf $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR) $(TETRIS_TAR)
+	rm -rf $(COV_DIR) $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR) $(TETRIS_TAR)
 
 rebuild: clean all

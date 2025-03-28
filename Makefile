@@ -9,7 +9,7 @@ TEST_DIR = tests/tetris_tests
 GUI_DIR = gui/cli
 BUILD_DIR = build/tetris
 OBJ_DIR = $(BUILD_DIR)/obj
-COV_DIR = $(BUILD_DIR)/coverage
+COV_DIR = coverage/tetris/
 LIB_DIR = lib
 TETRIS_TAR = s21_tetris.tar.gz
 
@@ -62,9 +62,9 @@ $(TEST_EXEC): $(TEST_OBJS) $(LIB_NAME)
 	$(CC) $(FLAGS) $(TEST_OBJS) $(LIB_PATH) -o $(BIN_DIR)/$@ $(CHECK_FLAGS)
 
 gcov_report: $(TEST_FILES) $(CFILES)
-	mkdir -p $(BIN_DIR) $(COV_DIR)
-	$(CC) $(FLAGS) $^ $(CHECK_FLAGS) $(GCOV_FLAGS) -o $(BIN_DIR)/gcov_exec
-	./$(BIN_DIR)/gcov_exec
+	mkdir -p $(BIN_DIR)/coverage $(COV_DIR)
+	$(CC) $(FLAGS) $^ $(CHECK_FLAGS) $(GCOV_FLAGS) -o $(BIN_DIR)/coverage/gcov_exec
+	./$(BIN_DIR)/coverage/gcov_exec
 	lcov --capture --directory . --output-file $(COV_DIR)/coverage.info
 	genhtml $(COV_DIR)/coverage.info --output-directory $(COV_DIR)
 
@@ -72,6 +72,7 @@ install: $(EXEC_NAME)
 	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
 	install $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
 	install $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)
+	cp -r $(DOCS_OUTPUT_DIR)/* $(DOCS_INSTALL_DIR)/
 
 uninstall:
 	rm -f $(BINDIR)/$(EXEC_NAME)

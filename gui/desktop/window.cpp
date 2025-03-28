@@ -1,29 +1,15 @@
-#include "./window.h"
-#include "./window_defines.h"
-
 #include <QKeyEvent>
 #include <QLabel>
 #include <QPushButton>
+
+#include "./include/window.h"
+#include "./include/window_defines.h"
 
 namespace s21 {
 
 Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);
- setStyleSheet(QString(
-    "QWidget { background-color: %1; color: white; }"
-    "QPushButton { background-color: %2; border: %3px solid %4; color: white; padding: %5px; border-radius: %6px; font-size: %7px; }"
-    "QPushButton:hover { background-color: %8; }"
-    "QPushButton:pressed { background-color: %9; }"
-    "QLabel { color: white; }")
-    .arg(BACKGROUND_COLOR)
-    .arg(BUTTON_NORMAL_COLOR)
-    .arg(BORDER_WIDTH)
-    .arg(BORDER_COLOR)
-    .arg(BUTTON_PADDING)
-    .arg(BORDER_RADIUS)
-    .arg(BUTTON_FONT_SIZE)
-    .arg(BUTTON_HOVER_COLOR)
-    .arg(BUTTON_PRESSED_COLOR));
+  applyStyleSheet();
 
   QHBoxLayout *main_layout = new QHBoxLayout(this);
   main_layout->setContentsMargins(LAYOUT_MARGIN, LAYOUT_MARGIN, LAYOUT_MARGIN, LAYOUT_MARGIN);
@@ -40,6 +26,35 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   right_layout->setSpacing(RIGHT_PANEL_SPACING);
   right_layout->setContentsMargins(RIGHT_PANEL_LEFT_MARGIN, RIGHT_PANEL_TOP_MARGIN, RIGHT_PANEL_RIGHT_MARGIN, RIGHT_PANEL_BOTTOM_MARGIN);
 
+  addInfoBlocks();
+
+  next_figure_widget_ = nullptr;
+
+  main_layout->addWidget(left_stack_, LEFT_STRETCH_FACTOR);
+  main_layout->addWidget(right_panel, RIGHT_STRETCH_FACTOR);
+
+  setupConnections();
+}
+
+void Window::applyStyleSheet() {
+    setStyleSheet(QString(
+        "QWidget { background-color: %1; color: white; }"
+        "QPushButton { background-color: %2; border: %3px solid %4; color: white; "
+        "padding: %5px; border-radius: %6px; font-size: %7px; }"
+        "QPushButton:hover { background-color: %8; }"
+        "QPushButton:pressed { background-color: %9; }"
+        "QLabel { color: white; }")
+        .arg(BACKGROUND_COLOR)
+        .arg(BUTTON_NORMAL_COLOR)
+        .arg(BORDER_WIDTH)
+        .arg(BORDER_COLOR)
+        .arg(BUTTON_PADDING)
+        .arg(BORDER_RADIUS)
+        .arg(BUTTON_FONT_SIZE)
+        .arg(BUTTON_HOVER_COLOR)
+        .arg(BUTTON_PRESSED_COLOR));
+}
+void Window::addInfoBlocks() {
   std::array<std::pair<QString, QString>, PANEL_COUNT> info_data = {
       std::make_pair("Score", QString::number(game_info_.score)),
       std::make_pair("High Score", QString::number(game_info_.score)),
@@ -49,15 +64,12 @@ Window::Window(QWidget *parent) : QWidget(parent), game_info_{} {
   for (const auto &entry : info_data) {
     right_layout->addWidget(createInfoBlock(entry.first, entry.second));
   }
+}
 
-  next_figure_widget_ = nullptr;
-
-  main_layout->addWidget(left_stack_, LEFT_STRETCH_FACTOR);
-  main_layout->addWidget(right_panel, RIGHT_STRETCH_FACTOR);
-
-  connect(menu_, &MenuWidget::pauseClicked, this, &Window::pauseClicked);
-  connect(menu_, &MenuWidget::restartClicked, this, &Window::restartClicked);
-  connect(menu_, &MenuWidget::exitClicked, this, &Window::exitClicked);
+void Window::setupConnections() {
+    connect(menu_, &MenuWidget::pauseClicked, this, &Window::pauseClicked);
+    connect(menu_, &MenuWidget::restartClicked, this, &Window::restartClicked);
+    connect(menu_, &MenuWidget::exitClicked, this, &Window::exitClicked);
 }
 
 QFrame *Window::createInfoBlock(const QString &title, const QString &value) {
@@ -144,7 +156,7 @@ QFrame *Window::createNextFigureBlock() {
 void Window::setGameInfo(const GameInfo_t &game_info) {
   game_info_ = game_info;
   main_field_->setGameInfo(&game_info_);
-  left_stack_->setCurrentIndex((game_info.pause == 2) ? 0 : 1);
+  left_stack_->setCurrentIndex((game_info.pause == static_cast<int>(PauseMode::kGameContinue)) ? MAIN_FIELD_STACK_INDEX : MENU_STACK_INDEX);
 
   menu_->updateButtons(game_info_.pause);
 

@@ -19,6 +19,9 @@ namespace s21 {
 #define LEFT_STRETCH_FACTOR 2
 #define RIGHT_STRETCH_FACTOR 1
 
+#define MAIN_FIELD_STACK_INDEX 0
+#define MENU_STACK_INDEX 1
+
 // Widget sizes
 #define NEXT_FIGURE_SIZE 120
 

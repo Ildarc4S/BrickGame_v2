@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./../desktop/window.h"
+#include "./../desktop/include/window.h"
 #include "./../../brick_game/spec/game_spec.h"
 
 namespace s21 {
@@ -19,9 +19,6 @@ class Controller : public QObject {
   void handleRestart();
   void handleStartContinue();
   void handleExit();
-
- //private slots:
-  //void processUserInput(int key, bool hold);
 
  private:
   UserAction_t convertKeyToAction(int key);

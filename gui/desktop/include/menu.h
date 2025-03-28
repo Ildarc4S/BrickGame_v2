@@ -8,7 +8,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "./../../brick_game/spec/game_spec.h"
+#include "./../../../brick_game/spec/game_spec.h"
 
 namespace s21 {
 

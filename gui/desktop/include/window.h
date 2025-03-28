@@ -8,7 +8,6 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "./../../brick_game/spec/game_spec.h"
 #include "./field_widget.h"
 #include "./menu.h"
 
@@ -30,6 +29,9 @@ class Window : public QWidget {
   void exitClicked();
 
  private:
+  void applyStyleSheet();
+  void addInfoBlocks();
+  void setupConnections();
   void updateInfoPanel();
   void updateLayout();
   void updateSingleInfoPanel(const QString &title, const QString &value);

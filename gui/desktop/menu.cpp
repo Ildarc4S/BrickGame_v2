@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "./window.h"
+#include "./include/window.h"
 
 namespace s21 {
 

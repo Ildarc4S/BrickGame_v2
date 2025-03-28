@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QWidget>
 
-#include "./../../brick_game/spec/game_spec.h"
+#include "./../../../brick_game/spec/game_spec.h"
 #include "./color_convert.h"
 
 namespace s21 {

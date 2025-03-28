@@ -74,7 +74,6 @@ file(GLOB GUI_DESKTOP_SOURCES "${GUI_DESKTOP_DIR}/*.cpp")
 file(GLOB GUI_COMMON_SOURCES "${GUI_COMMON_DIR}/*.cpp")
 file(GLOB SNAKE_TEST_SOURCES "${CMAKE_SOURCE_DIR}/tests/snake_tests/*.cc")
 
-# Создание библиотеки s21_snake.a из brick_game/snake
 add_library(snake_lib STATIC ${SNAKE_SOURCES})
 set_target_properties(snake_lib PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${LIB_DIR}
@@ -171,6 +170,7 @@ add_custom_target(${TETRIS_CLI_EXEC}
 
 # Тесты для Snake с GTest
 add_executable(${SNAKE_TEST_EXEC}
+    ${SNAKE_SOURCES}
     ${SNAKE_TEST_SOURCES}
 )
 target_include_directories(${SNAKE_TEST_EXEC} PRIVATE
@@ -178,10 +178,10 @@ target_include_directories(${SNAKE_TEST_EXEC} PRIVATE
     ${GTEST_INCLUDE_DIRS}
 )
 target_link_libraries(${SNAKE_TEST_EXEC} PRIVATE
-    snake_lib
     GTest::GTest
     GTest::Main
 )
+target_compile_definitions(${SNAKE_TEST_EXEC} PRIVATE SNAKE_TEST)
 set_target_properties(${SNAKE_TEST_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${TEST_BIN_DIR}
 )
@@ -200,6 +200,7 @@ target_link_libraries(${SNAKE_COV_EXEC} PRIVATE
     GTest::Main
     gcov
 )
+target_compile_definitions(${SNAKE_COV_EXEC} PRIVATE SNAKE_TEST)
 target_compile_options(${SNAKE_COV_EXEC} PRIVATE --coverage)
 target_link_options(${SNAKE_COV_EXEC} PRIVATE --coverage)
 set_target_properties(${SNAKE_COV_EXEC} PROPERTIES

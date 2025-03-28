@@ -22,45 +22,74 @@ bool isTetraminoCode(int field_code) {
            || field_code == OBJECT_CODE_TETRAMINO_L;
 }
 
-void _drawField(GameField_t *self) {
-    GameInfo_t game = updateCurrentState();
-
+static void clearField(GameField_t *self) {
     for (int i = 0; i < self->height; i++) {
         for (int j = 0; j < self->width; j++) {
             mvprintw(self->y + i, (self->x + j) * GAME_FIELD_CELL_WIDTH, "  ");
         }
     }
+}
 
-    if (game.pause == PAUSE_MODE_GAME_CONTINUE) {
-        for (int i = 0; i < self->height; i++) {
-            for (int j = 0; j < self->width; j++) {
-                if (game.field[i][j] == OBJECT_CODE_WALL) {
-                    mvprintw(self->y + i, (self->x + j) * GAME_FIELD_CELL_WIDTH, "[]");
-                } else if (isTetraminoCode(game.field[i][j]) || game.field[i][j] == OBJECT_CODE_SNAKE) {
-                    attron(COLOR_PAIR(game.field[i][j]));
-                    mvprintw(self->y + i, (self->x + j) * GAME_FIELD_CELL_WIDTH, "[]");
-                    attroff(COLOR_PAIR(game.field[i][j]));
-                } else if (game.field[i][j] == OBJECT_CODE_AIR) {
-                    mvprintw(self->y + i, (self->x + j) * GAME_FIELD_CELL_WIDTH, "  ");
-                } else if (game.field[i][j] == OBJECT_CODE_APPLE) {
-                    attron(COLOR_PAIR(game.field[i][j]));
-                    mvprintw(self->y + i, (self->x + j) * GAME_FIELD_CELL_WIDTH, "()");
-                    attroff(COLOR_PAIR(game.field[i][j]));
-                }
-            }
-        }
-    } else if (game.pause == PAUSE_MODE_START) {
-        drawCleanField(self);
-        mvprintw(self->height / GAME_FIELD_CENTER_DIVISOR, ((self->width - GAME_FIELD_CENTER_OFFSET) / GAME_FIELD_CENTER_DIVISOR) * GAME_FIELD_CELL_WIDTH, "START");
-    } else if (game.pause == PAUSE_MODE_PAUSE) {
-        drawCleanField(self);
-        mvprintw(self->height / GAME_FIELD_CENTER_DIVISOR, ((self->width - GAME_FIELD_CENTER_OFFSET) / GAME_FIELD_CENTER_DIVISOR) * GAME_FIELD_CELL_WIDTH, "PAUSE");
-    } else if (game.pause == PAUSE_MODE_GAME_OVER) {
-        drawCleanField(self);
-        mvprintw(self->height / GAME_FIELD_CENTER_DIVISOR, ((self->width - GAME_FIELD_CENTER_OFFSET) / GAME_FIELD_CENTER_DIVISOR) * GAME_FIELD_CELL_WIDTH, "GAME_OVER");
+void drawCell(int y, int x, const char* symbol, int color_pair) {
+    if (color_pair > 0) {
+        attron(COLOR_PAIR(color_pair));
+    }
+    mvprintw(y, x, "%s", symbol);
+    if (color_pair > 0) {
+        attroff(COLOR_PAIR(color_pair));
     }
 }
 
+void drawActiveGame(GameField_t *self, GameInfo_t *game) {
+    for (int i = 0; i < self->height; i++) {
+        for (int j = 0; j < self->width; j++) {
+            int pos_y = self->y + i;
+            int pos_x = (self->x + j) * GAME_FIELD_CELL_WIDTH;
+            int cell_value = game->field[i][j];
+            
+            if (cell_value == OBJECT_CODE_WALL) {
+              drawCell(pos_y, pos_x, "[]", 0);
+            } else if (cell_value == OBJECT_CODE_AIR) {
+              drawCell(pos_y, pos_x, "  ", 0);
+            } else if (cell_value == OBJECT_CODE_APPLE) {
+              drawCell(pos_y, pos_x, "()", 0);
+            } else if (isTetraminoCode(cell_value) || cell_value == OBJECT_CODE_SNAKE) {
+              drawCell(pos_y, pos_x, "[]", cell_value);
+            }
+        }
+    }
+}
+
+void drawGameStateMessage(GameField_t *self, const char* message) {
+    drawCleanField(self);
+    int centerY = self->height / GAME_FIELD_CENTER_DIVISOR;
+    int centerX = ((self->width - GAME_FIELD_CENTER_OFFSET) / GAME_FIELD_CENTER_DIVISOR) * GAME_FIELD_CELL_WIDTH;
+    mvprintw(centerY, centerX, "%s", message);
+}
+
+void _drawField(GameField_t *self) {
+    GameInfo_t game = updateCurrentState();
+    
+    clearField(self);
+
+    switch (game.pause) {
+        case PAUSE_MODE_GAME_CONTINUE:
+            drawActiveGame(self, &game);
+            break;
+            
+        case PAUSE_MODE_START:
+            drawGameStateMessage(self, "START");
+            break;
+            
+        case PAUSE_MODE_PAUSE:
+            drawGameStateMessage(self, "PAUSE");
+            break;
+            
+        case PAUSE_MODE_GAME_OVER:
+            drawGameStateMessage(self, "GAME_OVER");
+            break;
+    }
+}
 GameField_t initGameField(int width, int height) {
     return (GameField_t){
         .x = GAME_FIELD_GAME_FIELD_INIT_X,

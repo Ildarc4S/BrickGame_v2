@@ -1,5 +1,5 @@
 /**
- * @file apple.cpp
+ * @file apple.cc
  * @brief Реализация класса Apple (яблоко в игре Змейка)
  */
 
@@ -11,29 +11,13 @@
 
 namespace s21 {
 
-/**
- * @brief Конструктор с генерацией случайной позиции
- * @param snake_body Тело змейки для проверки коллизий
- * 
- * Инициализирует генератор случайных чисел и вызывает genRandPosition()
- * для установки начальной позиции яблока.
- */
+// Конструктор с генерацией случайной позиции
 Apple::Apple(const std::vector<Point>& snake_body) : position_() {
   srand(time(NULL));  // Инициализация генератора случайных чисел
   genRandPosition(snake_body);
 }
 
-/**
- * @brief Генерация случайной позиции яблока
- * @param snake_body Тело змейки для проверки коллизий
- * 
- * Алгоритм работы:
- * 1. Генерирует случайные координаты в пределах игрового поля
- * 2. Проверяет, не совпадает ли позиция с сегментами змейки
- * 3. Повторяет до тех пор, пока не найдется валидная позиция
- * 
- * @note Использует алгоритм std::find для проверки коллизий
- */
+// Генерация случайной позиции яблока
 void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   Point temp;
   do {
@@ -43,21 +27,12 @@ void Apple::genRandPosition(const std::vector<Point>& snake_body) {
   position_ = temp;
 }
 
-/**
- * @brief Получение текущей позиции яблока
- * @return Точка с текущими координатами яблока
- */
+// Получение текущей позиции яблока
 Point Apple::getPosition() const {
   return position_;
 }
 
-/**
- * @brief Установка позиции яблока вручную
- * @param position Новая позиция яблока
- * 
- * @warning Не проверяет коллизии с телом змейки!
- * Для безопасной установки позиции следует использовать genRandPosition()
- */
+// Установка позиции яблока вручную
 void Apple::setPosition(const Point& position) {
   position_ = position;
 }

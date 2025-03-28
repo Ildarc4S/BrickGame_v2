@@ -1,5 +1,5 @@
 /**
- * @file game_singleton.cpp
+ * @file game_singleton.cc
  * @brief Реализация класса-одиночки для игры Snake
  */
 

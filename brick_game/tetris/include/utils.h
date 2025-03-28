@@ -25,11 +25,11 @@ void clearTetraminoFromField(Tetris_t* tetris);
 
 /**
  * @brief Проверяет коллизию фигуры
- * @param tetris Указатель на объект игры
+ * @param self Указатель на объект игры
  * @param tetramino Указатель на фигуру
  * @return Код коллизии (0 - нет, 1 - есть, -1 - ошибка)
  */
-int isCollide(Tetris_t *tetris, Tetramino_t *tetramino);
+int isCollide(Tetris_t *self, Tetramino_t *tetramino);
 
 /**
  * @brief Заменяет текущую фигуру

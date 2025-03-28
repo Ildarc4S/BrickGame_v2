@@ -46,7 +46,6 @@ void _writeToFile(DataBase_t *self, int high_score) {
 
 /**
  * @brief Инициализация базы данных
- * @param file_name Имя файла для хранения рекордов
  * @return Настроенный объект базы данных
  * 
  * @details Устанавливает функции для операций чтения/записи

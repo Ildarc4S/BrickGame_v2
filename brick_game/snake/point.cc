@@ -1,5 +1,5 @@
 /**
- * @file point.cpp
+ * @file point.cc
  * @brief Реализация класса Point (точка в 2D пространстве)
  */
 
@@ -59,7 +59,6 @@ int& Point::setY() {
 
 /**
  * @brief Оператор сравнения точек
- * @param other Сравниваемая точка
  * @return true если координаты X и Y совпадают
  */
 bool Point::operator==(const Point& other) const {
@@ -68,7 +67,6 @@ bool Point::operator==(const Point& other) const {
 
 /**
  * @brief Оператор неравенства точек
- * @param other Сравниваемая точка
  * @return true если координаты X или Y отличаются
  */
 bool Point::operator!=(const Point& other) const {

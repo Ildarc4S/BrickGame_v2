@@ -1,5 +1,5 @@
 /**
- * @file timer.cpp
+ * @file timer.cc
  * @brief Реализация класса Timer для работы с таймером
  */
 

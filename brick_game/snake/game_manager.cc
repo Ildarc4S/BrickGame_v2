@@ -1,5 +1,5 @@
 /**
- * @file game_manager.cpp
+ * @file game_manager.cc
  * @brief Реализация логики игры Snake
  * @details Содержит реализацию всех методов класса SnakeGame для управления:
  * - Состояниями игры (старт, пауза, завершение)
@@ -56,7 +56,6 @@ SnakeGame::~SnakeGame() {
 
 /**
  * @brief Обрабатывает действия в начальном состоянии
- * @param action Входное действие пользователя
  */
 void SnakeGame::startHandler(UserAction_t action) {
       switch (action) {
@@ -86,8 +85,6 @@ void SnakeGame::toogleBoostTime() {
 
 /**
  * @brief Обрабатывает движение змейки
- * @param action Направление движения
- * @param hold Флаг удержания клавиши
  */
 void SnakeGame::moveHandler(UserAction_t action, bool hold) {
     switch (action) {

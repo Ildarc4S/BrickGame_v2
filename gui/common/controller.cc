@@ -1,21 +1,21 @@
 #include "./controller.h"
+
+#include <QApplication>
 #include <QDebug>
 #include <QTimer>
-#include <QApplication>
 
 namespace s21 {
 
 Controller::Controller(Window* view, QObject* parent)
-  : QObject(parent),
-    view_(view) {
-      connect(view_, &Window::keyPressed, this, &Controller::processUserInput);
-      connect(view_, &Window::pauseClicked, this, &Controller::handleStartContinue);
-      connect(view_, &Window::restartClicked, this, &Controller::handleRestart);
-      connect(view_, &Window::exitClicked, this, &Controller::handleExit);
+    : QObject(parent), view_(view) {
+  connect(view_, &Window::keyPressed, this, &Controller::processUserInput);
+  connect(view_, &Window::pauseClicked, this, &Controller::handleStartContinue);
+  connect(view_, &Window::restartClicked, this, &Controller::handleRestart);
+  connect(view_, &Window::exitClicked, this, &Controller::handleExit);
 
-      timer_ = new QTimer(this);
-      connect(timer_, &QTimer::timeout, this, &Controller::update_game);
-      timer_->start(1);
+  timer_ = new QTimer(this);
+  connect(timer_, &QTimer::timeout, this, &Controller::update_game);
+  timer_->start(1);
 }
 
 UserAction_t Controller::convertKeyToAction(int key) {
@@ -27,22 +27,22 @@ UserAction_t Controller::convertKeyToAction(int key) {
     case Qt::Key_Right:
       action = UserAction_t::Right;
       break;
-      case Qt::Key_Up:
+    case Qt::Key_Up:
       action = UserAction_t::Up;
       break;
-      case Qt::Key_Down:
+    case Qt::Key_Down:
       action = UserAction_t::Down;
       break;
-     case Qt::Key_Space:
+    case Qt::Key_Space:
       action = UserAction_t::Action;
       break;
-     case Qt::Key_P:
+    case Qt::Key_P:
       action = UserAction_t::Pause;
       break;
-     case Qt::Key_S:
+    case Qt::Key_S:
       action = UserAction_t::Start;
       break;
-     case Qt::Key_Q:
+    case Qt::Key_Q:
       action = UserAction_t::Terminate;
       break;
   }

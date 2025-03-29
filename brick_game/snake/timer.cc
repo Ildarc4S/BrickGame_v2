@@ -12,26 +12,22 @@ namespace s21 {
  * @param interval Начальный интервал времени в миллисекундах
  */
 Timer::Timer(int interval)
-  : interval_(interval),
-    last_interval_(interval_),
-    default_interval_(interval_),
-    last_time_(std::chrono::steady_clock::now()) {}
+    : interval_(interval),
+      last_interval_(interval_),
+      default_interval_(interval_),
+      last_time_(std::chrono::steady_clock::now()) {}
 
 /**
  * @brief Получить текущий интервал
  * @return Текущий интервал в миллисекундах
  */
-int Timer::getInterval() {
-  return interval_;
-}
+int Timer::getInterval() { return interval_; }
 
 /**
  * @brief Получить последний сохраненный интервал
  * @return Последний сохраненный интервал в миллисекундах
  */
-int Timer::getLastInterval() {
-  return last_interval_;
-}
+int Timer::getLastInterval() { return last_interval_; }
 
 /**
  * @brief Установить новый интервал
@@ -48,9 +44,7 @@ void Timer::setInterval(int interval, bool save) {
 /**
  * @brief Сохранить текущий интервал в last_interval_
  */
-void Timer::updateLastinterval() {
-  last_interval_ = interval_;
-}
+void Timer::updateLastinterval() { last_interval_ = interval_; }
 
 /**
  * @brief Сбросить интервалы к значениям по умолчанию
@@ -66,15 +60,15 @@ void Timer::resetInterval() {
  */
 bool Timer::isExpired() {
   auto curr_time = std::chrono::steady_clock::now();
-  auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - last_time_).count();
+  auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       curr_time - last_time_)
+                       .count();
   return diff_time > interval_;
 }
 
 /**
  * @brief Обновить время последнего отсчета
  */
-void Timer::update() {
-  last_time_ = std::chrono::steady_clock::now();
-}
+void Timer::update() { last_time_ = std::chrono::steady_clock::now(); }
 
 }  // namespace s21

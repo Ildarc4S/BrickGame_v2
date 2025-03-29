@@ -10,14 +10,13 @@ MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent) {
 
   status_label_ = new QLabel(this);
   status_label_->setAlignment(Qt::AlignCenter);
-    status_label_->setStyleSheet(QString(
-        "QLabel {"
-        "   color: %1;"
-        "   font: bold %2px;"
-        "   margin-bottom: %3px;}")
-        .arg(STATUS_FONT_COLOR)
-        .arg(STATUS_FONT_SIZE)
-        .arg(STATUS_MARGIN_BOTTOM));
+  status_label_->setStyleSheet(QString("QLabel {"
+                                       "   color: %1;"
+                                       "   font: bold %2px;"
+                                       "   margin-bottom: %3px;}")
+                                   .arg(STATUS_FONT_COLOR)
+                                   .arg(STATUS_FONT_SIZE)
+                                   .arg(STATUS_MARGIN_BOTTOM));
 
   status_layout->addWidget(status_label_);
 

@@ -8,7 +8,7 @@
 
 /**
  * @brief Обрабатывает пользовательский ввод
- * 
+ *
  * Функция передает пользовательский ввод в игровой движок.
  * Пример использования:
  * @code
@@ -17,20 +17,20 @@
  * @endcode
  */
 extern "C" void userInput(UserAction_t action, bool hold) {
-    s21::SnakeGameSingleton::getSnakeGame().userInput(action, hold);
+  s21::SnakeGameSingleton::getSnakeGame().userInput(action, hold);
 }
 
 /**
  * @brief Получает текущее состояние игры
  * @return Структура GameInfo_t с актуальным состоянием игры
- * 
+ *
  * Функция обновляет и возвращает текущее состояние игрового поля.
  * Содержит:
  * - Позиции всех объектов
  * - Текущий счет
  * - Уровень и скорость
  * - Состояние паузы/игры
- * 
+ *
  * Пример использования:
  * @code
  * GameInfo_t info = updateCurrentState();
@@ -38,5 +38,5 @@ extern "C" void userInput(UserAction_t action, bool hold) {
  * @endcode
  */
 extern "C" GameInfo_t updateCurrentState() {
-    return s21::SnakeGameSingleton::getSnakeGame().getGameInfo();
+  return s21::SnakeGameSingleton::getSnakeGame().getGameInfo();
 }

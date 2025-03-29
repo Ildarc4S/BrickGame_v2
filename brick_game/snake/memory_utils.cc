@@ -10,9 +10,10 @@ namespace s21 {
 /**
  * @brief Создает двумерный массив целых чисел
  * @return Указатель на созданный двумерный массив
- * 
+ *
  * Выделяет память под двумерный массив размером height x width.
- * В случае ошибки выделения памяти может сгенерировать исключение std::bad_alloc.
+ * В случае ошибки выделения памяти может сгенерировать исключение
+ * std::bad_alloc.
  */
 int** MemoryUtility::createField(int width, int height) {
   int** ptr = new int*[height];
@@ -24,19 +25,19 @@ int** MemoryUtility::createField(int width, int height) {
 
 /**
  * @brief Освобождает память, занятую двумерным массивом
- * 
+ *
  * Безопасно удаляет двумерный массив, проверяя указатель на nullptr.
  * Последовательно удаляет все строки массива, затем массив указателей.
  */
 void MemoryUtility::removeField(int** ptr, int height) {
-    if (ptr == nullptr) return;
+  if (ptr == nullptr) return;
 
-    for (int i = 0; i < height; i++) {
-        delete[] ptr[i];
-        ptr[i] = nullptr;
-    }
-    delete[] ptr;
-    ptr = nullptr;
+  for (int i = 0; i < height; i++) {
+    delete[] ptr[i];
+    ptr[i] = nullptr;
+  }
+  delete[] ptr;
+  ptr = nullptr;
 }
 
 }  // namespace s21

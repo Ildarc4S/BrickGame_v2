@@ -22,4 +22,4 @@ TEST(SnakeTest, MoveAssignment) {
   tester.snakeMoveAssignment();
 }
 
-}  // namespace 21
+}  // namespace s21

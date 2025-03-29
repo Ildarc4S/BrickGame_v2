@@ -36,7 +36,8 @@ void FieldWidget::paintEvent(QPaintEvent *event) {
 }
 
 int **FieldWidget::getFieldData() {
-  return (field_type_ == FieldType::MainField) ? game_info_->field : game_info_->next;
+  return (field_type_ == FieldType::MainField) ? game_info_->field
+                                               : game_info_->next;
 }
 
 void FieldWidget::drawField(QPainter &painter) {
@@ -48,7 +49,8 @@ void FieldWidget::drawField(QPainter &painter) {
       ObjectCode code = static_cast<ObjectCode>(field[i][j]);
       QColor cell_color = ColorConverter::convertObjectToColor(code);
 
-      painter.fillRect(j * cell_size, i * cell_size, cell_size, cell_size, cell_color);
+      painter.fillRect(j * cell_size, i * cell_size, cell_size, cell_size,
+                       cell_color);
       painter.setPen(border_color_);
       painter.drawRect(j * cell_size, i * cell_size, cell_size, cell_size);
     }

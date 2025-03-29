@@ -33,7 +33,10 @@ TEST_EXEC = test_exec
 DOCGEN = doxygen
 DOXYFILE = tetris_doxy 
 
-.PHONY: all install uninstall clean dvi dist test gcov_report rebuild
+CLANG_FORMAT = clang-format
+CLANG_FORMAT_FLAGS = --style=Google --Werror --dry-run
+
+.PHONY: all install uninstall clean dvi dist test gcov_report rebuild valgrind_test clang_test clang_format
 
 all: $(LIB_NAME) $(EXEC_NAME)
 
@@ -93,3 +96,12 @@ clean:
 	rm -rf $(COV_DIR) $(BIN_DIR) $(BUILD_DIR) $(LIB_DIR) *.gc* *.info $(DOCS_OUTPUT_DIR) $(TETRIS_TAR)
 
 rebuild: clean all
+
+valgrind_test: $(TEST_EXEC)
+	valgrind --leak-check=full ./$(BIN_DIR)/$(TEST_EXEC)
+
+clang_test:
+	find $(SRC_DIR) brick_game/spec $(TEST_DIR) $(GUI_DIR) -name '*.c' -o -name '*.h' | xargs $(CLANG_FORMAT) $(CLANG_FORMAT_FLAGS)
+
+clang_format:
+	find $(SRC_DIR) brick_game/spec $(TEST_DIR) $(GUI_DIR) -name '*.c' -o -name '*.h' | xargs $(CLANG_FORMAT) --style=Google -i

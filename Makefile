@@ -53,9 +53,9 @@ $(OBJ_DIR)/tests/%.o: $(TEST_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/tests
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(EXEC_NAME): $(GUI_DIR)/*.c $(LIB_PATH)
+$(EXEC_NAME): $(GUI_DIR)/*.c $(LIB_NAME)
 	mkdir -p $(BIN_DIR)
-	$(CC) $(FLAGS) $^ -o $(BIN_DIR)/$@ $(NCURSES_FLAGS)
+	$(CC) $(FLAGS) $(GUI_DIR)/*.c $(LIB_PATH) -o $(BIN_DIR)/$@ $(NCURSES_FLAGS)
 
 test: $(TEST_EXEC)
 	./$(BIN_DIR)/$<
@@ -71,7 +71,7 @@ gcov_report: $(TEST_FILES) $(CFILES)
 	lcov --capture --directory . --output-file $(COV_DIR)/coverage.info
 	genhtml $(COV_DIR)/coverage.info --output-directory $(COV_DIR)
 
-install: $(EXEC_NAME) dvi
+install: $(EXEC_NAME) dvi 
 	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
 	install $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
 	install $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)

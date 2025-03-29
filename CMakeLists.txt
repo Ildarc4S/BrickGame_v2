@@ -45,6 +45,8 @@ set(TETRIS_DESKTOP_EXEC s21_tetris_desktop)
 set(TETRIS_CLI_EXEC s21_tetris_cli)
 set(SNAKE_TEST_EXEC s21_snake_test)
 set(SNAKE_COV_EXEC s21_snake_coverage)
+set(SNAKE_ARCHIVE_NAME "s21_snake.tar.gz")
+set(SNAKE_ARCHIVE_PATH "${CMAKE_SOURCE_DIR}/${SNAKE_ARCHIVE_NAME}")
 
 set(SNAKE_DESKTOP_HEADERS 
     ${GUI_DESKTOP_DIR}/include/window.h
@@ -165,7 +167,7 @@ add_custom_target(${TETRIS_CLI_EXEC}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     BYPRODUCTS ${TETRIS_BIN_DIR}/${TETRIS_CLI_EXEC}
     COMMENT "Building s21_tetris_cli using existing Makefile"
-    DEPENDS tetris_lib  # Зависимость от библиотеки s21_tetris.a
+    DEPENDS tetris_lib
 )
 
 # Тесты для Snake с GTest
@@ -207,22 +209,58 @@ set_target_properties(${SNAKE_COV_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${COV_BIN_DIR}
 )
 
-
-install(TARGETS ${SNAKE_DESKTOP_EXEC} ${SNAKE_CLI_EXEC} ${TETRIS_DESKTOP_EXEC}
-    RUNTIME DESTINATION /usr/local/bin
-)
-install(FILES ${LIB_DIR}/${SNAKE_LIB_NAME}.a ${LIB_DIR}/${TETRIS_LIB_NAME}.a
-    DESTINATION /usr/local/lib
-)
-install(CODE "execute_process(
-    COMMAND make install
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    RESULT_VARIABLE MAKE_INSTALL_RESULT
+# Цель install
+install(CODE "
+    # 1. Устанавливаем Tetris через Makefile
+    message(STATUS \"Installing Tetris via Makefile...\")
+    execute_process(
+        COMMAND make install
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE MAKE_INSTALL_RESULT
     )
     if(NOT MAKE_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR \"Failed to run 'make install' for s21_tetris_cli\")
-    endif()"
+        message(FATAL_ERROR \"Failed to install Tetris via Makefile\")
+    endif()
+
+    # 2. Генерируем документацию
+    message(STATUS \"Generating documentation...\")
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --build . --target doc
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        RESULT_VARIABLE DOC_RESULT
+    )
+    if(NOT DOC_RESULT EQUAL 0)
+        message(WARNING \"Documentation generation failed\")
+    endif()
+
+    # 3. Устанавливаем документацию
+    if(EXISTS \"${DOCS_DIR}/html\")
+        file(INSTALL \"${DOCS_DIR}/html/\"
+            DESTINATION /usr/local/share/doc/s21_snake
+            PATTERN \".*\" EXCLUDE
+        )
+        message(STATUS \"Documentation installed to /usr/local/share/doc/s21_snake\")
+    else()
+        message(WARNING \"No documentation found to install\")
+    endif()
+
+    # 4. Устанавливаем компоненты Snake
+    message(STATUS \"Installing Snake components...\")
+"
+    COMPONENT snake
 )
+
+# Установка исполняемых файлов и библиотек Snake
+install(TARGETS ${SNAKE_DESKTOP_EXEC} ${SNAKE_CLI_EXEC}
+    RUNTIME DESTINATION /usr/local/bin
+    COMPONENT snake
+)
+
+install(FILES ${LIB_DIR}/${SNAKE_LIB_NAME}.a
+    DESTINATION /usr/local/lib
+    COMPONENT snake
+)
+
 
 # Цель uninstall
 add_custom_target(uninstall
@@ -231,28 +269,32 @@ add_custom_target(uninstall
     COMMAND rm -f /usr/local/bin/${TETRIS_DESKTOP_EXEC}
     COMMAND rm -rf /usr/local/lib/${SNAKE_LIB_NAME}.a
     COMMAND rm -rf /usr/local/lib/${TETRIS_LIB_NAME}.a
+    COMMAND rm -rf /usr/local/share/doc/s21_snake
     COMMAND make uninstall
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Uninstalling project files including s21_tetris_cli via Makefile"
+    COMMENT "Uninstalling project files including documentation and s21_tetris_cli"
 )
 
 # Цель dvi
-add_custom_target(dvi
-    COMMAND doxygen snake_doxy 
+add_custom_target(doc
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${DOCS_DIR}
+    COMMAND doxygen snake_doxy
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Generating documentation with Doxygen in docs/snake"
+    COMMENT "Generating documentation with Doxygen in ${DOCS_DIR}"
 )
+
+add_custom_target(dvi DEPENDS doc)
 
 # Цель dist
 add_custom_target(dist
     COMMAND ${CMAKE_COMMAND} -E make_directory package
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${SNAKE_SRC_DIR} package/brick_game/snake
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${TETRIS_SRC_DIR} package/brick_game/tetris
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_CLI_DIR} package/gui/cli
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_DESKTOP_DIR} package/gui/desktop
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_COMMON_DIR} package/gui/common
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CMakeLists.txt package/
-    COMMAND tar -czvf s21_brickgame.tar.gz package
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/snake_readme.md package/
+    COMMAND tar -czvf ${SNAKE_ARCHIVE_PATH} package
     COMMAND ${CMAKE_COMMAND} -E remove_directory package
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Creating distribution tarball"
@@ -281,7 +323,7 @@ add_custom_target(gcov_report
 
 set_directory_properties(PROPERTIES
     ADDITIONAL_CLEAN_FILES
-    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${CMAKE_SOURCE_DIR}/*.tar.gz;${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
+    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${SNAKE_ARCHIVE_PATH};${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
 )
 
 # Цели для форматирования кода

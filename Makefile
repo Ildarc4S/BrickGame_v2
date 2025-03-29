@@ -71,11 +71,16 @@ gcov_report: $(TEST_FILES) $(CFILES)
 	lcov --capture --directory . --output-file $(COV_DIR)/coverage.info
 	genhtml $(COV_DIR)/coverage.info --output-directory $(COV_DIR)
 
-install: $(EXEC_NAME)
+install: $(EXEC_NAME) dvi
 	mkdir -p $(BINDIR) $(LIBDIR) $(DOCDIR)
 	install $(BIN_DIR)/$(EXEC_NAME) $(BINDIR)
 	install $(LIB_PATH) $(LIBDIR)/$(LIB_NAME)
-	cp -r $(DOCS_OUTPUT_DIR)/* $(DOCS_INSTALL_DIR)/
+	@if [ -d "$(DOCS_OUTPUT_DIR)/html" ]; then \
+		echo "Installing documentation..."; \
+		cp -r $(DOCS_OUTPUT_DIR)/html/* $(DOCDIR)/; \
+	else \
+		echo "Warning: Documentation not found at $(DOCS_OUTPUT_DIR)/html"; \
+	fi
 
 uninstall:
 	rm -f $(BINDIR)/$(EXEC_NAME)

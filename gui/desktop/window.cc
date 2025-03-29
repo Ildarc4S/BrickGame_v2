@@ -110,12 +110,22 @@ QFrame *Window::createHelpBlock() {
   QLabel *help_label = nullptr;
   if (game_info_.next == nullptr) {
     help_label = new QLabel(
-        "CONTROLS:\n← → - Move left/right\n↑ ↓ - Move up/down\nS - "
-        "Start/Continue\nP - Pause\nQ - Quit");
+        "CONTROLS:\n"
+        "← → - Move left/right\n"
+        "↑ ↓ - Move up/down\n"
+        "Space - boost snake\n"
+        "S - Start/Continue/Restart\n"
+        "P - Pause\n"
+        "Q - Quit");
   } else {
     help_label = new QLabel(
-        "CONTROLS:\n← → - Move left/right\n↓ - Move down\nDouble ↓ - Move fast "
-        "down\nS - Start/Continue\nP - Pause\nQ - Quit");
+        "CONTROLS:\n"
+        "← → - Move left/right\n"
+        "↓ - Move fast down\n"
+        "Space - rotate figure\n"
+        "S - Start/Continue/Restart\n"
+        "P - Pause\n"
+        "Q - Quit");
   }
   help_label->setObjectName("helpFrame");
   help_label->setStyleSheet(QString("color: %1; font: %2px; line-height: %3;")

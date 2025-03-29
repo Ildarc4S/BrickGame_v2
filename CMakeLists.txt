@@ -283,3 +283,34 @@ set_directory_properties(PROPERTIES
     ADDITIONAL_CLEAN_FILES
     "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${CMAKE_SOURCE_DIR}/*.tar.gz;${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
 )
+
+# Цели для форматирования кода
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+    add_custom_target(clang_test
+        COMMAND ${CLANG_FORMAT} --style=Google --dry-run --Werror ${SNAKE_SOURCES} ${TETRIS_SOURCES} ${GUI_CLI_SOURCES} ${GUI_DESKTOP_SOURCES} ${GUI_COMMON_SOURCES} ${SNAKE_TEST_SOURCES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Checking code style with clang-format"
+    )
+
+    add_custom_target(clang_format
+        COMMAND ${CLANG_FORMAT} --style=Google -i ${SNAKE_SOURCES} ${TETRIS_SOURCES} ${GUI_CLI_SOURCES} ${GUI_DESKTOP_SOURCES} ${GUI_COMMON_SOURCES} ${SNAKE_TEST_SOURCES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Formatting code with clang-format"
+    )
+else()
+    message(WARNING "clang-format not found - clang_format and clang_test targets will not be available")
+endif()
+
+# Цель для проверка утечки памяти
+find_program(VALGRIND "valgrind")
+if(VALGRIND)
+    add_custom_target(valgrind_test
+        COMMAND ${VALGRIND} --leak-check=full --track-origins=yes --show-leak-kinds=all --error-exitcode=1 ${TEST_BIN_DIR}/${SNAKE_TEST_EXEC}
+        DEPENDS ${SNAKE_TEST_EXEC}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Running memory leak check with valgrind"
+    )
+else()
+    message(WARNING "valgrind not found - valgrind_test targets will not be available")
+endif()

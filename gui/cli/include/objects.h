@@ -1,8 +1,9 @@
 #ifndef OBJECTS_CODE_H
 #define OBJECTS_CODE_H
 
-#include "./../../../brick_game/spec/game_spec.h"
 #include <ncurses.h>
+
+#include "./../../../brick_game/spec/game_spec.h"
 
 typedef enum {
   OBJECT_CODE_AIR = -2,
@@ -29,19 +30,19 @@ typedef enum {
 } PauseMode_t;
 
 typedef enum {
-  PANEL_COLOR_GREEN = 21, /**< Green color for the panel */
-  PANEL_COLOR_RED = 22,       /**< Red color for the panel */
-  PANEL_COLOR_YELLOW = 23,    /**< Yellow color for the panel */
-  PANEL_COLOR_BLUE = 24,      /**< Blue color for the panel */
+  PANEL_COLOR_GREEN = 21,  /**< Green color for the panel */
+  PANEL_COLOR_RED = 22,    /**< Red color for the panel */
+  PANEL_COLOR_YELLOW = 23, /**< Yellow color for the panel */
+  PANEL_COLOR_BLUE = 24,   /**< Blue color for the panel */
 } PanelColor_t;
 
 typedef enum {
-    PANEL_MODE_TEXT = -3,
-    PANEL_MODE_HIGH_SCORE = -4,
-    PANEL_MODE_SPEED      = -5,
-    PANEL_MODE_LEVEL      = -6,
-    PANEL_MODE_CUR_SCORE  = -7,
-    PANEL_MODE_NEXT_FIGURE = -8
+  PANEL_MODE_TEXT = -3,
+  PANEL_MODE_HIGH_SCORE = -4,
+  PANEL_MODE_SPEED = -5,
+  PANEL_MODE_LEVEL = -6,
+  PANEL_MODE_CUR_SCORE = -7,
+  PANEL_MODE_NEXT_FIGURE = -8
 } PanelMode_t;
 
 #endif  // OBJECTS_CODE_H

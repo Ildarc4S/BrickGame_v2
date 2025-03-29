@@ -3,9 +3,9 @@
 
 #include <string.h>
 
+#include "./game_field.h"
 #include "./objects.h"
 #include "./panel.h"
-#include "./game_field.h"
 
 #define WINDOW_TEXT_LINE_COUNT PANEL_TEXT_LINE_COUNT
 #define WINDOW_TEXT_LINE_COUNT_ZERO PANEL_TEXT_LINE_COUNT_ZERO

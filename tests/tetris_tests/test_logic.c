@@ -62,7 +62,7 @@ END_TEST
 START_TEST(test_movement_and_collision) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
-  
+
   int initial_x = tetris->curr_tetramino.x;
 
   tetris->left(tetris, false);
@@ -114,13 +114,15 @@ START_TEST(test_rotation_logic) {
   Tetris_t* tetris = initTetris();
   tetris->start(tetris);
 
-  tetris->curr_tetramino = tetris->collection.tetraminos[tetris->collection.size - 1];
+  tetris->curr_tetramino =
+      tetris->collection.tetraminos[tetris->collection.size - 1];
   tetris->curr_tetramino.y = 5;
   int original_brick[TETRAMINO_HEIGHT][TETRAMINO_WIDTH];
   copyTetramino(original_brick, tetris->curr_tetramino.brick);
 
   tetris->action(tetris, false);
-  ck_assert(memcmp(original_brick, tetris->curr_tetramino.brick, sizeof(original_brick)) != 0);
+  ck_assert(memcmp(original_brick, tetris->curr_tetramino.brick,
+                   sizeof(original_brick)) != 0);
 
   Tetramino_t temp = tetris->curr_tetramino;
   while (!isCollide(tetris, &temp)) {
@@ -128,7 +130,8 @@ START_TEST(test_rotation_logic) {
   }
   replaceTetramino(tetris, &temp);
   tetris->action(tetris, false);
-  ck_assert(memcmp(temp.brick, tetris->curr_tetramino.brick, sizeof(temp.brick)) == 0);
+  ck_assert(memcmp(temp.brick, tetris->curr_tetramino.brick,
+                   sizeof(temp.brick)) == 0);
 
   tetris->exit(tetris);
 }

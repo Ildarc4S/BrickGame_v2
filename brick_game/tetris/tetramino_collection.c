@@ -4,12 +4,13 @@
  */
 
 #include "./include/tetramino_collection.h"
+
 #include <stdlib.h>
 
 /**
  * @brief Инициализирует все тетромино в коллекции
  * @param self Указатель на коллекцию
- * 
+ *
  * @details Создает и настраивает все 7 классических тетромино:
  * - I (палка)
  * - O (квадрат)
@@ -18,7 +19,7 @@
  * - Z (обратный зигзаг)
  * - J (Г-образное)
  * - L (обратное Г-образное)
- * 
+ *
  * Каждому тетромино присваивается уникальный цвет.
  */
 void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
@@ -29,42 +30,42 @@ void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
 
   // O-тетромино (пурпурный)
   Tetramino_t tetramino_o = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_MAGNETA,
       .brick = {{0, 0, 0, 0}, {0, 1, 1, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}}};
 
   // T-тетромино (синий)
   Tetramino_t tetramino_t = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_BLUE,
       .brick = {{0, 0, 0, 0}, {0, 1, 0, 0}, {1, 1, 1, 0}, {0, 0, 0, 0}}};
 
   // S-тетромино (зеленый)
   Tetramino_t tetramino_s = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_GREEN,
       .brick = {{0, 0, 0, 0}, {0, 1, 1, 0}, {1, 1, 0, 0}, {0, 0, 0, 0}}};
 
   // Z-тетромино (темно-пурпурный)
   Tetramino_t tetramino_z = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_DARK_MAGNETA,
       .brick = {{0, 0, 0, 0}, {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}}};
 
   // J-тетромино (темно-желтый)
   Tetramino_t tetramino_j = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_DARK_YELLOW,
       .brick = {{0, 0, 0, 0}, {1, 0, 0, 0}, {1, 1, 1, 0}, {0, 0, 0, 0}}};
 
   // L-тетромино (желтый)
   Tetramino_t tetramino_l = {
-      .x = TETRAMINO_COLLCECTION_INITIAL_X, 
+      .x = TETRAMINO_COLLCECTION_INITIAL_X,
       .y = TETRAMINO_COLLCECTION_INITIAL_Y,
       .color = TETRAMINO_COLOR_YELLOW,
       .brick = {{0, 0, 0, 0}, {0, 0, 1, 0}, {1, 1, 1, 0}, {0, 0, 0, 0}}};
@@ -83,7 +84,7 @@ void initAllTetraminoCollectionBricks(TetraminoCollection_t *self) {
  * @brief Возвращает случайное тетромино из коллекции
  * @param self Указатель на коллекцию
  * @return Указатель на случайное тетромино
- * 
+ *
  * @note Использует стандартную функцию rand()
  * @warning Требуется предварительная инициализация генератора случайных чисел
  */
@@ -95,7 +96,7 @@ Tetramino_t *_getRandomTetramino(TetraminoCollection_t *self) {
 /**
  * @brief Инициализирует коллекцию тетромино
  * @return Инициализированная коллекция
- * 
+ *
  * @details Выполняет:
  * 1. Установку размера коллекции
  * 2. Назначение функции получения случайного тетромино

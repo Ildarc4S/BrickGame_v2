@@ -56,9 +56,12 @@
  * @brief Структура для управления счетом игрока
  */
 typedef struct _score {
-  int score;                                      ///< Текущее количество очков
-  int score_converter[LEVEL_MANAGER_SCORE_CONVERTER_SIZE]; ///< Таблица конвертации линий в очки
-  void (*convertLineCountToScore)(struct _score *, int);    ///< Функция добавления очков
+  int score;  ///< Текущее количество очков
+  int score_converter[LEVEL_MANAGER_SCORE_CONVERTER_SIZE];  ///< Таблица
+                                                            ///< конвертации
+                                                            ///< линий в очки
+  void (*convertLineCountToScore)(struct _score *,
+                                  int);  ///< Функция добавления очков
 } Score_t;
 
 /**
@@ -66,11 +69,11 @@ typedef struct _score {
  * @brief Структура для управления уровнем сложности
  */
 typedef struct _level {
-  Score_t score;              ///< Объект счета игрока
-  int level;                  ///< Текущий уровень сложности
-  int max_level_score;        ///< Очков для перехода на след. уровень
-  int max_level;              ///< Максимальный уровень
-  void (*updateLevel)(struct _level *); ///< Функция обновления уровня
+  Score_t score;        ///< Объект счета игрока
+  int level;            ///< Текущий уровень сложности
+  int max_level_score;  ///< Очков для перехода на след. уровень
+  int max_level;        ///< Максимальный уровень
+  void (*updateLevel)(struct _level *);  ///< Функция обновления уровня
 } Level_t;
 
 /**
@@ -86,4 +89,3 @@ Level_t initLevel();
 Score_t initScore();
 
 #endif  // LEVEL_MANAGER_H
-

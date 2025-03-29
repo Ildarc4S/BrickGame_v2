@@ -4,6 +4,7 @@
  */
 
 #include "./include/utils.h"
+
 #include "./include/tetris.h"
 
 /**
@@ -59,15 +60,15 @@ int checkCollideWithBlock(Tetris_t *self, int x, int y) {
  */
 int isCollide(Tetris_t *self, Tetramino_t *tetramino) {
   if (!tetramino || !self || !self->game_info.field) return UTILS_ERROR;
-  
+
   int result = UTILS_NOT_COLLIDE;
   for (int i = 0; i < TETRAMINO_HEIGHT && !result; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH && !result; j++) {
       if (tetramino->brick[i][j]) {
         int global_x = tetramino->x + j;
         int global_y = tetramino->y + i;
-        result = checkCollideWithWall(global_x, global_y) || 
-                checkCollideWithBlock(self, global_x, global_y);
+        result = checkCollideWithWall(global_x, global_y) ||
+                 checkCollideWithBlock(self, global_x, global_y);
       }
     }
   }
@@ -155,7 +156,7 @@ void rotateTetramino(Tetramino_t *tetramino) {
  */
 void shiftLines(Tetris_t *tetris, int *index) {
   for (int k = *index; k > 1; k--) {
-    for (int j = 1; j <= FIELD_WIDTH+1; j++) {
+    for (int j = 1; j <= FIELD_WIDTH + 1; j++) {
       tetris->game_info.field[k][j] = tetris->game_info.field[k - 1][j];
     }
   }
@@ -165,7 +166,7 @@ void shiftLines(Tetris_t *tetris, int *index) {
 /**
  * @brief Подсчитывает количество заполненных линий
  */
-int countEraseLines(Tetris_t* tetris) {
+int countEraseLines(Tetris_t *tetris) {
   int erase_line_count = 0;
   for (int i = FIELD_HEIGHT; i > 0; i--) {
     bool erase_line = true;
@@ -185,8 +186,9 @@ int countEraseLines(Tetris_t* tetris) {
 /**
  * @brief Обновляет счет и уровень после очистки линий
  */
-void updateScoreAndLeve(Tetris_t* tetris, int erase_line_count) {
-  tetris->level.score.convertLineCountToScore(&tetris->level.score, erase_line_count);
+void updateScoreAndLeve(Tetris_t *tetris, int erase_line_count) {
+  tetris->level.score.convertLineCountToScore(&tetris->level.score,
+                                              erase_line_count);
   tetris->level.updateLevel(&tetris->level);
 
   tetris->updateScore(tetris);
@@ -206,13 +208,13 @@ void clearLines(Tetris_t *self) {
 /**
  * @brief Двигает фигуру горизонтально с проверкой коллизий
  */
-void moveHorizontal(Tetris_t* tetris, int direction) {
-    if (!tetris) return;
+void moveHorizontal(Tetris_t *tetris, int direction) {
+  if (!tetris) return;
 
   Tetramino_t *tetramino = &tetris->curr_tetramino;
   tetramino->x += direction;
   if (isCollide(tetris, tetramino)) {
-    tetramino->x -=direction;
+    tetramino->x -= direction;
   }
   replaceTetramino(tetris, tetramino);
 }
@@ -221,20 +223,19 @@ void moveHorizontal(Tetris_t* tetris, int direction) {
  * @brief Проверяет находится ли точка в пределах поля
  */
 bool isWithinFieldBounds(int x, int y) {
-    return x >= 1 && x < FIELD_WIDTH + 1 && 
-           y >= 1 && y < FIELD_HEIGHT + 1;
+  return x >= 1 && x < FIELD_WIDTH + 1 && y >= 1 && y < FIELD_HEIGHT + 1;
 }
 
 /**
  * @brief Обрабатывает ячейку фигуры для вставки с цветом
  */
 void processTetraminoCell(Tetris_t *self, int i, int j) {
-    int x = self->curr_tetramino.x + j;
-    int y = self->curr_tetramino.y + i;
+  int x = self->curr_tetramino.x + j;
+  int y = self->curr_tetramino.y + i;
 
-    if (isWithinFieldBounds(x, y)) {
-        self->game_info.field[y][x] = self->curr_tetramino.color;
-    }
+  if (isWithinFieldBounds(x, y)) {
+    self->game_info.field[y][x] = self->curr_tetramino.color;
+  }
 }
 
 /**
@@ -257,7 +258,7 @@ void insertTetraminoToFieldWithColor(Tetris_t *self) {
  */
 void setCurrTetramino(Tetris_t *tetris) {
   copyTetraminoToCurrentTetramino(tetris, tetris->next_tetramino);
-  
+
   tetris->curr_tetramino.y = TETRIS_TETRAMINO_SPAWN_Y;
   tetris->curr_tetramino.x = TETRIS_TETRAMINO_SPAWN_X;
 }
@@ -266,12 +267,13 @@ void setCurrTetramino(Tetris_t *tetris) {
  * @brief Обновляет следующee тетромино
  */
 void updateNextTetraminoPreview(Tetris_t *tetris) {
-  tetris->next_tetramino = tetris->collection.getRandomTetranimo(&tetris->collection);
+  tetris->next_tetramino =
+      tetris->collection.getRandomTetranimo(&tetris->collection);
 
   for (int i = 0; i < TETRAMINO_HEIGHT; i++) {
     for (int j = 0; j < TETRAMINO_WIDTH; j++) {
       tetris->game_info.next[i][j] = OBJECT_CODE_AIR;
-      
+
       if (tetris->next_tetramino->brick[i][j]) {
         tetris->game_info.next[i][j] = tetris->next_tetramino->color;
       }

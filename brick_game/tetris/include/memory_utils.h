@@ -41,4 +41,3 @@ int **newField(int width, int height);
 void freeField(int ***field, int height);
 
 #endif  // MEMORY_UTILS_H
-

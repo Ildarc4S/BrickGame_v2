@@ -4,9 +4,10 @@
  */
 
 #include "./include/tetris.h"
+
+#include "./include/init_utils.h"
 #include "./include/memory_utils.h"
 #include "./include/utils.h"
-#include "./include/init_utils.h"
 
 /**
  * @brief Восстанавливает начальное состояние игры
@@ -49,10 +50,11 @@ void _spawn(Tetris_t *self) {
   if (!self) return;
 
   if (!self->next_tetramino) {
-    self->next_tetramino = self->collection.getRandomTetranimo(&self->collection);
+    self->next_tetramino =
+        self->collection.getRandomTetranimo(&self->collection);
   }
 
-  setCurrTetramino(self); 
+  setCurrTetramino(self);
   updateNextTetraminoPreview(self);
   self->state = TETRIS_STATE_MOVE;
   checkGameOver(self);
@@ -179,7 +181,7 @@ void _updateTetrisState(Tetris_t *self) {
       self->down(self, true);
       self->timer.updateLastTime(&self->timer);
     }
-  } 
+  }
   if (self->state == TETRIS_STATE_ATTACH) {
     clearLines(self);
     self->spawn(self);
@@ -215,19 +217,19 @@ void _exitGame(Tetris_t *self) {
  * @param self Указатель на объект игры
  */
 void assignFunctionPointers(Tetris_t *self) {
-    self->start = _startGame;
-    self->spawn = _spawn;
-    self->action = _action;
-    self->left = _left;
-    self->right = _right;
-    self->up = _up;
-    self->down = _down;
-    self->pause = _pauseGame;
-    self->exit = _exitGame;
-    self->restoreInfo = _restoreInfo;
-    self->updateScore = _updateTetrisScore;
-    self->updateLevel = _updateTetrisLevel;
-    self->updateTetrisState = _updateTetrisState;
+  self->start = _startGame;
+  self->spawn = _spawn;
+  self->action = _action;
+  self->left = _left;
+  self->right = _right;
+  self->up = _up;
+  self->down = _down;
+  self->pause = _pauseGame;
+  self->exit = _exitGame;
+  self->restoreInfo = _restoreInfo;
+  self->updateScore = _updateTetrisScore;
+  self->updateLevel = _updateTetrisLevel;
+  self->updateTetrisState = _updateTetrisState;
 }
 
 /**
@@ -235,28 +237,26 @@ void assignFunctionPointers(Tetris_t *self) {
  * @return Инициализированный объект игры
  */
 Tetris_t constructorTetris() {
-    Tetris_t self = (Tetris_t){
-        .state = TETRIS_STATE_START,
-        .game_info = initGameInfo(),
-        .curr_tetramino = initCurrentTetramino(),
-        .next_tetramino = NULL,
-        .collection = initTetraminoCollection(),
-        .timer = initTimer(),
-        .level = initLevel(),
-        .db = initDataBase("tetris_db.txt"),
-        .speed_diff = TETRIS_SPEED_INCREMENT,
-        .tick_diff = TETRIS_TICK_DECREMENT
-    };
+  Tetris_t self = (Tetris_t){.state = TETRIS_STATE_START,
+                             .game_info = initGameInfo(),
+                             .curr_tetramino = initCurrentTetramino(),
+                             .next_tetramino = NULL,
+                             .collection = initTetraminoCollection(),
+                             .timer = initTimer(),
+                             .level = initLevel(),
+                             .db = initDataBase("tetris_db.txt"),
+                             .speed_diff = TETRIS_SPEED_INCREMENT,
+                             .tick_diff = TETRIS_TICK_DECREMENT};
 
-    assignFunctionPointers(&self);
-    clearField(self.game_info.field);
-    return self;
+  assignFunctionPointers(&self);
+  clearField(self.game_info.field);
+  return self;
 }
 
 /**
  * @brief Инициализирует и возвращает указатель на объект игры
  * @return Указатель на статический объект игры
- * 
+ *
  * @note Использует статическую переменную для реализации singleton
  */
 Tetris_t *initTetris() {

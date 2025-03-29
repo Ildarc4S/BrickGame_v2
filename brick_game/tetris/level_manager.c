@@ -9,7 +9,7 @@
  * @brief Конвертирует количество собранных линий в очки
  * @param self Указатель на объект счета
  * @param line_count Количество собранных линий (1-4)
- * 
+ *
  * @details Использует предустановленную таблицу конвертации
  * @warning Не проверяет выход за границы массива (line_count должен быть 1-4)
  */
@@ -20,7 +20,7 @@ void _convertLineCountToScore(Score_t *self, int line_count) {
 /**
  * @brief Обновляет уровень сложности на основе набранных очков
  * @param self Указатель на объект уровня
- * 
+ *
  * @note Уровень рассчитывается как (очки / max_level_score) + 1
  * @warning Не превышает установленный максимальный уровень
  */
@@ -34,7 +34,7 @@ void _updateLevel(Level_t *self) {
 /**
  * @brief Инициализирует систему подсчета очков
  * @return Инициализированный объект Score_t
- * 
+ *
  * @details Устанавливает:
  * - Начальный счет = 0
  * - Таблицу конвертации линий в очки
@@ -43,11 +43,10 @@ void _updateLevel(Level_t *self) {
 Score_t initScore() {
   return (Score_t){
       .score = LEVEL_MANAGER_INITIAL_SCORE,
-      .score_converter = {
-        LEVEL_MANAGER_SCORE_FOR_ONE_LINE, 
-        LEVEL_MANAGER_SCORE_FOR_TWO_LINES, 
-        LEVEL_MANAGER_SCORE_FOR_THREE_LINES, 
-        LEVEL_MANAGER_SCORE_FOR_FOUR_LINES},
+      .score_converter = {LEVEL_MANAGER_SCORE_FOR_ONE_LINE,
+                          LEVEL_MANAGER_SCORE_FOR_TWO_LINES,
+                          LEVEL_MANAGER_SCORE_FOR_THREE_LINES,
+                          LEVEL_MANAGER_SCORE_FOR_FOUR_LINES},
       .convertLineCountToScore = _convertLineCountToScore,
   };
 }
@@ -55,7 +54,7 @@ Score_t initScore() {
 /**
  * @brief Инициализирует систему уровней
  * @return Инициализированный объект Level_t
- * 
+ *
  * @details Устанавливает:
  * - Начальный уровень = 1
  * - Максимальный уровень = 10
@@ -63,11 +62,9 @@ Score_t initScore() {
  * - Функцию обновления уровня
  */
 Level_t initLevel() {
-  return (Level_t){
-      .score = initScore(),
-      .level = LEVEL_MANAGER_INITIAL_LEVEL,
-      .max_level_score = LEVEL_MANAGER_MAX_LEVEL_SCORE,
-      .max_level = LEVEL_MANAGER_MAX_LEVEL,
-      .updateLevel = _updateLevel
-  };
+  return (Level_t){.score = initScore(),
+                   .level = LEVEL_MANAGER_INITIAL_LEVEL,
+                   .max_level_score = LEVEL_MANAGER_MAX_LEVEL_SCORE,
+                   .max_level = LEVEL_MANAGER_MAX_LEVEL,
+                   .updateLevel = _updateLevel};
 }

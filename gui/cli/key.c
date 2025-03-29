@@ -34,19 +34,17 @@ void _listen(Keyboard_t *this) {
   }
 }
 
-
 Keyboard_t initKeyboard() {
-  return (Keyboard_t) {
-    .keyboard_listeners = {
-      {KEY_UP, upKeyPressed},
-      {KEY_DOWN, downKeyPressed},
-      {KEY_LEFT, leftKeyPressed},
-      {KEY_RIGHT, rightKeyPressed},
-      {' ', spaceKeyPressed},
-      {'s', startKeyPressed},
-      {'p', pauseKeyPressed},
-      {'q', exitKeyPressed},
-    },
-    .listen = _listen
-  };
+  return (Keyboard_t){.keyboard_listeners =
+                          {
+                              {KEY_UP, upKeyPressed},
+                              {KEY_DOWN, downKeyPressed},
+                              {KEY_LEFT, leftKeyPressed},
+                              {KEY_RIGHT, rightKeyPressed},
+                              {' ', spaceKeyPressed},
+                              {'s', startKeyPressed},
+                              {'p', pauseKeyPressed},
+                              {'q', exitKeyPressed},
+                          },
+                      .listen = _listen};
 }

@@ -1,4 +1,5 @@
 #include "./include/init_frontend.h"
+
 #include "./include/objects.h"
 
 typedef enum {
@@ -12,13 +13,13 @@ typedef enum {
 } CustomColor_t;
 
 void initColorPairs() {
-  init_color(CUSTOM_COLOR_RED,          1000, 0,    0);
-  init_color(CUSTOM_COLOR_MAGENTA,      1000, 0,    1000);
-  init_color(CUSTOM_COLOR_BLUE,         0,    0,    1000);
-  init_color(CUSTOM_COLOR_GREEN,        0,    1000, 0);
-  init_color(CUSTOM_COLOR_DARK_MAGENTA, 500,  0,    500);
-  init_color(CUSTOM_COLOR_ORANGE,       1000, 647,  0);
-  init_color(CUSTOM_COLOR_YELLOW,       1000, 1000, 0);
+  init_color(CUSTOM_COLOR_RED, 1000, 0, 0);
+  init_color(CUSTOM_COLOR_MAGENTA, 1000, 0, 1000);
+  init_color(CUSTOM_COLOR_BLUE, 0, 0, 1000);
+  init_color(CUSTOM_COLOR_GREEN, 0, 1000, 0);
+  init_color(CUSTOM_COLOR_DARK_MAGENTA, 500, 0, 500);
+  init_color(CUSTOM_COLOR_ORANGE, 1000, 647, 0);
+  init_color(CUSTOM_COLOR_YELLOW, 1000, 1000, 0);
 
   init_pair(OBJECT_CODE_TETRAMINO_I, CUSTOM_COLOR_RED, COLOR_BLACK);
   init_pair(OBJECT_CODE_TETRAMINO_O, CUSTOM_COLOR_MAGENTA, COLOR_BLACK);
@@ -48,4 +49,3 @@ void initNcurses() {
   initColorPairs();      /**< Initialize color pairs for game elements */
   timeout(300);          /**< Set input timeout (in milliseconds) */
 }
-

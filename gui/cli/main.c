@@ -1,8 +1,7 @@
+#include <stdlib.h>
 #include <time.h>
 
 #include "./include/frontend.h"
-
-#include <stdlib.h>
 
 void gameLoop() {
   Keyboard_t kb = initKeyboard();
@@ -19,7 +18,6 @@ void gameLoop() {
   }
 }
 
-
 int main() {
   initNcurses();
   srand(time(NULL));
@@ -28,4 +26,3 @@ int main() {
 
   endwin();
 }
-

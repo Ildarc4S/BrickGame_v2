@@ -13,7 +13,7 @@
  * @brief Обновляет состояние конечного автомата
  * @param action Действие пользователя
  * @param hold Флаг удержания клавиши
- * 
+ *
  * @note Вызывает соответствующий обработчик состояния
  */
 void updateFSM(UserAction_t action, bool hold);
@@ -48,4 +48,3 @@ void pauseHandler(Tetris_t *tetris, UserAction_t action);
 void gameOverHandler(Tetris_t *tetris, UserAction_t action);
 
 #endif  // FSM_H
-

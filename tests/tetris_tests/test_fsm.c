@@ -10,7 +10,7 @@ START_TEST(test_fsm_states) {
   ck_assert_int_eq(tetris->state, TETRIS_STATE_EXIT);
   tetris->exit(tetris);
   tetris = NULL;
-} 
+}
 END_TEST
 
 START_TEST(test_start_state) {
@@ -107,7 +107,6 @@ START_TEST(test_hold_actions) {
   tetris->state = TETRIS_STATE_MOVE;
 
   userInput(Down, true);
-
 }
 END_TEST
 

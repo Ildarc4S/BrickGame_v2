@@ -6,13 +6,13 @@
 #ifndef INIT_UTILS_H
 #define INIT_UTILS_H
 
-#include "./tetris.h"
 #include "./memory_utils.h"
+#include "./tetris.h"
 
 /**
  * @brief Инициализирует структуру игровой информации
  * @return Инициализированная структура GameInfo_t
- * 
+ *
  * @details Создает:
  * - Игровое поле с границами
  * - Поле для следующей фигуры
@@ -26,7 +26,7 @@ GameInfo_t initGameInfo();
 /**
  * @brief Инициализирует текущую тетромино
  * @return Инициализированная структура Tetramino_t
- * 
+ *
  * @details Устанавливает:
  * - Стартовые координаты
  * - Синий цвет по умолчанию
@@ -35,4 +35,3 @@ GameInfo_t initGameInfo();
 Tetramino_t initCurrentTetramino();
 
 #endif  // INIT_UTILS_H
-

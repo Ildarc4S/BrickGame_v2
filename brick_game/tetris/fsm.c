@@ -4,6 +4,7 @@
  */
 
 #include "./include/fsm.h"
+
 #include <ncurses.h>
 
 /**
@@ -33,7 +34,7 @@ void updateFSM(UserAction_t action, bool hold) {
 
 /**
  * @brief Обрабатывает действия в начальном состоянии
- * 
+ *
  * @details Доступные действия:
  * - Terminate: выход из игры
  * - Start: начало игры
@@ -53,7 +54,7 @@ void startHandler(Tetris_t *tetris, UserAction_t action) {
 
 /**
  * @brief Обрабатывает действия в состоянии движения
- * 
+ *
  * @details Доступные действия:
  * - Terminate: выход из игры
  * - Pause: пауза игры
@@ -92,7 +93,7 @@ void moveHandler(Tetris_t *tetris, UserAction_t action, bool hold) {
 
 /**
  * @brief Обрабатывает действия в состоянии паузы
- * 
+ *
  * @details Доступные действия:
  * - Terminate: выход из игры
  * - Start: продолжение игры
@@ -116,7 +117,7 @@ void pauseHandler(Tetris_t *tetris, UserAction_t action) {
 
 /**
  * @brief Обрабатывает действия в состоянии завершения игры
- * 
+ *
  * @details Доступные действия:
  * - Start: новая игра
  * - Terminate: выход из игры

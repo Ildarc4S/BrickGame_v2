@@ -6,8 +6,9 @@
 #ifndef TETRAMINO_COLLECTION_H
 #define TETRAMINO_COLLECTION_H
 
-#include "./tetramino.h"
 #include <stdlib.h>
+
+#include "./tetramino.h"
 
 /**
  * @def Количество различных тетромино в коллекции
@@ -29,18 +30,19 @@
  * @brief Коллекция всех возможных тетромино в игре
  */
 typedef struct _tetramino_collection {
-  Tetramino_t tetraminos[TETRAMINO_COLLCECTION_SIZE]; ///< Массив тетромино
-  int size;                                           ///< Размер коллекции
-  Tetramino_t *(*getRandomTetranimo)(struct _tetramino_collection *); ///< Функция получения случайного тетромино
+  Tetramino_t tetraminos[TETRAMINO_COLLCECTION_SIZE];  ///< Массив тетромино
+  int size;                                            ///< Размер коллекции
+  Tetramino_t *(*getRandomTetranimo)(
+      struct _tetramino_collection
+          *);  ///< Функция получения случайного тетромино
 } TetraminoCollection_t;
 
 /**
  * @brief Инициализирует коллекцию тетромино
  * @return Инициализированная коллекция
- * 
+ *
  * @note Включает все стандартные 7 видов тетромино
  */
 TetraminoCollection_t initTetraminoCollection();
 
 #endif  // TETRAMINO_COLLECTION_H
-

@@ -15,13 +15,13 @@
  * @brief Очищает игровое поле
  * @param field Двумерный массив поля
  */
-void clearField(int** field);
+void clearField(int **field);
 
 /**
  * @brief Удаляет текущую фигуру с поля
  * @param tetris Указатель на объект игры
  */
-void clearTetraminoFromField(Tetris_t* tetris);
+void clearTetraminoFromField(Tetris_t *tetris);
 
 /**
  * @brief Проверяет коллизию фигуры
@@ -83,7 +83,7 @@ void clearLines(Tetris_t *self);
  * @param tetris Указатель на объект игры
  * @param direction Направление движения (-1 влево, 1 вправо)
  */
-void moveHorizontal(Tetris_t* tetris, int direction);
+void moveHorizontal(Tetris_t *tetris, int direction);
 
 /**
  * @brief Вставляет фигуру в поле с учетом цвета
@@ -94,10 +94,10 @@ void insertTetraminoToFieldWithColor(Tetris_t *self);
 /**
  * @brief Устанавливает текущую тетромино из следующей
  * @param tetris Указатель на объект игры
- * 
+ *
  * @details Копирует следующую тетромино в текущую и устанавливает
  * начальные координаты спавна. Вызывается при появлении новой фигуры.
- * 
+ *
  * @note Перед вызовом должна быть инициализирована следующая тетромино
  * @see updateNextTetraminoPreview()
  */
@@ -106,10 +106,10 @@ void setCurrTetramino(Tetris_t *tetris);
 /**
  * @brief Обновляет превью следующей тетромино
  * @param tetris Указатель на объект игры
- * 
+ *
  * @details Выбирает случайную тетромино из коллекции и отображает
  * её в поле game_info.next с сохранением цвета.
- * 
+ *
  * @note Использует текущую цветовую схему фигур
  */
 void updateNextTetraminoPreview(Tetris_t *tetris);
@@ -117,13 +117,12 @@ void updateNextTetraminoPreview(Tetris_t *tetris);
 /**
  * @brief Проверяет условие завершения игры
  * @param tetris Указатель на объект игры
- * 
+ *
  * @details Проверяет коллизию текущей тетромино при спавне.
  * Если коллизия есть - игра завершается, сохраняется рекорд.
- * 
+ *
  * @warning Вызывается только при появлении новой фигуры
  */
 void checkGameOver(Tetris_t *tetris);
 
 #endif  // UTILS_H
-

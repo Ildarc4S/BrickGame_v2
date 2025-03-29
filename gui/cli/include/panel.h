@@ -31,6 +31,7 @@ typedef struct _panel {
   void (*draw)(struct _panel *);
 } Panel_t;
 
-Panel_t initPanel(int x, int y, const char *title, const char **text, int size, PanelColor_t color, PanelMode_t mode);
+Panel_t initPanel(int x, int y, const char *title, const char **text, int size,
+                  PanelColor_t color, PanelMode_t mode);
 
 #endif  // PANEL_H

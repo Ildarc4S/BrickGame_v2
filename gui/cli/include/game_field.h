@@ -24,4 +24,4 @@ typedef struct _game_field {
 
 GameField_t initGameField(int width, int height);
 
-#endif  // GAME_FIELD_H 
+#endif  // GAME_FIELD_H

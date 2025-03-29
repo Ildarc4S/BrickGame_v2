@@ -45,7 +45,7 @@ set(TETRIS_DESKTOP_EXEC s21_tetris_desktop)
 set(TETRIS_CLI_EXEC s21_tetris_cli)
 set(SNAKE_TEST_EXEC s21_snake_test)
 set(SNAKE_COV_EXEC s21_snake_coverage)
-set(SNAKE_ARCHIVE_NAME "s21_snake.tar.gz")
+set(SNAKE_ARCHIVE_NAME "s21_brick_game.tar.gz")
 set(SNAKE_ARCHIVE_PATH "${CMAKE_SOURCE_DIR}/${SNAKE_ARCHIVE_NAME}")
 
 set(SNAKE_DESKTOP_HEADERS 
@@ -279,6 +279,7 @@ add_custom_target(uninstall
 add_custom_target(doc
     COMMAND ${CMAKE_COMMAND} -E make_directory ${DOCS_DIR}
     COMMAND doxygen snake_doxy
+    COMMAND make dvi
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Generating documentation with Doxygen in ${DOCS_DIR}"
 )
@@ -289,12 +290,16 @@ add_custom_target(dvi DEPENDS doc)
 add_custom_target(dist
     COMMAND ${CMAKE_COMMAND} -E make_directory package
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${SNAKE_SRC_DIR} package/brick_game/snake
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${TETRIS_SRC_DIR} package/brick_game/tetris
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_CLI_DIR} package/gui/cli
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_DESKTOP_DIR} package/gui/desktop
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${GUI_COMMON_DIR} package/gui/common
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CMakeLists.txt package/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Makefile package/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/snake_readme.md package/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/tetris_readme.md package/
     COMMAND tar -czvf ${SNAKE_ARCHIVE_PATH} package
+    COMMAND make dist
     COMMAND ${CMAKE_COMMAND} -E remove_directory package
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Creating distribution tarball"
@@ -323,7 +328,7 @@ add_custom_target(gcov_report
 
 set_directory_properties(PROPERTIES
     ADDITIONAL_CLEAN_FILES
-    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${SNAKE_ARCHIVE_PATH};${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
+    "${SNAKE_BIN_DIR};${TETRIS_BIN_DIR};${BUILD_DIR};${LIB_DIR};${TEST_BIN_DIR};${COV_BIN_DIR};${COV_DIR};${DOCS_DIR};${DOCS_OUTPUT_DIR};${SNAKE_ARCHIVE_PATH};${CMAKE_SOURCE_DIR}/*.gcda;${CMAKE_SOURCE_DIR}/*.gcno"
 )
 
 # Цели для форматирования кода

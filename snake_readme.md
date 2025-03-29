@@ -4,7 +4,7 @@
 
 Логика игры реализована с использованием конечных автоматов (Finite State Machines, FSM), схему которых вы можете увидеть ниже:
 
-![FSM Diagram](image/snake/fsm.png)
+![FSM Diagram](image/snake/fsm.jpg)
 
 ## Управление игрой
 

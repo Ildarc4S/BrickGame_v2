@@ -15,7 +15,7 @@ TETRIS_TAR = s21_tetris.tar.gz
 
 CFILES = $(wildcard $(SRC_DIR)/*.c)
 TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
-OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/tetris/%.o,$(CFILES))
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(CFILES))
 TEST_OBJS = $(patsubst $(TEST_DIR)/%.c,$(OBJ_DIR)/tests/%.o,$(TEST_FILES))
 BIN_DIR = bin/tetris
 
@@ -42,8 +42,8 @@ $(LIB_NAME): $(OBJS)
 	ar rcs $(LIB_PATH) $^
 	ranlib $(LIB_PATH)
 
-$(OBJ_DIR)/tetris/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)/tetris
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(OBJ_DIR)/tests/%.o: $(TEST_DIR)/%.c

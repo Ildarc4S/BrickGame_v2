@@ -149,10 +149,9 @@ START_TEST(test_line_clearing_and_scoring) {
   ck_assert_int_gt(tetris->game_info.score, initial_score);
 
   int empty = 1;
-  for (int j = 1; j <= FIELD_WIDTH; j++) {
+  for (int j = 1; j <= FIELD_WIDTH && empty; j++) {
     if (tetris->game_info.field[FIELD_HEIGHT][j] != OBJECT_CODE_AIR) {
       empty = 0;
-      break;
     }
   }
   ck_assert_int_eq(empty, 1);
